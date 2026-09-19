@@ -254,6 +254,11 @@ otp_expiry = 3600
 # content_path = "./supabase/templates/password_changed_notification.html"
 
 [auth.sms]
+# Nominal provider so GoTrue's phone-auth code path validates — actual
+# delivery never touches Twilio because auth.hook.send_sms.enabled = true
+# below takes over sending (and test_otp below bypasses both for the dev
+# admin phone number).
+provider = "twilio"
 # Allow/disallow new user signups via SMS to your project.
 enable_signup = true
 # If enabled, users need to confirm their phone number before signing in.
@@ -294,10 +299,14 @@ uri = "http://host.docker.internal:54321/functions/v1/telegram-send-sms"
 secrets = "env(SEND_SMS_HOOK_SECRET)"
 
 # Configure one of the supported SMS providers: `twilio`, `twilio_verify`, `messagebird`, `textlocal`, `vonage`.
+# Dummy credentials — the CLI requires *some* provider "enabled" for phone
+# login to work at all, but auth.hook.send_sms above intercepts every
+# outgoing OTP before Twilio would ever be called, so these values are never
+# actually used.
 [auth.sms.twilio]
-enabled = false
-account_sid = ""
-message_service_sid = ""
+enabled = true
+account_sid = "dummy"
+message_service_sid = "dummy"
 # DO NOT commit your Twilio auth token to git. Use environment variable substitution instead:
 auth_token = "env(SUPABASE_AUTH_SMS_TWILIO_AUTH_TOKEN)"
 
