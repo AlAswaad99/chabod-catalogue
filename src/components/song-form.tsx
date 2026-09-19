@@ -47,6 +47,9 @@ export function SongForm({
   const [newFieldType, setNewFieldType] = useState<MetadataFieldType>("text");
   const [newFieldOptions, setNewFieldOptions] = useState("");
 
+  const [addingOptionFieldId, setAddingOptionFieldId] = useState<string | null>(null);
+  const [newOptionValue, setNewOptionValue] = useState("");
+
   function updateSection(index: number, patch: Partial<LyricsSection>) {
     setSections((prev) => prev.map((s, i) => (i === index ? { ...s, ...patch } : s)));
   }
@@ -88,7 +91,7 @@ export function SongForm({
   }
 
   async function handleAddOption(fieldId: string) {
-    const option = window.prompt("New option value:");
+    const option = newOptionValue.trim();
     if (!option) return;
     const { data, error } = await addOptionToField(fieldId, option);
     if (error || !data) {
@@ -96,6 +99,8 @@ export function SongForm({
       return;
     }
     setFieldDefs((prev) => prev.map((f) => (f.id === fieldId ? data : f)));
+    setAddingOptionFieldId(null);
+    setNewOptionValue("");
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -259,26 +264,62 @@ export function SongForm({
                   />
                 )}
                 {field.type === "single_select" && (
-                  <div className="flex gap-2">
-                    <select
-                      value={(metadata[field.id] as string) ?? ""}
-                      onChange={(e) => setMetadataValue(field.id, e.target.value)}
-                      className="flex-1 rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm"
-                    >
-                      <option value="">—</option>
-                      {field.options.map((o) => (
-                        <option key={o} value={o}>
-                          {o}
-                        </option>
-                      ))}
-                    </select>
-                    <button
-                      type="button"
-                      onClick={() => handleAddOption(field.id)}
-                      className="text-sm text-foreground/60 underline whitespace-nowrap"
-                    >
-                      + option
-                    </button>
+                  <div className="space-y-2">
+                    <div className="flex gap-2">
+                      <select
+                        value={(metadata[field.id] as string) ?? ""}
+                        onChange={(e) => setMetadataValue(field.id, e.target.value)}
+                        className="flex-1 rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm"
+                      >
+                        <option value="">—</option>
+                        {field.options.map((o) => (
+                          <option key={o} value={o}>
+                            {o}
+                          </option>
+                        ))}
+                      </select>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setAddingOptionFieldId(field.id);
+                          setNewOptionValue("");
+                        }}
+                        className="text-sm text-foreground/60 underline whitespace-nowrap"
+                      >
+                        + option
+                      </button>
+                    </div>
+                    {addingOptionFieldId === field.id && (
+                      <div className="flex gap-2">
+                        <input
+                          autoFocus
+                          placeholder="New option value"
+                          value={newOptionValue}
+                          onChange={(e) => setNewOptionValue(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              handleAddOption(field.id);
+                            }
+                          }}
+                          className="flex-1 rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleAddOption(field.id)}
+                          className="rounded-md bg-foreground text-background px-3 py-2 text-sm font-medium"
+                        >
+                          Add
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setAddingOptionFieldId(null)}
+                          className="text-sm text-foreground/60"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    )}
                   </div>
                 )}
                 {field.type === "multi_select" && (
@@ -304,11 +345,45 @@ export function SongForm({
                     </div>
                     <button
                       type="button"
-                      onClick={() => handleAddOption(field.id)}
+                      onClick={() => {
+                        setAddingOptionFieldId(field.id);
+                        setNewOptionValue("");
+                      }}
                       className="text-sm text-foreground/60 underline"
                     >
                       + option
                     </button>
+                    {addingOptionFieldId === field.id && (
+                      <div className="flex gap-2">
+                        <input
+                          autoFocus
+                          placeholder="New option value"
+                          value={newOptionValue}
+                          onChange={(e) => setNewOptionValue(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              handleAddOption(field.id);
+                            }
+                          }}
+                          className="flex-1 rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleAddOption(field.id)}
+                          className="rounded-md bg-foreground text-background px-3 py-2 text-sm font-medium"
+                        >
+                          Add
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setAddingOptionFieldId(null)}
+                          className="text-sm text-foreground/60"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
