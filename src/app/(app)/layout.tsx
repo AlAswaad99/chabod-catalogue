@@ -22,6 +22,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           { href: "/admin/metadata-fields", label: "Fields" },
           { href: "/admin/members", label: "Members" },
           { href: "/admin/import", label: "Import" },
+          { href: "/admin/slides", label: "Slides" },
         ]
       : []),
   ];
