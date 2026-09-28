@@ -22,8 +22,8 @@ export async function saveSong(
 
   const payload = {
     title: input.title.trim(),
-    lyrics: input.lyrics as unknown as Json,
-    metadata: input.metadata as unknown as Json,
+    lyrics: input.lyrics as unknown as NonNullable<Json>,
+    metadata: input.metadata as unknown as NonNullable<Json>,
   };
 
   const query = input.id

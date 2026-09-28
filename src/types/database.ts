@@ -4,230 +4,238 @@ export type Json =
   | boolean
   | null
   | { [key: string]: Json | undefined }
-  | Json[]
+  | Json[];
 
 export type Database = {
   graphql_public: {
     Tables: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Views: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Functions: {
       graphql: {
         Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
-    }
+          extensions?: Json;
+          operationName?: string;
+          query?: string;
+          variables?: Json;
+        };
+        Returns: Json;
+      };
+    };
     Enums: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     CompositeTypes: {
-      [_ in never]: never
-    }
-  }
+      [_ in never]: never;
+    };
+  };
   public: {
     Tables: {
       allowed_users: {
         Row: {
-          created_at: string
-          display_name: string | null
-          id: string
-          phone_number: string
-          role: string
-          updated_at: string
-        }
+          created_at: string;
+          display_name: string | null;
+          id: string;
+          phone_number: string;
+          role: string;
+          updated_at: string;
+        };
         Insert: {
-          created_at?: string
-          display_name?: string | null
-          id?: string
-          phone_number: string
-          role: string
-          updated_at?: string
-        }
+          created_at?: string;
+          display_name?: string | null;
+          id?: string;
+          phone_number: string;
+          role: string;
+          updated_at?: string;
+        };
         Update: {
-          created_at?: string
-          display_name?: string | null
-          id?: string
-          phone_number?: string
-          role?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
+          created_at?: string;
+          display_name?: string | null;
+          id?: string;
+          phone_number?: string;
+          role?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       metadata_field_definitions: {
         Row: {
-          created_at: string
-          created_by: string | null
-          id: string
-          name: string
-          options: Json
-          type: string
-          updated_at: string
-        }
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          name: string;
+          options: NonNullable<Json>;
+          type: string;
+          updated_at: string;
+        };
         Insert: {
-          created_at?: string
-          created_by?: string | null
-          id?: string
-          name: string
-          options?: Json
-          type: string
-          updated_at?: string
-        }
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          name: string;
+          options?: NonNullable<Json>;
+          type: string;
+          updated_at?: string;
+        };
         Update: {
-          created_at?: string
-          created_by?: string | null
-          id?: string
-          name?: string
-          options?: Json
-          type?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          name?: string;
+          options?: NonNullable<Json>;
+          type?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       song_attachments: {
         Row: {
-          created_at: string
-          filename: string
-          id: string
-          mime_type: string | null
-          song_id: string
-          storage_path: string
-          uploaded_by: string | null
-        }
+          created_at: string;
+          filename: string;
+          id: string;
+          mime_type: string | null;
+          song_id: string;
+          storage_path: string;
+          uploaded_by: string | null;
+        };
         Insert: {
-          created_at?: string
-          filename: string
-          id?: string
-          mime_type?: string | null
-          song_id: string
-          storage_path: string
-          uploaded_by?: string | null
-        }
+          created_at?: string;
+          filename: string;
+          id?: string;
+          mime_type?: string | null;
+          song_id: string;
+          storage_path: string;
+          uploaded_by?: string | null;
+        };
         Update: {
-          created_at?: string
-          filename?: string
-          id?: string
-          mime_type?: string | null
-          song_id?: string
-          storage_path?: string
-          uploaded_by?: string | null
-        }
+          created_at?: string;
+          filename?: string;
+          id?: string;
+          mime_type?: string | null;
+          song_id?: string;
+          storage_path?: string;
+          uploaded_by?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "song_attachments_song_id_fkey"
-            columns: ["song_id"]
-            isOneToOne: false
-            referencedRelation: "songs"
-            referencedColumns: ["id"]
+            foreignKeyName: "song_attachments_song_id_fkey";
+            columns: ["song_id"];
+            isOneToOne: false;
+            referencedRelation: "songs";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       songs: {
         Row: {
-          created_at: string
-          created_by: string | null
-          id: string
-          lyrics: Json
-          metadata: Json
-          search_vector: unknown
-          title: string
-          updated_at: string
-        }
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          lyrics: NonNullable<Json>;
+          metadata: NonNullable<Json>;
+          number: number;
+          search_vector: unknown;
+          title: string;
+          updated_at: string;
+        };
         Insert: {
-          created_at?: string
-          created_by?: string | null
-          id?: string
-          lyrics?: Json
-          metadata?: Json
-          search_vector?: unknown
-          title: string
-          updated_at?: string
-        }
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          lyrics?: NonNullable<Json>;
+          metadata?: NonNullable<Json>;
+          number?: number;
+          search_vector?: unknown;
+          title: string;
+          updated_at?: string;
+        };
         Update: {
-          created_at?: string
-          created_by?: string | null
-          id?: string
-          lyrics?: Json
-          metadata?: Json
-          search_vector?: unknown
-          title?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          lyrics?: NonNullable<Json>;
+          metadata?: NonNullable<Json>;
+          number?: number;
+          search_vector?: unknown;
+          title?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       telegram_links: {
         Row: {
-          linked_at: string
-          phone_number: string
-          telegram_chat_id: number
-          telegram_username: string | null
-        }
+          linked_at: string;
+          phone_number: string;
+          telegram_chat_id: number;
+          telegram_username: string | null;
+        };
         Insert: {
-          linked_at?: string
-          phone_number: string
-          telegram_chat_id: number
-          telegram_username?: string | null
-        }
+          linked_at?: string;
+          phone_number: string;
+          telegram_chat_id: number;
+          telegram_username?: string | null;
+        };
         Update: {
-          linked_at?: string
-          phone_number?: string
-          telegram_chat_id?: number
-          telegram_username?: string | null
-        }
+          linked_at?: string;
+          phone_number?: string;
+          telegram_chat_id?: number;
+          telegram_username?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "telegram_links_phone_number_fkey"
-            columns: ["phone_number"]
-            isOneToOne: true
-            referencedRelation: "allowed_users"
-            referencedColumns: ["phone_number"]
+            foreignKeyName: "telegram_links_phone_number_fkey";
+            columns: ["phone_number"];
+            isOneToOne: true;
+            referencedRelation: "allowed_users";
+            referencedColumns: ["phone_number"];
           },
-        ]
-      }
-    }
+        ];
+      };
+    };
     Views: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Functions: {
-      before_user_created_hook: { Args: { event: Json }; Returns: Json }
-      jwt_role: { Args: never; Returns: string }
-    }
+      before_user_created_hook: { Args: { event: Json }; Returns: Json };
+      jwt_phone: { Args: Record<PropertyKey, never>; Returns: string };
+      jwt_role: { Args: Record<PropertyKey, never>; Returns: string };
+      normalize_phone: { Args: { p: string }; Returns: string };
+    };
     Enums: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     CompositeTypes: {
-      [_ in never]: never
-    }
-  }
-}
+      [_ in never]: never;
+    };
+  };
+};
 
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">;
 
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+type DefaultSchema = DatabaseWithoutInternals[Extract<
+  keyof Database,
+  "public"
+>];
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends (DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
       DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R
+      Row: infer R;
     }
     ? R
     : never
@@ -235,95 +243,92 @@ export type Tables<
         DefaultSchema["Views"])
     ? (DefaultSchema["Tables"] &
         DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
-        Row: infer R
+        Row: infer R;
       }
       ? R
       : never
-    : never
+    : never;
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
+    keyof DefaultSchema["Tables"] | { schema: keyof DatabaseWithoutInternals },
   TableName extends (DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I
+      Insert: infer I;
     }
     ? I
     : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
     ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Insert: infer I
+        Insert: infer I;
       }
       ? I
       : never
-    : never
+    : never;
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
+    keyof DefaultSchema["Tables"] | { schema: keyof DatabaseWithoutInternals },
   TableName extends (DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U
+      Update: infer U;
     }
     ? U
     : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
     ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Update: infer U
+        Update: infer U;
       }
       ? U
       : never
-    : never
+    : never;
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
-    | { schema: keyof DatabaseWithoutInternals },
+    keyof DefaultSchema["Enums"] | { schema: keyof DatabaseWithoutInternals },
   EnumName extends (DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-    : never
+    : never;
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof DatabaseWithoutInternals;
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
+  schema: keyof DatabaseWithoutInternals;
 }
   ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never
+    : never;
 
 export const Constants = {
   graphql_public: {
@@ -332,5 +337,4 @@ export const Constants = {
   public: {
     Enums: {},
   },
-} as const
-
+} as const;
