@@ -36,7 +36,10 @@ Deno.serve(async (req) => {
   if (TELEGRAM_WEBHOOK_SECRET) {
     const token = req.headers.get("x-telegram-bot-api-secret-token");
     if (token !== TELEGRAM_WEBHOOK_SECRET) {
-      return new Response("unauthorized", { status: 401 });
+      return new Response(JSON.stringify({ error: "unauthorized" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
     }
   }
 
@@ -44,7 +47,7 @@ Deno.serve(async (req) => {
   const message = update.message;
 
   if (!message) {
-    return new Response(null, { status: 200 });
+    return new Response(JSON.stringify({}), { status: 200, headers: { "Content-Type": "application/json" } });
   }
 
   const chatId = message.chat.id as number;
@@ -63,7 +66,7 @@ Deno.serve(async (req) => {
         chatId,
         `${phone} isn't on the choir's member list yet. Ask an admin to add you, then try again.`,
       );
-      return new Response(null, { status: 200 });
+      return new Response(JSON.stringify({}), { status: 200, headers: { "Content-Type": "application/json" } });
     }
 
     await supabase.from("telegram_links").upsert({
@@ -77,7 +80,7 @@ Deno.serve(async (req) => {
       "Phone number linked! Go back to the catalogue and request your login code — it'll show up right here.",
       { reply_markup: { remove_keyboard: true } },
     );
-    return new Response(null, { status: 200 });
+    return new Response(JSON.stringify({}), { status: 200, headers: { "Content-Type": "application/json" } });
   }
 
   if (typeof message.text === "string" && message.text.startsWith("/start")) {
@@ -94,5 +97,8 @@ Deno.serve(async (req) => {
     );
   }
 
-  return new Response(null, { status: 200 });
+  return new Response(JSON.stringify({}), {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+  });
 });

@@ -28,7 +28,10 @@ Deno.serve(async (req) => {
       wh.verify(rawBody, Object.fromEntries(req.headers));
     } catch (err) {
       console.error("telegram-send-sms: signature verification failed", err);
-      return new Response(JSON.stringify({ error: "invalid signature" }), { status: 401 });
+      return new Response(JSON.stringify({ error: "invalid signature" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
     }
   }
 
@@ -50,7 +53,10 @@ Deno.serve(async (req) => {
       `[telegram-send-sms:DEV FALLBACK] OTP for ${phone} is ${otp}` +
         (TELEGRAM_BOT_TOKEN ? " (no linked Telegram chat yet)" : " (TELEGRAM_BOT_TOKEN not set)"),
     );
-    return new Response(null, { status: 200 });
+    return new Response(JSON.stringify({}), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
   const message = `Your Chabod Choir Catalogue login code is: ${otp}`;
@@ -66,8 +72,14 @@ Deno.serve(async (req) => {
   if (!telegramResponse.ok) {
     const body = await telegramResponse.text();
     console.error("telegram-send-sms: Telegram API error", telegramResponse.status, body);
-    return new Response(JSON.stringify({ error: "failed to deliver OTP via Telegram" }), { status: 500 });
+    return new Response(JSON.stringify({ error: "failed to deliver OTP via Telegram" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
-  return new Response(null, { status: 200 });
+  return new Response(JSON.stringify({}), {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+  });
 });
