@@ -273,6 +273,7 @@ max_frequency = "5s"
 # dev admin) without needing Telegram or a real SMS provider wired up yet.
 [auth.sms.test_otp]
 "+15555550123" = "123456"
+"+15555550199" = "654321"
 
 # Configure logged in session timeouts.
 # [auth.sessions]

@@ -11,3 +11,14 @@ on conflict (phone_number) do nothing;
 insert into public.telegram_links (phone_number, telegram_chat_id, telegram_username)
 values ('+15555550123', 0, 'dev_admin')
 on conflict (phone_number) do nothing;
+
+-- Second test account with the "member" role, for verifying read-only
+-- access is actually enforced (not just hidden in the UI). Paired with its
+-- own [auth.sms.test_otp] entry in config.toml.
+insert into public.allowed_users (phone_number, role, display_name)
+values ('+15555550199', 'member', 'Test Member')
+on conflict (phone_number) do nothing;
+
+insert into public.telegram_links (phone_number, telegram_chat_id, telegram_username)
+values ('+15555550199', 1, 'dev_member')
+on conflict (phone_number) do nothing;
