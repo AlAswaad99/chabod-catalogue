@@ -13,7 +13,31 @@ import { SearchBar } from "@/components/ui/search-bar";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Chip } from "@/components/ui/chip";
 import { Badge } from "@/components/ui/badge";
+import { SongRow } from "@/components/ui/song-row";
+import { MetaGrid } from "@/components/ui/meta-grid";
+import { LyricSection } from "@/components/ui/lyric-section";
+import { DockedPlayer } from "@/components/ui/docked-player";
+import { ToastProvider, useToast } from "@/components/ui/toast";
+import { TopBar } from "@/components/ui/top-bar";
+import { StickyFooterAction } from "@/components/ui/sticky-footer-action";
+import { annotateSections } from "@/lib/lyrics";
 import { setTheme, getTheme } from "@/lib/theme";
+
+const TEST_SECTIONS = annotateSections([
+  { type: "verse", label: "Verse 1", text: "ሰም እና ወርቅ ሆኖ ህይወት ቢፈትንህ\nሰላም እረፍት ጠፍቶ ሁኔታ ቢጫንህ" },
+  { type: "chorus", text: "ቃል ስጋ ሆኖ ወርዶ አድኖናል\nበትንሳኤው ሀይል ለኛ ሰቶናል" },
+  { type: "verse", label: "Verse 2", text: "ነገን አስበህ ዛሬ ብትሮጥም\n\nየሀዘን ሆድ ውጦህ ተስፋ ብታጣ" },
+  { type: "chorus", text: "ቃል ስጋ ሆኖ ወርዶ አድኖናል\nበትንሳኤው ሀይል ለኛ ሰቶናል" },
+]);
+
+function ToastDemo() {
+  const { showToast } = useToast();
+  return (
+    <Button variant="secondary" fullWidth={false} onClick={() => showToast("Song saved")}>
+      Trigger toast
+    </Button>
+  );
+}
 
 export default function UiKitPage() {
   const [phone, setPhone] = useState("");
@@ -24,6 +48,7 @@ export default function UiKitPage() {
   const [chip1, setChip1] = useState(false);
 
   return (
+    <ToastProvider>
     <div className="min-h-dvh space-y-8 bg-ground p-6 text-ink">
       <div className="flex items-center justify-between">
         <Wordmark size={40} />
@@ -119,6 +144,77 @@ export default function UiKitPage() {
         </div>
       </section>
 
+      <section className="max-w-sm space-y-2">
+        <h2 className="type-section-label">SongRow</h2>
+        <div className="border border-rule">
+          <SongRow
+            href="#"
+            number={14}
+            title="Adon Olam"
+            titleMatch={{ start: 0, end: 4 }}
+            matchBadge="TITLE"
+            metaLine="D♭ · 6/8 · Praise"
+          />
+          <SongRow
+            href="#"
+            number={7}
+            title="EREDTONAL"
+            snippet={{ before: "the ", hit: "lord", after: " reigns" }}
+            metaLine="Key: G"
+          />
+        </div>
+      </section>
+
+      <section className="max-w-sm space-y-2">
+        <h2 className="type-section-label">MetaGrid</h2>
+        <MetaGrid
+          fields={[
+            { fieldId: "1", name: "Key", value: "D♭", isKey: true },
+            { fieldId: "2", name: "Time", value: "6/8" },
+            { fieldId: "3", name: "Genre", value: "Praise" },
+            { fieldId: "4", name: "Notes", value: "Slow intro, full choir on verse 2" },
+          ]}
+        />
+      </section>
+
+      <section className="max-w-sm space-y-1 pb-4">
+        <h2 className="type-section-label">
+          LyricSection (repeat-collapse test: 2 choruses in, should render once + 1 collapsed row)
+        </h2>
+        <div className="px-5">
+          {TEST_SECTIONS.map((s, i) => (
+            <div key={i} className="py-3">
+              <LyricSection {...s} />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="max-w-sm space-y-2">
+        <h2 className="type-section-label">TopBar</h2>
+        <div className="border border-rule">
+          <TopBar title="Edit song" backHref="#" right={<span className="type-mono text-muted">No. 015</span>} />
+        </div>
+      </section>
+
+      <section className="max-w-sm space-y-2">
+        <h2 className="type-section-label">StickyFooterAction</h2>
+        <div className="relative h-24 border border-rule">
+          <StickyFooterAction>
+            <Button variant="primary">Save song ✓</Button>
+          </StickyFooterAction>
+        </div>
+      </section>
+
+      <section className="max-w-sm space-y-2 pb-24">
+        <h2 className="type-section-label">Toast</h2>
+        <ToastDemo />
+      </section>
+
+      <DockedPlayer
+        recordings={[{ id: "1", url: "", filename: "Adon Olam - live recording.mp3" }]}
+      />
+
       <section className="space-y-1">
         <h2 className="type-section-label">Type scale</h2>
         <p className="type-heading">Screen heading</p>
@@ -130,5 +226,6 @@ export default function UiKitPage() {
         <p className="type-mono">No. 014</p>
       </section>
     </div>
+    </ToastProvider>
   );
 }
