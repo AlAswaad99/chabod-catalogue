@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { SongAttachmentsManager } from "@/components/song-attachments-manager";
 import type { LyricsSection, MetadataFieldDefinition, Song, SongAttachment } from "@/types/song";
 
 function formatMetadataValue(value: unknown): string {
@@ -88,17 +89,12 @@ export default async function SongDetailPage({
         ))}
       </div>
 
-      {signedAttachments.length > 0 && (
-        <div className="space-y-2 border-t border-foreground/10 pt-4">
-          <p className="text-sm font-medium">Recordings</p>
-          {signedAttachments.map((a) => (
-            <div key={a.id} className="space-y-1">
-              <p className="text-xs text-foreground/60">{a.filename}</p>
-              {a.url && <audio controls src={a.url} className="w-full" />}
-            </div>
-          ))}
-        </div>
-      )}
+      <SongAttachmentsManager
+        songId={song.id}
+        songTitle={song.title}
+        isAdmin={isAdmin}
+        initialAttachments={signedAttachments}
+      />
     </div>
   );
 }
