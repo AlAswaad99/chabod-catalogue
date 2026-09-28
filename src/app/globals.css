@@ -71,6 +71,12 @@
   --font-sans: var(--font-ui);
   --font-lyrics: var(--font-lyrics);
   --font-mono: var(--font-mono-stack);
+
+  /* Matches the brief's own breakpoint (§4.10), not Tailwind's default lg
+     (1024px) — lets components use `desktop:` for real. Tablet split-view
+     (768-1199px) is deferred (Q10), so there is no `tablet:` breakpoint
+     yet; that range falls through to phone styles in the meantime. */
+  --breakpoint-desktop: 1200px;
 }
 
 body {

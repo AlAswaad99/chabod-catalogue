@@ -31,6 +31,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       className={`${archivo.variable} ${notoSansEthiopic.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      // data-theme is set by the inline script below before hydration, so
+      // it will always differ from the server-rendered markup — expected,
+      // not a real mismatch.
+      suppressHydrationWarning
     >
       <head>
         {/* Sets data-theme before first paint so there is no flash — see
