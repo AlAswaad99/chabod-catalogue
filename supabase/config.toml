@@ -271,9 +271,11 @@ max_frequency = "5s"
 # Use pre-defined map of phone number to OTP for testing.
 # Lets you exercise the full login flow locally (matches supabase/seed.sql's
 # dev admin) without needing Telegram or a real SMS provider wired up yet.
+# +251-shaped so they pass the login page's Ethiopian-only phone validation
+# (redesign decisions.md Q2) the same way a real number would.
 [auth.sms.test_otp]
-"+15555550123" = "123456"
-"+15555550199" = "654321"
+"+251911000001" = "123456"
+"+251922000002" = "654321"
 
 # Configure logged in session timeouts.
 # [auth.sessions]

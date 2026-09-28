@@ -5,7 +5,10 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { AllowedUser, MemberRole } from "@/types/song";
 
-const E164_RE = /^\+[1-9]\d{7,14}$/;
+// +251 only (redesign decisions.md Q2) — must match the login page's own
+// validation in src/app/api/auth/check-phone/route.ts, or an admin could add
+// a member whose number can never actually sign in.
+const E164_RE = /^\+251\d{9}$/;
 
 async function requireAdmin() {
   const supabase = await createClient();
@@ -26,7 +29,7 @@ export async function addMember(input: {
   const supabase = await requireAdmin();
 
   if (!E164_RE.test(input.phoneNumber)) {
-    return { error: "Phone number must be in E.164 format, e.g. +15555550123." };
+    return { error: "Enter a valid Ethiopian phone number, e.g. +251912345678." };
   }
 
   const { error } = await supabase.from("allowed_users").insert({

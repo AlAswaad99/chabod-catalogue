@@ -1,14 +1,21 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
-const E164_RE = /^\+[1-9]\d{7,14}$/;
+// +251 only (redesign decisions.md Q2) — this app only ever serves Ethiopian
+// phone numbers, matching PhoneInput's fixed +251 prefix and 9-digit field.
+const E164_RE = /^\+251\d{9}$/;
+
+// Keep in sync with supabase/config.toml's [auth.sms] max_frequency — there's
+// no runtime way to read that value from GoTrue, so the login page's resend
+// countdown is seeded from this instead of a guessed UI duration.
+const RESEND_SECONDS = Number(process.env.SMS_OTP_RESEND_SECONDS) || 5;
 
 export async function POST(request: Request) {
   const { phone } = (await request.json()) as { phone?: string };
 
   if (!phone || !E164_RE.test(phone)) {
     return NextResponse.json(
-      { status: "invalid", message: "Enter a phone number with country code, e.g. +15555550123." },
+      { status: "invalid", message: "Enter a valid Ethiopian phone number, e.g. +251912345678." },
       { status: 400 },
     );
   }
@@ -43,5 +50,5 @@ export async function POST(request: Request) {
     });
   }
 
-  return NextResponse.json({ status: "ready" });
+  return NextResponse.json({ status: "ready", resendSeconds: RESEND_SECONDS });
 }

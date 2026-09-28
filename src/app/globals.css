@@ -90,7 +90,15 @@ body {
    along with tablet split-view generally (see docs/redesign/decisions.md,
    Q10) and phone sizes apply in that range meanwhile.
    "Latin only" styles (section-label, badge: uppercase + letter-spacing)
-   must never be applied to Ge'ez text — enforced by usage, not CSS. */
+   must never be applied to Ge'ez text — enforced by usage, not CSS.
+
+   Wrapped in @layer components: unlayered CSS always wins over ANY @layer
+   rule regardless of specificity or source order, so leaving these
+   unlayered would make color: var(--muted) on .type-meta/-section-label/
+   -field-label permanently beat a `text-danger`/`text-accent`/etc utility
+   applied alongside them. Components sits before Tailwind's utilities
+   layer, so a utility class can still override these as expected. */
+@layer components {
 .type-heading {
   font-size: 26px;
   font-weight: 800;
@@ -164,6 +172,7 @@ body {
   font-family: var(--font-mono-stack);
   font-size: 12px;
   font-weight: 400;
+}
 }
 
 :focus-visible {
