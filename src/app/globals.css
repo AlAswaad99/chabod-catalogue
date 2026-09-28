@@ -42,6 +42,16 @@
   --mark: linear-gradient(180deg, #d99a2b 0%, #c8662a 60%, #a8401c 100%);
 }
 
+/* Font stacks — CLAUDE_CODE_PROMPT.md §2.2. Archivo has no Ethiopic
+   glyphs, so Ge'ez falls through to Noto Sans Ethiopic and mixed-script
+   lines render each script in its correct face. The lyrics body
+   deliberately reverses the order (Ge'ez sizes/shapes the line). */
+:root {
+  --font-ui: var(--font-archivo), var(--font-noto-ethiopic), system-ui, sans-serif;
+  --font-lyrics: var(--font-noto-ethiopic), var(--font-archivo), sans-serif;
+  --font-mono-stack: var(--font-jetbrains-mono), monospace;
+}
+
 @theme inline {
   --color-ground: var(--bg);
   --color-surface: var(--surface);
@@ -57,11 +67,97 @@
   --color-hl-text: var(--hltext);
   --color-band: var(--band);
   --color-danger: var(--danger);
+
+  --font-sans: var(--font-ui);
+  --font-lyrics: var(--font-lyrics);
+  --font-mono: var(--font-mono-stack);
 }
 
 body {
   background: var(--bg);
   color: var(--text);
+  font-family: var(--font-ui);
+}
+
+/* Type scale — CLAUDE_CODE_PROMPT.md §2.2 table. Desktop breakpoint only
+   (1200px) for now; tablet (768–1199px) intermediate sizes are deferred
+   along with tablet split-view generally (see docs/redesign/decisions.md,
+   Q10) and phone sizes apply in that range meanwhile.
+   "Latin only" styles (section-label, badge: uppercase + letter-spacing)
+   must never be applied to Ge'ez text — enforced by usage, not CSS. */
+.type-heading {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+.type-topbar-title {
+  font-size: 18px;
+  font-weight: 800;
+}
+.type-song-title {
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+@media (min-width: 1200px) {
+  .type-song-title {
+    font-size: 44px;
+  }
+}
+.type-list-title {
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+.type-list-title-latin {
+  font-size: 18px;
+  font-weight: 600;
+}
+.type-lyrics {
+  font-family: var(--font-lyrics);
+  /* --lyrics-size is set inline by the reading-size control (A−/A+, step
+     11); this default only applies before that control has run. */
+  font-size: var(--lyrics-size, 20px);
+  font-weight: 400;
+  line-height: 1.75;
+}
+.type-action {
+  font-size: 16px;
+  font-weight: 800;
+}
+.type-body {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+.type-meta {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--muted);
+}
+.type-section-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+.type-badge {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.type-field-label {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--muted);
+}
+.type-mono {
+  font-family: var(--font-mono-stack);
+  font-size: 12px;
+  font-weight: 400;
 }
 
 :focus-visible {
