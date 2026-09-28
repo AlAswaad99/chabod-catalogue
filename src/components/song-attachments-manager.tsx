@@ -2,7 +2,9 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Trash, Upload } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/button";
 import type { SongAttachment } from "@/types/song";
 
 const MAX_SIZE = 25 * 1024 * 1024;
@@ -22,6 +24,9 @@ function timestampLabel(): string {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}_${pad(d.getHours())}-${pad(d.getMinutes())}`;
 }
 
+// Admin-only recordings management (upload/delete). Playback for everyone
+// lives in DockedPlayer instead — this renders nothing for members, and
+// nothing for admins either once §4.4's editor grows its own recordings UI.
 export function SongAttachmentsManager({
   songId,
   songTitle,
@@ -38,6 +43,7 @@ export function SongAttachmentsManager({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [confirmingId, setConfirmingId] = useState<string | null>(null);
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -87,61 +93,67 @@ export function SongAttachmentsManager({
   }
 
   async function handleDelete(attachment: AttachmentWithUrl) {
-    if (!window.confirm(`Delete "${attachment.filename}"?`)) return;
+    if (confirmingId !== attachment.id) {
+      setConfirmingId(attachment.id);
+      return;
+    }
+    setConfirmingId(null);
     await supabase.storage.from("song-audio").remove([attachment.storage_path]);
     await supabase.from("song_attachments").delete().eq("id", attachment.id);
     router.refresh();
   }
 
-  if (!isAdmin && initialAttachments.length === 0) return null;
+  if (!isAdmin) return null;
 
   return (
-    <div className="space-y-2 border-t border-foreground/10 pt-4">
+    <div className="space-y-3 border-t-2 border-rule px-5 py-5">
       <div className="flex items-center justify-between">
-        <p className="text-sm font-medium">Recordings</p>
-        {isAdmin && (
-          <>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept={ACCEPT}
-              onChange={handleFileChange}
-              className="hidden"
-            />
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              disabled={uploading}
-              className="text-sm text-foreground/60 underline disabled:opacity-50"
-            >
-              {uploading ? "Uploading…" : "+ Upload recording"}
-            </button>
-          </>
-        )}
+        <p className="type-section-label">Recordings</p>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept={ACCEPT}
+          onChange={handleFileChange}
+          className="hidden"
+        />
+        <Button
+          variant="text"
+          icon={Upload}
+          disabled={uploading}
+          onClick={() => fileInputRef.current?.click()}
+        >
+          {uploading ? "Uploading…" : "Upload recording"}
+        </Button>
       </div>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="type-meta text-danger">{error}</p>}
 
       {initialAttachments.length === 0 ? (
-        <p className="text-sm text-foreground/50">No recordings yet.</p>
+        <p className="type-meta">No recordings yet.</p>
       ) : (
-        initialAttachments.map((a) => (
-          <div key={a.id} className="space-y-1">
-            <div className="flex items-center justify-between gap-2">
-              <p className="text-xs text-foreground/60 truncate">{a.filename}</p>
-              {isAdmin && (
-                <button
-                  type="button"
-                  onClick={() => handleDelete(a)}
-                  className="text-xs text-red-600 shrink-0"
-                >
-                  Delete
-                </button>
-              )}
-            </div>
-            {a.url && <audio controls src={a.url} className="w-full" />}
-          </div>
-        ))
+        <ul className="divide-y divide-rule border-y border-rule">
+          {initialAttachments.map((a) => (
+            <li key={a.id} className="flex items-center justify-between gap-2 py-2.5">
+              <p className="type-meta min-w-0 truncate text-ink">{a.filename}</p>
+              <button
+                type="button"
+                onClick={() => handleDelete(a)}
+                className={`type-badge shrink-0 px-2 py-1 ${
+                  confirmingId === a.id ? "bg-danger text-ground" : "text-danger"
+                }`}
+              >
+                {confirmingId === a.id ? (
+                  "Tap again"
+                ) : (
+                  <span className="inline-flex items-center gap-1">
+                    <Trash size={14} strokeWidth={2} aria-hidden />
+                    Delete
+                  </span>
+                )}
+              </button>
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );

@@ -3,7 +3,8 @@ import { ArrowLeft, X } from "lucide-react";
 import type { ReactNode } from "react";
 
 interface TopBarProps {
-  title: string;
+  /** Omit for a back/actions-only bar with no title, e.g. song detail's TopBar (§4.3). */
+  title?: string;
   backHref?: string;
   onBack?: () => void;
   onClose?: () => void;
@@ -32,7 +33,9 @@ export function TopBar({ title, backHref, onBack, onClose, right, noBorder }: To
           <X size={22} strokeWidth={2} />
         </button>
       ) : null}
-      <h1 className="type-topbar-title min-w-0 flex-1 truncate text-ink">{title}</h1>
+      <div className="min-w-0 flex-1">
+        {title && <h1 className="type-topbar-title truncate text-ink">{title}</h1>}
+      </div>
       {right && <div className="shrink-0">{right}</div>}
     </header>
   );

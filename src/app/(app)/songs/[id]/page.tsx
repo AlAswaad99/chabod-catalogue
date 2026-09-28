@@ -1,8 +1,15 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Pencil } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { SongAttachmentsManager } from "@/components/song-attachments-manager";
-import type { LyricsSection, MetadataFieldDefinition, Song, SongAttachment } from "@/types/song";
+import { SongLyrics } from "@/components/song-lyrics";
+import { SongDesktopSidebar } from "@/components/song-desktop-sidebar";
+import { ReadingSizeControl } from "@/components/reading-size-control";
+import { TopBar } from "@/components/ui/top-bar";
+import { MetaGrid } from "@/components/ui/meta-grid";
+import { DockedPlayer } from "@/components/ui/docked-player";
+import { Button } from "@/components/ui/button";
+import type { MetadataFieldDefinition, Song, SongAttachment } from "@/types/song";
 
 function formatMetadataValue(value: unknown): string {
   return Array.isArray(value) ? value.join(", ") : String(value);
@@ -23,7 +30,7 @@ export default async function SongDetailPage({
 
   const [{ data: songRow, error }, { data: fieldDefs }, { data: attachments }] = await Promise.all([
     supabase.from("songs").select("*").eq("id", id).maybeSingle(),
-    supabase.from("metadata_field_definitions").select("*"),
+    supabase.from("metadata_field_definitions").select("*").order("name"),
     supabase.from("song_attachments").select("*").eq("song_id", id).order("created_at"),
   ]);
 
@@ -32,9 +39,20 @@ export default async function SongDetailPage({
   }
 
   const song = songRow as unknown as Song;
-  const fieldDefMap = new Map(
-    ((fieldDefs ?? []) as unknown as MetadataFieldDefinition[]).map((f) => [f.id, f]),
-  );
+  const fieldDefList = (fieldDefs ?? []) as unknown as MetadataFieldDefinition[];
+
+  const metaFields = fieldDefList
+    .map((def) => {
+      const raw = song.metadata?.[def.id];
+      if (raw === undefined || raw === null || raw === "") return null;
+      return {
+        fieldId: def.id,
+        name: def.name,
+        value: formatMetadataValue(raw),
+        isKey: def.name.toLowerCase() === "key",
+      };
+    })
+    .filter((f): f is NonNullable<typeof f> => f !== null);
 
   const attachmentRows = (attachments ?? []) as unknown as SongAttachment[];
   const signedAttachments = await Promise.all(
@@ -45,48 +63,62 @@ export default async function SongDetailPage({
       return { ...a, url: data?.signedUrl ?? null };
     }),
   );
+  const playableRecordings = signedAttachments
+    .filter((a): a is typeof a & { url: string } => a.url !== null)
+    .map((a) => ({ id: a.id, url: a.url, filename: a.filename }));
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <Link href="/catalogue" className="text-sm text-foreground/60 hover:underline">
-          ← Back to catalogue
-        </Link>
-        {isAdmin && (
-          <Link href={`/admin/songs/${song.id}/edit`} className="text-sm text-foreground/60 underline">
-            Edit
-          </Link>
-        )}
-      </div>
-
-      <h1 className="text-2xl font-semibold">{song.title}</h1>
-
-      {Object.keys(song.metadata ?? {}).length > 0 && (
-        <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm sm:grid-cols-3">
-          {Object.entries(song.metadata).map(([fieldId, value]) => {
-            const def = fieldDefMap.get(fieldId);
-            if (!def) return null;
-            return (
-              <div key={fieldId}>
-                <dt className="text-foreground/50">{def.name}</dt>
-                <dd className="font-medium">{formatMetadataValue(value)}</dd>
-              </div>
-            );
-          })}
-        </dl>
-      )}
-
-      <div className="space-y-4">
-        {(song.lyrics as LyricsSection[]).map((section, i) => (
-          <div key={i}>
-            {section.label && (
-              <p className="text-xs uppercase tracking-wide text-foreground/50 mb-1">
-                {section.label}
-              </p>
+    <div className={playableRecordings.length > 0 ? "pb-[72px] desktop:pb-0" : ""}>
+      <TopBar
+        backHref="/catalogue"
+        noBorder
+        right={
+          <div className="flex items-center gap-2">
+            <ReadingSizeControl />
+            {isAdmin && (
+              <>
+                <div className="desktop:hidden">
+                  <Button
+                    variant="icon"
+                    icon={Pencil}
+                    href={`/admin/songs/${song.id}/edit`}
+                    aria-label="Edit song"
+                  />
+                </div>
+                <div className="hidden desktop:block">
+                  <Button
+                    variant="secondary"
+                    icon={Pencil}
+                    href={`/admin/songs/${song.id}/edit`}
+                    fullWidth={false}
+                    className="h-10 px-3"
+                  >
+                    Edit
+                  </Button>
+                </div>
+              </>
             )}
-            <p className="whitespace-pre-wrap leading-relaxed">{section.text}</p>
           </div>
-        ))}
+        }
+      />
+
+      <div className="desktop:flex">
+        <div className="min-w-0 flex-1 desktop:max-w-[600px] desktop:px-14">
+          <div className="space-y-1 border-b-2 border-rule px-5 pb-4 desktop:px-0">
+            <p className="type-mono text-muted">No. {String(song.number).padStart(3, "0")}</p>
+            <h1 className="type-song-title text-ink">{song.title}</h1>
+          </div>
+
+          {metaFields.length > 0 && (
+            <div className="desktop:hidden">
+              <MetaGrid fields={metaFields} />
+            </div>
+          )}
+
+          <SongLyrics sections={song.lyrics} />
+        </div>
+
+        <SongDesktopSidebar fields={metaFields} recordings={playableRecordings} />
       </div>
 
       <SongAttachmentsManager
@@ -95,6 +127,10 @@ export default async function SongDetailPage({
         isAdmin={isAdmin}
         initialAttachments={signedAttachments}
       />
+
+      <div className="desktop:hidden">
+        <DockedPlayer recordings={playableRecordings} aboveBottomNav={isAdmin} />
+      </div>
     </div>
   );
 }
