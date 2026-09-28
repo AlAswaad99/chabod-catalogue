@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="_ds/modernist-3b26e34c-e774-4b82-a1a7-3f1fa4613831/styles.css">
+<script src="_ds/modernist-3b26e34c-e774-4b82-a1a7-3f1fa4613831/_ds_bundle.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;800&family=Noto+Sans+Ethiopic:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#e6e4e1;color:#201e1d;font-family:Archivo,system-ui,sans-serif}
+*{box-sizing:border-box}
+a{color:#ae1800}
+a:hover{color:#ec3013}
+</style>
+</helmet>
+<section data-screen-label="Wide layouts" style="padding:64px;display:flex;flex-direction:column;gap:48px">
+  <header style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;border-bottom:2px solid #201e1d;padding-bottom:28px;max-width:1440px">
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#605d5d">Chabod · Tablet &amp; desktop</div>
+      <h1 style="margin:10px 0 0;font-size:44px;font-weight:800;letter-spacing:-.02em;line-height:1.05">Same system, wider screen</h1>
+    </div>
+    <p style="margin:0;align-self:end;font-size:15px;line-height:1.6;color:#444141;text-wrap:pretty">From 768px up, the catalogue and song detail sit side by side, so searching never loses your place. On tablet the admin bottom bar stays. From 1200px, a left rail replaces both the bottom bar and the More sheet, and all admin tools are shown at once. Lyrics are capped at about 36 Ge'ez characters per line so they stay easy to read.</p>
+  </header>
+
+  <div id="tablet" style="display:flex;flex-direction:column;gap:12px">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#605d5d;text-transform:uppercase;letter-spacing:.06em">Tablet · 1024 × 768 · split view, admin bar kept</div>
+    <div data-screen-label="Tablet" style="width:1024px;height:768px;background:#0d2124;color:#efe9dc;display:grid;grid-template-columns:380px minmax(0,1fr);grid-template-rows:minmax(0,1fr) 72px;font-family:Archivo,'Noto Sans Ethiopic',sans-serif;overflow:hidden">
+      <div style="border-right:2px solid #2f4649;display:flex;flex-direction:column;min-height:0">
+        <div style="padding:18px 20px 12px;display:flex;justify-content:space-between;align-items:center"><span style="font-family:'Noto Sans Ethiopic',sans-serif;font-weight:800;font-size:26px;background:linear-gradient(180deg,#f3c75a,#e0602e);-webkit-background-clip:text;background-clip:text;color:transparent">ካቦድ</span><span style="font-size:12px;color:#9fb3b1">142 songs</span></div>
+        <div style="padding:0 20px"><div style="height:52px;border:2px solid #e2ad4f;background:#152d31;display:flex;align-items:center;gap:10px;padding:0 12px"><svg viewBox="0 0 24 24" fill="none" stroke="#e2ad4f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg><span style="font-size:17px;color:#9fb3b1">Title, lyric line, key…</span></div><div style="font-size:12px;color:#9fb3b1;padding:10px 0 8px;border-bottom:2px solid #2f4649">All songs · by number</div></div>
+        <div style="flex:1;overflow:hidden">
+          <div style="display:grid;grid-template-columns:56px 1fr;padding:14px 20px 14px 0;border-bottom:1px solid #2f4649"><span style="padding:4px 0 0 20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#9fb3b1">002</span><span><span style="display:block;font-size:19px;font-weight:700;line-height:1.35">አቤኔዘር</span><span style="font-size:13px;color:#9fb3b1">A · 4/4 · Worship</span></span></div>
+          <div style="display:grid;grid-template-columns:56px 1fr;padding:14px 20px 14px 0;border-bottom:1px solid #2f4649"><span style="padding:4px 0 0 20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#9fb3b1">008</span><span><span style="display:block;font-size:19px;font-weight:700;line-height:1.35">ምስጋና ይሁን</span><span style="font-size:13px;color:#9fb3b1">G · 4/4 · Worship</span></span></div>
+          <div style="display:grid;grid-template-columns:56px 1fr;padding:14px 20px 14px 0;border-bottom:1px solid #2f4649;background:#152d31;box-shadow:inset 3px 0 0 #e2ad4f"><span style="padding:4px 0 0 20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#e2ad4f">014</span><span><span style="display:block;font-size:19px;font-weight:700;line-height:1.35">እረድቶናል</span><span style="font-size:13px;color:#9fb3b1">D♭ · 6/8 · Praise</span></span></div>
+          <div style="display:grid;grid-template-columns:56px 1fr;padding:14px 20px 14px 0;border-bottom:1px solid #2f4649"><span style="padding:4px 0 0 20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#9fb3b1">031</span><span><span style="display:block;font-size:19px;font-weight:700;line-height:1.35">ይገባዋል</span><span style="font-size:13px;color:#9fb3b1">E · 4/4 · Praise</span></span></div>
+          <div style="display:grid;grid-template-columns:56px 1fr;padding:14px 20px 14px 0;border-bottom:1px solid #2f4649"><span style="padding:4px 0 0 20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#9fb3b1">040</span><span><span style="display:block;font-size:19px;font-weight:700;line-height:1.35">ስሙ ይባረክ</span><span style="font-size:13px;color:#9fb3b1">C · 4/4 · Praise</span></span></div>
+          <div style="display:grid;grid-template-columns:56px 1fr;padding:14px 20px 14px 0;border-bottom:1px solid #2f4649"><span style="padding:4px 0 0 20px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#9fb3b1">057</span><span><span style="display:block;font-size:18px;font-weight:600;line-height:1.35">Amazing Grace</span><span style="font-size:13px;color:#9fb3b1">G · 3/4 · Hymn</span></span></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;min-height:0;grid-row:span 2">
+        <div style="height:64px;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:0 20px;flex:none"><span style="display:flex;border:1px solid #4a6064"><span style="width:44px;height:40px;display:flex;align-items:center;justify-content:center;font-size:13px;border-right:1px solid #4a6064">A−</span><span style="width:44px;height:40px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600">A+</span></span><span style="width:44px;height:44px;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path></svg></span></div>
+        <div style="flex:1;overflow:hidden;padding:0 40px">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#9fb3b1">No. 014</div>
+          <div style="font-size:38px;font-weight:700;line-height:1.25;margin-top:4px;padding-bottom:18px;border-bottom:2px solid #2f4649">እረድቶናል</div>
+          <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:#2f4649;border-bottom:2px solid #2f4649">
+            <div style="background:#0d2124;padding:10px 12px 12px 0"><div style="font-size:11px;color:#9fb3b1">Key</div><div style="font-size:20px;font-weight:800;color:#e2ad4f">D♭</div></div>
+            <div style="background:#0d2124;padding:10px 12px 12px"><div style="font-size:11px;color:#9fb3b1">Time</div><div style="font-size:17px;font-weight:700;margin-top:4px">6/8</div></div>
+            <div style="background:#0d2124;padding:10px 12px 12px"><div style="font-size:11px;color:#9fb3b1">Genre</div><div style="font-size:17px;font-weight:700;margin-top:4px">Praise</div></div>
+            <div style="background:#0d2124;padding:10px 12px 12px"><div style="font-size:11px;color:#9fb3b1">Chant type</div><div style="font-size:17px;font-weight:700;margin-top:4px">ዝማሬ</div></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:20px;padding-top:24px;font-family:'Noto Sans Ethiopic',sans-serif;font-size:22px;line-height:1.75;max-width:560px">
+            <div style="display:grid;grid-template-columns:44px 1fr"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#e2ad4f;padding-top:8px">01</span><span>ይውጣ ድንቅ ዜማ ለምልክት<br>እርዳታችን ከላይ ለሆነበት<br>አቤኔዘር ብለን አኑረናል<br>ዜማችን ማህተም ሆኖ ተተክሏል</span></div>
+            <div style="display:grid;grid-template-columns:44px 1fr;background:#152d31;margin:0 -20px;padding:14px 20px"><span style="font-size:13px;font-weight:700;color:#7ccfd6;padding-top:8px">አዝ</span><span>ኑ እንቅረብ ምስጋና ይዘን<br>በብርቱ ላቆመን ላፀናን</span></div>
+          </div>
+        </div>
+        <div style="flex:none;background:#152d31;border-top:2px solid #e2ad4f;display:grid;grid-template-columns:72px minmax(0,1fr);height:72px">
+          <div style="background:#e2ad4f;color:#1a1206;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg></div>
+          <div style="padding:10px 20px;display:flex;flex-direction:column;justify-content:center;gap:8px"><div style="display:flex;justify-content:space-between;font-size:13px"><span style="font-weight:600">Full choir · 12 May</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#9fb3b1">1 of 2 ›</span></div><div style="display:flex;align-items:center;gap:10px"><div style="flex:1;height:3px;background:#2f4649;position:relative"><div style="position:absolute;left:0;top:0;bottom:0;width:38%;background:#e2ad4f"></div></div><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#9fb3b1">1:42 / 4:32</span></div></div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;border-top:2px solid #2f4649;border-right:2px solid #2f4649">
+        <div style="display:flex;flex-direction:column;justify-content:center;gap:4px;padding-left:18px;color:#e2ad4f;box-shadow:inset 0 3px 0 #e2ad4f"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg><span style="font-size:12px;font-weight:600">Catalogue</span></div>
+        <div style="display:flex;flex-direction:column;justify-content:center;gap:4px;padding-left:18px;background:#e2ad4f;color:#1a1206"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg><span style="font-size:12px;font-weight:800">Add song</span></div>
+        <div style="display:flex;flex-direction:column;justify-content:center;gap:4px;padding-left:18px;color:#9fb3b1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg><span style="font-size:12px;font-weight:600">More</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="desktop" style="display:flex;flex-direction:column;gap:12px">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#605d5d;text-transform:uppercase;letter-spacing:.06em">Desktop · 1440 × 900 · rail replaces bar and sheet</div>
+    <div data-screen-label="Desktop" style="width:1440px;height:900px;background:#0d2124;color:#efe9dc;display:grid;grid-template-columns:232px 400px minmax(0,1fr);font-family:Archivo,'Noto Sans Ethiopic',sans-serif;overflow:hidden">
+      <div style="border-right:2px solid #2f4649;display:flex;flex-direction:column;padding:24px 0">
+        <div style="padding:0 24px 28px"><div style="font-family:'Noto Sans Ethiopic',sans-serif;font-weight:800;font-size:40px;line-height:1.05;background:linear-gradient(180deg,#f3c75a 0%,#ea8a34 60%,#d9542a 100%);-webkit-background-clip:text;background-clip:text;color:transparent">ካቦድ</div><div style="margin-top:6px;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#9fb3b1">Chabod Choir</div></div>
+        <div style="padding:0 16px 20px"><div style="height:48px;background:#e2ad4f;color:#1a1206;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-weight:800;font-size:15px">Add song<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></div></div>
+        <div style="border-top:2px solid #2f4649">
+          <div style="height:48px;display:flex;align-items:center;gap:12px;padding:0 24px;color:#e2ad4f;background:#152d31;box-shadow:inset 3px 0 0 #e2ad4f;font-size:15px;font-weight:600"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>Catalogue</div>
+        </div>
+        <div style="padding:20px 24px 8px;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#9fb3b1;border-top:1px solid #2f4649;margin-top:12px">Admin tools</div>
+        <div style="height:44px;display:flex;align-items:center;gap:12px;padding:0 24px;font-size:15px"><svg viewBox="0 0 24 24" fill="none" stroke="#e2ad4f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M2 3h20"></path><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"></path><path d="m7 21 5-5 5 5"></path></svg>Slides</div>
+        <div style="height:44px;display:flex;align-items:center;gap:12px;padding:0 24px;font-size:15px"><svg viewBox="0 0 24 24" fill="none" stroke="#e2ad4f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" x2="12" y1="3" y2="15"></line></svg>Import</div>
+        <div style="height:44px;display:flex;align-items:center;gap:12px;padding:0 24px;font-size:15px"><svg viewBox="0 0 24 24" fill="none" stroke="#e2ad4f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>Members</div>
+        <div style="height:44px;display:flex;align-items:center;gap:12px;padding:0 24px;font-size:15px"><svg viewBox="0 0 24 24" fill="none" stroke="#e2ad4f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"></path><circle cx="7.5" cy="7.5" r=".5"></circle></svg>Fields</div>
+        <div style="flex:1"></div>
+        <div style="border-top:1px solid #2f4649;padding:16px 24px 0;display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;border:1px solid #4a6064;align-self:flex-start"><span style="padding:8px 14px;font-size:13px;background:#e2ad4f;color:#1a1206;font-weight:600">Dark</span><span style="padding:8px 14px;font-size:13px;color:#9fb3b1">Light</span></div>
+          <div style="font-size:13px;color:#9fb3b1">+251 91 234 5678 · Sign out</div>
+        </div>
+      </div>
+      <div style="border-right:2px solid #2f4649;display:flex;flex-direction:column;min-height:0">
+        <div style="padding:24px 24px 0"><div style="height:52px;border:2px solid #e2ad4f;background:#152d31;display:flex;align-items:center;gap:10px;padding:0 12px"><svg viewBox="0 0 24 24" fill="none" stroke="#e2ad4f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg><span style="flex:1;font-size:17px">ምስጋና</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#9fb3b1;border:1px solid #4a6064;padding:2px 6px">/</span></div><div style="font-size:12px;color:#9fb3b1;padding:10px 0 8px;border-bottom:2px solid #2f4649">4 matches in titles, lyrics and fields</div></div>
+        <div style="flex:1;overflow:hidden">
+          <div style="display:grid;grid-template-columns:60px 1fr;padding:14px 24px 14px 0;border-bottom:1px solid #2f4649"><span style="padding:4px 0 0 24px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#9fb3b1">008</span><span style="display:flex;flex-direction:column;gap:6px"><span style="display:flex;justify-content:space-between"><span style="font-size:19px;font-weight:700"><span style="color:#e2ad4f">ምስጋና</span> ይሁን</span><span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#7ccfd6">Title</span></span><span style="font-size:13px;color:#9fb3b1">G · 4/4 · Worship</span></span></div>
+          <div style="display:grid;grid-template-columns:60px 1fr;padding:14px 24px 14px 0;border-bottom:1px solid #2f4649;background:#152d31;box-shadow:inset 3px 0 0 #e2ad4f"><span style="padding:4px 0 0 24px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#e2ad4f">014</span><span style="display:flex;flex-direction:column;gap:6px"><span style="display:flex;justify-content:space-between"><span style="font-size:19px;font-weight:700">እረድቶናል</span><span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#7ccfd6">Lyrics</span></span><span style="font-size:14px;line-height:1.6">…ያለን በእጃችን <span style="background:#3a3219;color:#f3c75a;padding:0 2px">ምስጋና</span> ነው…</span><span style="font-size:13px;color:#9fb3b1">D♭ · 6/8 · Praise</span></span></div>
+          <div style="display:grid;grid-template-columns:60px 1fr;padding:14px 24px 14px 0;border-bottom:1px solid #2f4649"><span style="padding:4px 0 0 24px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#9fb3b1">031</span><span style="display:flex;flex-direction:column;gap:6px"><span style="display:flex;justify-content:space-between"><span style="font-size:19px;font-weight:700">ይገባዋል</span><span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#7ccfd6">Lyrics</span></span><span style="font-size:14px;line-height:1.6">…ክብር ይገባዋል <span style="background:#3a3219;color:#f3c75a;padding:0 2px">ምስጋና</span> ይገባዋል…</span><span style="font-size:13px;color:#9fb3b1">E · 4/4 · Praise</span></span></div>
+          <div style="display:grid;grid-template-columns:60px 1fr;padding:14px 24px 14px 0;border-bottom:1px solid #2f4649"><span style="padding:4px 0 0 24px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#9fb3b1">040</span><span style="display:flex;flex-direction:column;gap:6px"><span style="display:flex;justify-content:space-between"><span style="font-size:19px;font-weight:700">ስሙ ይባረክ</span><span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#7ccfd6">Lyrics</span></span><span style="font-size:14px;line-height:1.6">…<span style="background:#3a3219;color:#f3c75a;padding:0 2px">ምስጋና</span> ለአምላካችን…</span><span style="font-size:13px;color:#9fb3b1">C · 4/4 · Praise</span></span></div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) 300px;min-height:0">
+        <div style="display:flex;flex-direction:column;min-height:0;border-right:1px solid #2f4649">
+          <div style="height:72px;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:0 32px;flex:none"><span style="display:flex;border:1px solid #4a6064"><span style="width:44px;height:40px;display:flex;align-items:center;justify-content:center;font-size:13px;border-right:1px solid #4a6064">A−</span><span style="width:44px;height:40px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600">A+</span></span><span style="height:40px;display:flex;align-items:center;gap:8px;padding:0 14px;border:1px solid #4a6064;font-size:14px;font-weight:600"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path></svg>Edit</span></div>
+          <div style="flex:1;overflow:hidden;padding:0 56px">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#9fb3b1">No. 014</div>
+            <div style="font-size:44px;font-weight:700;line-height:1.25;margin:4px 0 28px">እረድቶናል</div>
+            <div style="display:flex;flex-direction:column;gap:24px;font-family:'Noto Sans Ethiopic',sans-serif;font-size:24px;line-height:1.75;max-width:600px">
+              <div style="display:grid;grid-template-columns:48px 1fr"><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#e2ad4f;padding-top:10px">01</span><span>ይውጣ ድንቅ ዜማ ለምልክት<br>እርዳታችን ከላይ ለሆነበት<br>አቤኔዘር ብለን አኑረናል<br>ዜማችን ማህተም ሆኖ ተተክሏል<span style="display:block;padding-left:24px;margin-top:6px">እግዚአብሄር ይመስገን ላከበረን<br>በእውነት ድንቅ ሰርቶ ላስደነቀን<br>ያለን በእጃችን <span style="background:#3a3219;color:#f3c75a">ምስጋና</span> ነው</span></span></div>
+              <div style="display:grid;grid-template-columns:48px 1fr;background:#152d31;margin:0 -24px;padding:16px 24px"><span style="font-size:13px;font-weight:700;color:#7ccfd6;padding-top:10px">አዝ</span><span>ኑ እንቅረብ ምስጋና ይዘን<br>በብርቱ ላቆመን ላፀናን</span></div>
+            </div>
+          </div>
+        </div>
+        <div style="padding:72px 24px 24px;display:flex;flex-direction:column;gap:28px">
+          <div>
+            <div style="font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#9fb3b1;padding-bottom:8px;border-bottom:2px solid #2f4649">Details</div>
+            <div style="display:grid;grid-template-columns:96px 1fr;padding:10px 0;border-bottom:1px solid #2f4649;font-size:14px"><span style="color:#9fb3b1;font-size:12px">Key</span><span style="font-weight:800;font-size:18px;color:#e2ad4f">D♭</span></div>
+            <div style="display:grid;grid-template-columns:96px 1fr;padding:10px 0;border-bottom:1px solid #2f4649;font-size:14px"><span style="color:#9fb3b1;font-size:12px">Time</span><span style="font-weight:700">6/8</span></div>
+            <div style="display:grid;grid-template-columns:96px 1fr;padding:10px 0;border-bottom:1px solid #2f4649;font-size:14px"><span style="color:#9fb3b1;font-size:12px">Genre</span><span style="font-weight:700">Praise</span></div>
+            <div style="display:grid;grid-template-columns:96px 1fr;padding:10px 0;border-bottom:1px solid #2f4649;font-size:14px"><span style="color:#9fb3b1;font-size:12px">Chant type</span><span style="font-weight:700">ዝማሬ</span></div>
+            <div style="display:grid;grid-template-columns:96px 1fr;padding:10px 0;border-bottom:1px solid #2f4649;font-size:14px;line-height:1.5"><span style="color:#9fb3b1;font-size:12px">Notes</span><span>Women lead the verse response; full choir on the chorus.</span></div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#9fb3b1;padding-bottom:8px;border-bottom:2px solid #2f4649">Recordings · 2</div>
+            <div style="display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid #2f4649"><span style="width:44px;height:44px;background:#e2ad4f;color:#1a1206;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg></span><span style="display:flex;flex-direction:column;gap:8px"><span style="display:flex;justify-content:space-between;font-size:13px"><b>Full choir · 12 May</b><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#9fb3b1">1:42</span></span><span style="height:3px;background:#2f4649;position:relative"><span style="position:absolute;left:0;top:0;bottom:0;width:38%;background:#e2ad4f"></span></span></span></div>
+            <div style="display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center;padding:12px 0"><span style="width:44px;height:44px;border:2px solid #4a6064;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg></span><span style="display:flex;justify-content:space-between;font-size:13px"><b>Alto part only</b><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#9fb3b1">3:58</span></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;max-width:1440px;border-top:2px solid #201e1d;padding-top:20px;font-size:14px;line-height:1.55;color:#444141">
+    <div><b style="color:#201e1d">Breakpoints.</b> Below 768: the phone layout as prototyped. 768–1199: split view with the bottom bar and More sheet kept. 1200 and up: left rail, and song details and recordings move into a right-hand column.</div>
+    <div><b style="color:#201e1d">Selection.</b> The open song keeps a 3px gold marker in the list. Searching filters the list and leaves the open song where it is.</div>
+    <div><b style="color:#201e1d">Admin screens.</b> Editor, Import, Slides, Members and Fields keep their single column at max 720px, centred in the content area beside the rail. Slides adds a live preview column at 1200+.</div>
+  </div>
+</section>
+</x-dc>
+</body>
+</html>

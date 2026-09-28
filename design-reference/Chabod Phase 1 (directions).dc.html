@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;800&family=Noto+Sans+Ethiopic:wght@400;500;700;800&family=Noto+Serif+Ethiopic:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#e6e4e1;color:#201e1d;font-family:"Archivo",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#ae1800;text-underline-offset:3px}
+a:hover{color:#ec3013}
+</style>
+</helmet>
+
+<section data-screen-label="Turn 1 — Phase 1 directions" style="padding:64px 64px 96px;display:flex;flex-direction:column;gap:48px">
+  <header style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;border-bottom:2px solid #201e1d;padding-bottom:28px;max-width:1720px">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#605d5d">Chabod Choir Catalogue · Phase 1 · Turn 1</div>
+      <h1 style="margin:0;font-size:44px;font-weight:800;letter-spacing:-.02em;line-height:1.05">Three directions, one structure</h1>
+    </div>
+    <p style="margin:0;font-size:15px;line-height:1.6;color:#444141;text-wrap:pretty;align-self:end">Modernist's structure (square corners, 2px rules, flush-left labels, visible grid, line icons) set in Chabod's poster colors, muted, with dark as the default. The three directions differ in how the colors are assigned, the lyric typeface and where the search bar sits. Each direction shows a different login step (phone number, code, Telegram link), so all three steps get covered. The admin nav is the same in all three: Catalogue · Add · More, with More opening a slide-up sheet. Members don't see a bottom bar at all.</p>
+  </header>
+
+  <div style="display:flex;flex-direction:column;gap:72px">
+
+  <!-- ============ 1a SANCTUARY ============ -->
+  <div id="1a" style="display:flex;flex-direction:column;gap:24px">
+    <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;background:#201e1d;color:#f3f2f2;padding:4px 10px">1a</span>
+      <h2 style="margin:0;font-size:26px;font-weight:800;letter-spacing:-.015em">Sanctuary</h2>
+      <span style="font-size:14px;color:#605d5d">Teal ground · gold carries every action · cyan labels the lyric sections · Noto Sans Ethiopic · recordings dock at the bottom as a mini-player</span>
+    </div>
+    <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start">
+
+      <!-- tokens -->
+      <div style="width:220px;display:flex;flex-direction:column;gap:0;border-top:2px solid #201e1d">
+        <div style="display:grid;grid-template-columns:44px 1fr;border-bottom:1px solid #bab6b6"><div style="background:#0d2124"></div><div style="padding:8px 10px;font-size:12px;line-height:1.35"><b>Ground</b><br><span style="font-family:'JetBrains Mono',monospace;color:#605d5d">#0D2124</span></div></div>
+        <div style="display:grid;grid-template-columns:44px 1fr;border-bottom:1px solid #bab6b6"><div style="background:#152d31"></div><div style="padding:8px 10px;font-size:12px;line-height:1.35"><b>Surface</b><br><span style="font-family:'JetBrains Mono',monospace;color:#605d5d">#152D31</span></div></div>
+        <div style="display:grid;grid-template-columns:44px 1fr;border-bottom:1px solid #bab6b6"><div style="background:#efe9dc"></div><div style="padding:8px 10px;font-size:12px;line-height:1.35"><b>Text · cream</b><br><span style="font-family:'JetBrains Mono',monospace;color:#605d5d">#EFE9DC · 14.6:1</span></div></div>
+        <div style="display:grid;grid-template-columns:44px 1fr;border-bottom:1px solid #bab6b6"><div style="background:#e2ad4f"></div><div style="padding:8px 10px;font-size:12px;line-height:1.35"><b>Primary · gold</b><br><span style="font-family:'JetBrains Mono',monospace;color:#605d5d">#E2AD4F · 8.4:1</span></div></div>
+        <div style="display:grid;grid-template-columns:44px 1fr;border-bottom:1px solid #bab6b6"><div style="background:#7ccfd6"></div><div style="padding:8px 10px;font-size:12px;line-height:1.35"><b>Label · cyan</b><br><span style="font-family:'JetBrains Mono',monospace;color:#605d5d">#7CCFD6 · 9.3:1</span></div></div>
+        <div style="padding:14px 0 0;display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:'Noto Sans Ethiopic',sans-serif;font-size:22px;font-weight:700;line-height:1.3">እረድቶናል</div>
+          <div style="font-family:'Noto Sans Ethiopic',sans-serif;font-size:17px;line-height:1.75">ኑ እንቅረብ ምስጋና ይዘን</div>
+          <div style="font-size:12px;color:#605d5d;line-height:1.45">Lyrics 20/1.75 · UI Archivo 15/1.45. Ge'ez needs about 20% more line-height than Latin at the same size.</div>
+        </div>
+      </div>
+
+      <!-- A1 login: phone -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#605d5d;text-transform:uppercase;letter-spacing:.06em">Login · phone</div>
+        <div data-screen-label="1a Login" style="width:360px;height:760px;background:#0d2124;color:#efe9dc;display:flex;flex-direction:column;overflow:hidden;position:relative">
+          <div style="height:32px;padding:0 20px;display:flex;align-items:center;font-size:12px;font-weight:600">9:41</div>
+          <div style="flex:1;padding:56px 24px 28px;display:flex;flex-direction:column">
+            <div style="font-family:'Noto Sans Ethiopic',sans-serif;font-weight:800;font-size:76px;line-height:1.05;background:linear-gradient(180deg,#f3c75a 0%,#ea8a34 60%,#d9542a 100%);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-.01em">ካቦድ</div>
+            <div style="margin-top:10px;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#9fb3b1">Chabod Choir · Song catalogue</div>
+            <div style="height:2px;background:#2f4649;margin:40px 0 28px"></div>
+            <label style="font-size:13px;color:#9fb3b1;margin-bottom:8px">Phone number</label>
+            <div style="display:grid;grid-template-columns:72px 1fr;border:2px solid #e2ad4f;height:56px">
+              <div style="display:flex;align-items:center;padding-left:14px;font-size:17px;border-right:1px solid #2f4649;color:#9fb3b1">+251</div>
+              <div style="display:flex;align-items:center;padding-left:14px;font-size:19px;font-weight:500;letter-spacing:.04em">91 234 56<span style="width:2px;height:22px;background:#e2ad4f;margin-left:2px"></span></div>
+            </div>
+            <div style="font-size:13px;line-height:1.5;color:#9fb3b1;margin-top:12px;text-wrap:pretty">We'll send a one-time code to you through <span style="color:#efe9dc">@ChabodBot</span> on Telegram.</div>
+            <div style="flex:1"></div>
+            <div style="height:56px;background:#e2ad4f;color:#1a1206;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-weight:800;font-size:16px">Send code<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- A2 catalogue admin -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#605d5d;text-transform:uppercase;letter-spacing:.06em">Catalogue · searching (admin)</div>
+        <div data-screen-label="1a Catalogue" style="width:360px;height:760px;background:#0d2124;color:#efe9dc;display:flex;flex-direction:column;overflow:hidden">
+          <div style="height:32px;padding:0 20px;display:flex;align-items:center;font-size:12px;font-weight:600">9:41</div>
+          <div style="padding:8px 16px 12px;display:flex;align-items:center;justify-content:space-between">
+            <div style="font-family:'Noto Sans Ethiopic',sans-serif;font-weight:800;font-size:24px;background:linear-gradient(180deg,#f3c75a,#e0602e);-webkit-background-clip:text;background-clip:text;color:transparent">ካቦድ</div>
+            <div style="font-size:12px;color:#9fb3b1">142 songs</div>
+          </div>
+          <div style="padding:0 16px">
+            <div style="height:52px;border:2px solid #e2ad4f;background:#152d31;display:flex;align-items:center;gap:10px;padding:0 12px">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#e2ad4f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+              <span style="flex:1;font-family:'Noto Sans Ethiopic',sans-serif;font-size:18px">ምስጋና</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="#9fb3b1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+            </div>
+            <div style="font-size:12px;color:#9fb3b1;padding:10px 0 8px;border-bottom:2px solid #2f4649">9 matches in titles, lyrics and fields</div>
+          </div>
+          <div style="flex:1;overflow:hidden;padding:0 16px">
+            <div style="padding:14px 0;border-bottom:1px solid #2f4649;display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><span style="font-family:'Noto Sans Ethiopic',sans-serif;font-size:19px;font-weight:700"><span style="color:#e2ad4f">ምስጋና</span> ይሁን</span><span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#7ccfd6">Title</span></div>
+              <div style="font-size:13px;color:#9fb3b1">G · 4/4 · Worship</div>
+            </div>
+            <div style="padding:14px 0;border-bottom:1px solid #2f4649;display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><span style="font-family:'Noto Sans Ethiopic',sans-serif;font-size:19px;font-weight:700">እረድቶናል</span><span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#7ccfd6">Lyrics</span></div>
+              <div style="font-family:'Noto Sans Ethiopic',sans-serif;font-size:14px;line-height:1.6;color:#c9d3cf">…ያለን በእጃችን <span style="background:#3a3219;color:#f3c75a;padding:0 2px">ምስጋና</span> ነው…</div>
+              <div style="font-size:13px;color:#9fb3b1">D♭ · 6/8 · Praise</div>
+            </div>
+            <div style="padding:14px 0;border-bottom:1px solid #2f4649;display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><span style="font-family:'Noto Sans Ethiopic',sans-serif;font-size:19px;font-weight:700">ይገባዋል</span><span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#7ccfd6">Field</span></div>
+              <div style="font-size:13px;color:#9fb3b1">E · 4/4 · Chant type: <span style="font-family:'Noto Sans Ethiopic',sans-serif;color:#f3c75a">ምስጋና</span></div>
+            </div>
+            <div style="padding:14px 0;border-bottom:1px solid #2f4649;display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><span style="font-family:'Noto Sans Ethiopic',sans-serif;font-size:19px;font-weight:700">ስሙ ይባረክ</span><span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#7ccfd6">Lyrics</span></div>
+              <div style="font-family:'Noto Sans Ethiopic',sans-serif;font-size:14px;line-height:1.6;color:#c9d3cf">…<span style="background:#3a3219;color:#f3c75a;padding:0 2px">ምስጋና</span> ለአምላካችን…</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;border-top:2px solid #2f4649;background:#0d2124;height:72px">
+            <div style="display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:4px;padding-left:18px;color:#e2ad4f;box-shadow:inset 0 3px 0 #e2ad4f"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg><span style="font-size:12px;font-weight:600">Catalogue</span></div>
+            <div style="display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:4px;padding-left:18px;background:#e2ad4f;color:#1a1206"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg><span style="font-size:12px;font-weight:800">Add song</span></div>
+            <div style="display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:4px;padding-left:18px;color:#9fb3b1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg><span style="font-size:12px;font-weight:600">More</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- A3 more sheet -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#605d5d;text-transform:uppercase;letter-spacing:.06em">More · slide-up sheet</div>
+        <div data-screen-label="1a More sheet" style="width:360px;height:760px;background:#081618;color:#efe9dc;display:flex;flex-direction:column;overflow:hidden;position:relative">
+          <div style="height:32px;padding:0 20px;display:flex;align-items:center;font-size:12px;font-weight:600;color:#6f807e">9:41</div>
+          <div style="flex:1;padding:12px 16px;opacity:.28;display:flex;flex-direction:column;gap:14px">
+            <div style="height:52px;border:2px solid #2f4649"></div>
+            <div style="height:1px;background:#2f4649"></div>
+            <div style="font-family:'Noto Sans Ethiopic',sans-serif;font-size:19px;font-weight:700">አቤኔዘር</div>
+            <div style="height:1px;background:#2f4649"></div>
+            <div style="font-family:'Noto Sans Ethiopic',sans-serif;font-size:19px;font-weight:700">ክብር ለስሙ</div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:0;background:#152d31;border-top:2px solid #e2ad4f;display:flex;flex-direction:column">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 18px 12px">
+              <span style="font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#9fb3b1">Admin tools</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="#9fb3b1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #2f4649">
+              <div style="padding:18px;display:flex;flex-direction:column;gap:10px;border-right:1px solid #2f4649;border-bottom:1px solid #2f4649"><svg viewBox="0 0 24 24" fill="none" stroke="#e2ad4f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M2 3h20"></path><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"></path><path d="m7 21 5-5 5 5"></path></svg><div><div style="font-size:16px;font-weight:800">Slides</div><div style="font-size:12px;color:#9fb3b1;margin-top:2px">Build a service deck</div></div></div>
+              <div style="padding:18px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid #2f4649"><svg viewBox="0 0 24 24" fill="none" stroke="#e2ad4f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" x2="12" y1="3" y2="15"></line></svg><div><div style="font-size:16px;font-weight:800">Import</div><div style="font-size:12px;color:#9fb3b1;margin-top:2px">Paste lyrics in bulk</div></div></div>
+              <div style="padding:18px;display:flex;flex-direction:column;gap:10px;border-right:1px solid #2f4649;border-bottom:1px solid #2f4649"><svg viewBox="0 0 24 24" fill="none" stroke="#e2ad4f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg><div><div style="font-size:16px;font-weight:800">Members</div><div style="font-size:12px;color:#9fb3b1;margin-top:2px">38 numbers</div></div></div>
+              <div style="padding:18px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid #2f4649"><svg viewBox="0 0 24 24" fill="none" stroke="#e2ad4f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"></path><circle cx="7.5" cy="7.5" r=".5"></circle></svg><div><div style="font-size:16px;font-weight:800">Fields</div><div style="font-size:12px;color:#9fb3b1;margin-top:2px">9 metadata fields</div></div></div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:0 18px;height:60px;border-bottom:1px solid #2f4649">
+              <span style="font-size:15px">Appearance</span>
+              <div style="display:flex;border:1px solid #4a6064"><span style="padding:8px 14px;font-size:13px;background:#e2ad4f;color:#1a1206;font-weight:600">Dark</span><span style="padding:8px 14px;font-size:13px;color:#9fb3b1">Light</span></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:0 18px;height:60px;color:#9fb3b1;font-size:15px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" x2="9" y1="12" y2="12"></line></svg>Sign out</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;border-top:2px solid #2f4649;background:#0d2124;height:72px">
+              <div style="display:flex;flex-direction:column;justify-content:center;gap:4px;padding-left:18px;color:#9fb3b1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg><span style="font-size:12px;font-weight:600">Catalogue</span></div>
+              <div style="display:flex;flex-direction:column;justify-content:center;gap:4px;padding-left:18px;background:#e2ad4f;color:#1a1206"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg><span style="font-size:12px;font-weight:800">Add song</span></div>
+              <div style="display:flex;flex-direction:column;justify-content:center;gap:4px;padding-left:18px;color:#e2ad4f;box-shadow:inset 0 3px 0 #e2ad4f"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg><span style="font-size:12px;font-weight:600">More</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- A4 song detail -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#605d5d;text-transform:uppercase;letter-spacing:.06em">Song detail · reading</div>
+        <div data-screen-label="1a Song detail" style="width:360px;height:760px;background:#0d2124;color:#efe9dc;display:flex;flex-direction:column;overflow:hidden">
+          <div style="height:32px;padding:0 20px;display:flex;align-items:center;font-size:12px;font-weight:600">9:41</div>
+          <div style="height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 8px;border-bottom:1px solid #2f4649">
+            <div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg></div>
+            <div style="display:flex">
+              <div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600">Aa</div>
+              <div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path></svg></div>
+            </div>
+          </div>
+          <div style="flex:1;overflow:hidden;padding:20px 20px 0">
+            <h3 style="margin:0;font-family:'Noto Sans Ethiopic',sans-serif;font-size:32px;font-weight:700;line-height:1.25">እረድቶናል</h3>
+            <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:16px;border-top:2px solid #2f4649;border-bottom:1px solid #2f4649">
+              <div style="padding:10px 0"><div style="font-size:11px;color:#9fb3b1;letter-spacing:.06em;text-transform:uppercase">Key</div><div style="font-size:18px;font-weight:800;color:#e2ad4f;margin-top:2px">D♭</div></div>
+              <div style="padding:10px 0 10px 10px;border-left:1px solid #2f4649"><div style="font-size:11px;color:#9fb3b1;letter-spacing:.06em;text-transform:uppercase">Time</div><div style="font-size:18px;font-weight:800;margin-top:2px">6/8</div></div>
+              <div style="padding:10px 0 10px 10px;border-left:1px solid #2f4649;grid-column:span 2"><div style="font-size:11px;color:#9fb3b1;letter-spacing:.06em;text-transform:uppercase">Genre · Chant</div><div style="font-size:15px;font-weight:600;margin-top:4px">Praise · <span style="font-family:'Noto Sans Ethiopic',sans-serif">ዝማሬ</span></div></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:22px;margin-top:22px;font-family:'Noto Sans Ethiopic',sans-serif;font-size:20px;line-height:1.75">
+              <div>
+                <div style="font-family:Archivo,sans-serif;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#7ccfd6;margin-bottom:6px">Verse 1</div>
+                <div>ይውጣ ድንቅ ዜማ ለምልክት<br>እርዳታችን ከላይ ለሆነበት<br>አቤኔዘር ብለን አኑረናል<br>ዜማችን ማህተም ሆኖ ተተክሏል</div>
+                <div style="padding-left:20px;margin-top:6px">እግዚአብሄር ይመስገን ላከበረን<br>በእውነት ድንቅ ሰርቶ ላስደነቀን</div>
+              </div>
+            </div>
+          </div>
+          <div style="background:#152d31;border-top:2px solid #e2ad4f;display:grid;grid-template-columns:56px 1fr;height:68px">
+            <div style="background:#e2ad4f;color:#1a1206;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg></div>
+            <div style="padding:10px 14px;display:flex;flex-direction:column;justify-content:center;gap:7px">
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span style="font-weight:600">Rehearsal · 12 May</span><span style="color:#9fb3b1;font-family:'JetBrains Mono',monospace;font-size:12px">1 of 2</span></div>
+              <div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:3px;background:#2f4649;position:relative"><div style="position:absolute;left:0;top:0;bottom:0;width:38%;background:#e2ad4f"></div></div><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#9fb3b1">1:42 / 4:32</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ 1b INK ============ -->
+  <div id="1b" style="display:flex;flex-direction:column;gap:24px">
+    <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;background:#201e1d;color:#f3f2f2;padding:4px 10px">1b</span>
+      <h2 style="margin:0;font-size:26px;font-weight:800;letter-spacing:-.015em">Ink &amp; Ember</h2>
+      <span style="font-size:14px;color:#605d5d">Near-black ground for the most dim-light headroom · teal only in the header band · amber for actions · Noto Serif Ethiopic lyrics · numbered grid</span>
+    </div>
+    <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start">
+
+      <div style="width:220px;display:flex;flex-direction:column;border-top:2px solid #201e1d">
+        <div style="display:grid;grid-template-columns:44px 1fr;border-bottom:1px solid #bab6b6"><div style="background:#0f1211"></div><div style="padding:8px 10px;font-size:12px;line-height:1.35"><b>Ground · ink</b><br><span style="font-family:'JetBrains Mono',monospace;color:#605d5d">#0F1211</span></div></div>
+        <div style="display:grid;grid-template-columns:44px 1fr;border-bottom:1px solid #bab6b6"><div style="background:#12434a"></div><div style="padding:8px 10px;font-size:12px;line-height:1.35"><b>Brand band · teal</b><br><span style="font-family:'JetBrains Mono',monospace;color:#605d5d">#12434A</span></div></div>
+        <div style="display:grid;grid-template-columns:44px 1fr;border-bottom:1px solid #bab6b6"><div style="background:#f2eee6"></div><div style="padding:8px 10px;font-size:12px;line-height:1.35"><b>Text · cream</b><br><span style="font-family:'JetBrains Mono',monospace;color:#605d5d">#F2EEE6 · 17.1:1</span></div></div>
+        <div style="display:grid;grid-template-columns:44px 1fr;border-bottom:1px solid #bab6b6"><div style="background:#eb9a3c"></div><div style="padding:8px 10px;font-size:12px;line-height:1.35"><b>Primary · amber</b><br><span style="font-family:'JetBrains Mono',monospace;color:#605d5d">#EB9A3C · 8.6:1</span></div></div>
+        <div style="display:grid;grid-template-columns:44px 1fr;border-bottom:1px solid #bab6b6"><div style="background:#8fd4da"></div><div style="padding:8px 10px;font-size:12px;line-height:1.35"><b>Chorus · cyan</b><br><span style="font-family:'JetBrains Mono',monospace;color:#605d5d">#8FD4DA · 11.8:1</span></div></div>
+        <div style="padding:14px 0 0;display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:'Noto Serif Ethiopic',serif;font-size:22px;font-weight:700;line-height:1.3">እረድቶናል</div>
+          <div style="font-family:'Noto Serif Ethiopic',serif;font-size:17px;line-height:1.8">ኑ እንቅረብ ምስጋና ይዘን</div>
+          <div style="font-size:12px;color:#605d5d;line-height:1.45">Serif Ethiopic for lyrics and titles, a nod to hymnals. The UI stays in Archivo.</div>
+        </div>
+      </div>
+
+      <!-- B1 login OTP -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#605d5d;text-transform:uppercase;letter-spacing:.06em">Login · code from Telegram</div>
+        <div data-screen-label="1b Login code" style="width:360px;height:760px;background:#0f1211;color:#f2eee6;display:flex;flex-direction:column;overflow:hidden">
+          <div style="background:#12434a;padding:0 0 28px">
+            <div style="height:32px;padding:0 20px;display:flex;align-items:center;font-size:12px;font-weight:600">9:41</div>
+            <div style="padding:36px 24px 0">
+              <div style="font-family:'Noto Sans Ethiopic',sans-serif;font-weight:800;font-size:56px;line-height:1.05;background:linear-gradient(180deg,#f3c75a 0%,#ea8a34 60%,#d9542a 100%);-webkit-background-clip:text;background-clip:text;color:transparent">ካቦድ</div>
+              <div style="margin-top:8px;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#b9d4d3">Chabod Choir</div>
+            </div>
+          </div>
+          <div style="flex:1;padding:28px 24px;display:flex;flex-direction:column">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#a3a9a6">Step 2 of 2</div>
+            <div style="font-size:24px;font-weight:800;letter-spacing:-.01em;margin-top:6px;line-height:1.2">Enter the code</div>
+            <div style="font-size:14px;line-height:1.5;color:#a3a9a6;margin-top:8px">@ChabodBot sent a 6-digit code to your Telegram for +251 91 234 5678.</div>
+            <div style="display:grid;grid-template-columns:repeat(6,1fr);margin-top:24px;border:2px solid #3a403e">
+              <div style="height:60px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;border-right:1px solid #3a403e">4</div>
+              <div style="height:60px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;border-right:1px solid #3a403e">7</div>
+              <div style="height:60px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;border-right:1px solid #3a403e">0</div>
+              <div style="height:60px;display:flex;align-items:center;justify-content:center;border-right:1px solid #3a403e;box-shadow:inset 0 -3px 0 #eb9a3c"><span style="width:2px;height:26px;background:#eb9a3c"></span></div>
+              <div style="height:60px;border-right:1px solid #3a403e"></div>
+              <div style="height:60px"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:14px;font-size:13px"><span style="color:#a3a9a6">Resend in 0:42</span><span style="color:#eb9a3c;font-weight:600">Change number</span></div>
+            <div style="flex:1"></div>
+            <div style="height:56px;background:#eb9a3c;color:#1b0f02;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-weight:800;font-size:16px;opacity:.45">Verify and continue<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- B2 catalogue -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#605d5d;text-transform:uppercase;letter-spacing:.06em">Catalogue · home (admin)</div>
+        <div data-screen-label="1b Catalogue" style="width:360px;height:760px;background:#0f1211;color:#f2eee6;display:flex;flex-direction:column;overflow:hidden">
+          <div style="background:#12434a;padding-bottom:16px">
+            <div style="height:32px;padding:0 20px;display:flex;align-items:center;font-size:12px;font-weight:600">9:41</div>
+            <div style="padding:6px 16px 14px;display:flex;align-items:baseline;justify-content:space-between">
+              <span style="font-size:22px;font-weight:800;letter-spacing:-.01em">Catalogue</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#b9d4d3">142</span>
+            </div>
+            <div style="margin:0 16px;height:52px;background:#0f1211;display:flex;align-items:center;gap:10px;padding:0 14px">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#a3a9a6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+              <span style="font-size:16px;color:#a3a9a6">Title, lyric line, key…</span>
+            </div>
+          </div>
+          <div style="flex:1;overflow:hidden">
+            <div style="display:grid;grid-template-columns:56px 1fr;border-bottom:1px solid #2a2f2d">
+              <div style="padding:16px 0 0 16px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#a3a9a6">014</div>
+              <div style="padding:14px 16px 14px 0"><div style="font-family:'Noto Serif Ethiopic',serif;font-size:20px;font-weight:700;line-height:1.35">እረድቶናል</div><div style="display:flex;gap:6px;margin-top:8px"><span style="font-size:12px;font-weight:600;background:#23201a;color:#eb9a3c;padding:3px 8px">D♭</span><span style="font-size:12px;background:#1c201f;color:#cfd3d1;padding:3px 8px">6/8</span><span style="font-size:12px;background:#1c201f;color:#cfd3d1;padding:3px 8px">Praise</span></div></div>
+            </div>
+            <div style="display:grid;grid-template-columns:56px 1fr;border-bottom:1px solid #2a2f2d">
+              <div style="padding:16px 0 0 16px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#a3a9a6">002</div>
+              <div style="padding:14px 16px 14px 0"><div style="font-family:'Noto Serif Ethiopic',serif;font-size:20px;font-weight:700;line-height:1.35">አቤኔዘር</div><div style="display:flex;gap:6px;margin-top:8px"><span style="font-size:12px;font-weight:600;background:#23201a;color:#eb9a3c;padding:3px 8px">A</span><span style="font-size:12px;background:#1c201f;color:#cfd3d1;padding:3px 8px">4/4</span><span style="font-size:12px;background:#1c201f;color:#cfd3d1;padding:3px 8px">Worship</span></div></div>
+            </div>
+            <div style="display:grid;grid-template-columns:56px 1fr;border-bottom:1px solid #2a2f2d">
+              <div style="padding:16px 0 0 16px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#a3a9a6">031</div>
+              <div style="padding:14px 16px 14px 0"><div style="font-family:'Noto Serif Ethiopic',serif;font-size:20px;font-weight:700;line-height:1.35">ይገባዋል</div><div style="display:flex;gap:6px;margin-top:8px"><span style="font-size:12px;font-weight:600;background:#23201a;color:#eb9a3c;padding:3px 8px">E</span><span style="font-size:12px;background:#1c201f;color:#cfd3d1;padding:3px 8px">4/4</span><span style="font-size:12px;background:#1c201f;color:#cfd3d1;padding:3px 8px">Praise</span></div></div>
+            </div>
+            <div style="display:grid;grid-template-columns:56px 1fr;border-bottom:1px solid #2a2f2d">
+              <div style="padding:16px 0 0 16px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#a3a9a6">057</div>
+              <div style="padding:14px 16px 14px 0"><div style="font-size:18px;font-weight:600;line-height:1.35">Great Is Thy Faithfulness</div><div style="display:flex;gap:6px;margin-top:8px"><span style="font-size:12px;font-weight:600;background:#23201a;color:#eb9a3c;padding:3px 8px">E♭</span><span style="font-size:12px;background:#1c201f;color:#cfd3d1;padding:3px 8px">3/4</span><span style="font-size:12px;background:#1c201f;color:#cfd3d1;padding:3px 8px">Hymn</span></div></div>
+            </div>
+            <div style="display:grid;grid-template-columns:56px 1fr;border-bottom:1px solid #2a2f2d">
+              <div style="padding:16px 0 0 16px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#a3a9a6">062</div>
+              <div style="padding:14px 16px 14px 0"><div style="font-family:'Noto Serif Ethiopic',serif;font-size:20px;font-weight:700;line-height:1.35">ክብር ለስሙ</div><div style="display:flex;gap:6px;margin-top:8px"><span style="font-size:12px;font-weight:600;background:#23201a;color:#eb9a3c;padding:3px 8px">G</span><span style="font-size:12px;background:#1c201f;color:#cfd3d1;padding:3px 8px">6/8</span></div></div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;border-top:2px solid #3a403e;height:72px">
+            <div style="display:flex;flex-direction:column;justify-content:center;gap:4px;padding-left:18px;color:#f2eee6"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg><span style="font-size:12px;font-weight:800">Catalogue</span></div>
+            <div style="display:flex;flex-direction:column;justify-content:center;gap:4px;padding-left:18px;background:#eb9a3c;color:#1b0f02"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg><span style="font-size:12px;font-weight:800">Add song</span></div>
+            <div style="display:flex;flex-direction:column;justify-content:center;gap:4px;padding-left:18px;color:#a3a9a6"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg><span style="font-size:12px;font-weight:600">More</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- B3 more sheet (list style) -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#605d5d;text-transform:uppercase;letter-spacing:.06em">More · sheet as a list</div>
+        <div data-screen-label="1b More sheet" style="width:360px;height:760px;background:#070908;color:#f2eee6;display:flex;flex-direction:column;overflow:hidden;position:relative">
+          <div style="height:120px;background:#0a2024;opacity:.5"></div>
+          <div style="position:absolute;left:0;right:0;bottom:0;top:210px;background:#171b1a;border-top:2px solid #eb9a3c;display:flex;flex-direction:column">
+            <div style="display:flex;justify-content:center;padding:10px 0 4px"><span style="width:40px;height:4px;background:#3a403e"></span></div>
+            <div style="padding:10px 18px 12px;font-size:20px;font-weight:800">Tools</div>
+            <div style="border-top:2px solid #3a403e">
+              <div style="display:grid;grid-template-columns:48px 1fr 24px;align-items:center;height:64px;padding:0 16px;border-bottom:1px solid #2a2f2d"><svg viewBox="0 0 24 24" fill="none" stroke="#eb9a3c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M2 3h20"></path><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"></path><path d="m7 21 5-5 5 5"></path></svg><div><div style="font-size:16px;font-weight:600">Slides</div><div style="font-size:12px;color:#a3a9a6">Sunday deck · draft</div></div><svg viewBox="0 0 24 24" fill="none" stroke="#a3a9a6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="m9 18 6-6-6-6"></path></svg></div>
+              <div style="display:grid;grid-template-columns:48px 1fr 24px;align-items:center;height:64px;padding:0 16px;border-bottom:1px solid #2a2f2d"><svg viewBox="0 0 24 24" fill="none" stroke="#eb9a3c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" x2="12" y1="3" y2="15"></line></svg><div><div style="font-size:16px;font-weight:600">Import lyrics</div></div><svg viewBox="0 0 24 24" fill="none" stroke="#a3a9a6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="m9 18 6-6-6-6"></path></svg></div>
+              <div style="display:grid;grid-template-columns:48px 1fr 24px;align-items:center;height:64px;padding:0 16px;border-bottom:1px solid #2a2f2d"><svg viewBox="0 0 24 24" fill="none" stroke="#eb9a3c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg><div><div style="font-size:16px;font-weight:600">Members</div><div style="font-size:12px;color:#a3a9a6">2 not linked to Telegram</div></div><svg viewBox="0 0 24 24" fill="none" stroke="#a3a9a6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="m9 18 6-6-6-6"></path></svg></div>
+              <div style="display:grid;grid-template-columns:48px 1fr 24px;align-items:center;height:64px;padding:0 16px;border-bottom:2px solid #3a403e"><svg viewBox="0 0 24 24" fill="none" stroke="#eb9a3c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"></path><circle cx="7.5" cy="7.5" r=".5"></circle></svg><div><div style="font-size:16px;font-weight:600">Metadata fields</div></div><svg viewBox="0 0 24 24" fill="none" stroke="#a3a9a6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="m9 18 6-6-6-6"></path></svg></div>
+              <div style="display:grid;grid-template-columns:48px 1fr auto;align-items:center;height:64px;padding:0 16px;border-bottom:1px solid #2a2f2d"><svg viewBox="0 0 24 24" fill="none" stroke="#a3a9a6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg><div style="font-size:16px">Dark mode</div><div style="width:48px;height:28px;background:#eb9a3c;display:flex;justify-content:flex-end;padding:3px"><span style="width:22px;height:22px;background:#0f1211"></span></div></div>
+              <div style="display:grid;grid-template-columns:48px 1fr;align-items:center;height:64px;padding:0 16px;color:#a3a9a6"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" x2="9" y1="12" y2="12"></line></svg><div style="font-size:16px">Sign out</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- B4 song detail -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#605d5d;text-transform:uppercase;letter-spacing:.06em">Song detail · repeats collapsed</div>
+        <div data-screen-label="1b Song detail" style="width:360px;height:760px;background:#0f1211;color:#f2eee6;display:flex;flex-direction:column;overflow:hidden">
+          <div style="height:32px;padding:0 20px;display:flex;align-items:center;font-size:12px;font-weight:600">9:41</div>
+          <div style="height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 8px">
+            <div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg></div>
+            <div style="display:flex;border:1px solid #3a403e"><span style="width:44px;height:36px;display:flex;align-items:center;justify-content:center;font-size:13px;border-right:1px solid #3a403e">A−</span><span style="width:44px;height:36px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600">A+</span></div>
+          </div>
+          <div style="flex:1;overflow:hidden">
+            <div style="padding:8px 20px 18px;border-bottom:2px solid #3a403e">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#a3a9a6">No. 014</div>
+              <h3 style="margin:4px 0 0;font-family:'Noto Serif Ethiopic',serif;font-size:34px;font-weight:700;line-height:1.25">እረድቶናል</h3>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:2px solid #3a403e">
+              <div style="padding:10px 12px 10px 20px;border-right:1px solid #2a2f2d"><div style="font-size:11px;color:#a3a9a6">Key</div><div style="font-size:20px;font-weight:800;color:#eb9a3c">D♭</div></div>
+              <div style="padding:10px 12px;border-right:1px solid #2a2f2d"><div style="font-size:11px;color:#a3a9a6">Time</div><div style="font-size:20px;font-weight:800">6/8</div></div>
+              <div style="padding:10px 12px"><div style="font-size:11px;color:#a3a9a6">Genre</div><div style="font-size:15px;font-weight:600;margin-top:4px">Praise</div></div>
+            </div>
+            <div style="padding:20px;display:flex;flex-direction:column;gap:20px;font-family:'Noto Serif Ethiopic',serif;font-size:20px;line-height:1.8">
+              <div style="display:grid;grid-template-columns:34px 1fr">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#eb9a3c;padding-top:6px">01</div>
+                <div>ይውጣ ድንቅ ዜማ ለምልክት<br>እርዳታችን ከላይ ለሆነበት<br>አቤኔዘር ብለን አኑረናል<br>ዜማችን ማህተም ሆኖ ተተክሏል</div>
+              </div>
+              <div style="display:grid;grid-template-columns:34px 1fr;background:#12282b;margin:0 -20px;padding:14px 20px">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8fd4da;padding-top:6px">አዝ</div>
+                <div>ኑ እንቅረብ ምስጋና ይዘን<br>በብርቱ ላቆመን ላፀናን<br>ረድቶናል የሰማዩ አምላክ</div>
+              </div>
+            </div>
+          </div>
+          <div style="height:60px;border-top:2px solid #3a403e;display:grid;grid-template-columns:1fr 1fr;font-size:13px">
+            <div style="display:flex;align-items:center;gap:10px;padding-left:20px;border-right:1px solid #2a2f2d"><svg viewBox="0 0 24 24" fill="none" stroke="#eb9a3c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg><span style="font-weight:600">Recordings · 2</span></div>
+            <div style="display:flex;align-items:center;padding-left:16px;color:#a3a9a6">Verse 1 of 4 parts</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ 1c CALLOUT ============ -->
+  <div id="1c" style="display:flex;flex-direction:column;gap:24px">
+    <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;background:#201e1d;color:#f3f2f2;padding:4px 10px">1c</span>
+      <h2 style="margin:0;font-size:26px;font-weight:800;letter-spacing:-.015em">Callout</h2>
+      <span style="font-size:14px;color:#605d5d">Mid-teal ground, closest to the poster · cyan is the interactive color · gold is used only for Key · black badges from the poster · search sits in thumb reach at the bottom</span>
+    </div>
+    <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start">
+
+      <div style="width:220px;display:flex;flex-direction:column;border-top:2px solid #201e1d">
+        <div style="display:grid;grid-template-columns:44px 1fr;border-bottom:1px solid #bab6b6"><div style="background:#0b2d31"></div><div style="padding:8px 10px;font-size:12px;line-height:1.35"><b>Ground · teal</b><br><span style="font-family:'JetBrains Mono',monospace;color:#605d5d">#0B2D31</span></div></div>
+        <div style="display:grid;grid-template-columns:44px 1fr;border-bottom:1px solid #bab6b6"><div style="background:#07100f"></div><div style="padding:8px 10px;font-size:12px;line-height:1.35"><b>Badge · black</b><br><span style="font-family:'JetBrains Mono',monospace;color:#605d5d">#07100F</span></div></div>
+        <div style="display:grid;grid-template-columns:44px 1fr;border-bottom:1px solid #bab6b6"><div style="background:#f4efe3"></div><div style="padding:8px 10px;font-size:12px;line-height:1.35"><b>Text · cream</b><br><span style="font-family:'JetBrains Mono',monospace;color:#605d5d">#F4EFE3 · 13.2:1</span></div></div>
+        <div style="display:grid;grid-template-columns:44px 1fr;border-bottom:1px solid #bab6b6"><div style="background:#5ccdd6"></div><div style="padding:8px 10px;font-size:12px;line-height:1.35"><b>Primary · cyan</b><br><span style="font-family:'JetBrains Mono',monospace;color:#605d5d">#5CCDD6 · 7.1:1</span></div></div>
+        <div style="display:grid;grid-template-columns:44px 1fr;border-bottom:1px solid #bab6b6"><div style="background:#e9b24a"></div><div style="padding:8px 10px;font-size:12px;line-height:1.35"><b>Key · gold</b><br><span style="font-family:'JetBrains Mono',monospace;color:#605d5d">#E9B24A · 7.4:1</span></div></div>
+        <div style="padding:14px 0 0;display:flex;flex-direction:column;gap:6px">
+          <div style="font-family:'Noto Sans Ethiopic',sans-serif;font-size:22px;font-weight:800;line-height:1.3">እረድቶናል</div>
+          <div style="font-family:'Noto Sans Ethiopic',sans-serif;font-size:17px;font-weight:500;line-height:1.75">ኑ እንቅረብ ምስጋና ይዘን</div>
+          <div style="font-size:12px;color:#605d5d;line-height:1.45">Medium-weight lyrics (500) so the letterforms hold up on a brighter ground.</div>
+        </div>
+      </div>
+
+      <!-- C1 telegram link -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#605d5d;text-transform:uppercase;letter-spacing:.06em">Login · first time, link Telegram</div>
+        <div data-screen-label="1c Link Telegram" style="width:360px;height:760px;background:#0b2d31;color:#f4efe3;display:flex;flex-direction:column;overflow:hidden">
+          <div style="height:32px;padding:0 20px;display:flex;align-items:center;font-size:12px;font-weight:600">9:41</div>
+          <div style="padding:20px 24px 0;display:flex;align-items:center;gap:12px">
+            <div style="font-family:'Noto Sans Ethiopic',sans-serif;font-weight:800;font-size:36px;line-height:1;background:linear-gradient(180deg,#f3c75a,#e0602e);-webkit-background-clip:text;background-clip:text;color:transparent">ካቦድ</div>
+          </div>
+          <div style="flex:1;padding:28px 24px;display:flex;flex-direction:column">
+            <div style="display:inline-flex;align-self:flex-start;background:#07100f;color:#5ccdd6;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:6px 10px">One-time setup</div>
+            <div style="font-size:26px;font-weight:800;letter-spacing:-.01em;margin-top:14px;line-height:1.2;text-wrap:pretty">Link your phone to our Telegram bot</div>
+            <div style="font-size:14px;line-height:1.5;color:#b3cbca;margin-top:8px;text-wrap:pretty">Your login codes come through Telegram, not SMS. This only happens once.</div>
+            <div style="margin-top:24px;border-top:2px solid #2b5257">
+              <div style="display:grid;grid-template-columns:36px 1fr;padding:14px 0;border-bottom:1px solid #2b5257;font-size:15px;line-height:1.45"><span style="font-weight:800;color:#5ccdd6">1</span><span>Open <b>@ChabodBot</b> and tap <b>Start</b></span></div>
+              <div style="display:grid;grid-template-columns:36px 1fr;padding:14px 0;border-bottom:1px solid #2b5257;font-size:15px;line-height:1.45"><span style="font-weight:800;color:#5ccdd6">2</span><span>Tap <b>Share phone number</b> when the bot asks</span></div>
+              <div style="display:grid;grid-template-columns:36px 1fr;padding:14px 0;border-bottom:1px solid #2b5257;font-size:15px;line-height:1.45"><span style="font-weight:800;color:#5ccdd6">3</span><span>Come back here and continue</span></div>
+            </div>
+            <div style="flex:1"></div>
+            <div style="height:56px;background:#5ccdd6;color:#04191b;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-weight:800;font-size:16px">Open @ChabodBot<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="m22 2-7 20-4-9-9-4Z"></path><path d="M22 2 11 13"></path></svg></div>
+            <div style="height:56px;margin-top:10px;border:2px solid #4b7479;display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-weight:600;font-size:15px">I've linked it, continue<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- C2 catalogue bottom search -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#605d5d;text-transform:uppercase;letter-spacing:.06em">Catalogue · search in thumb reach</div>
+        <div data-screen-label="1c Catalogue" style="width:360px;height:760px;background:#0b2d31;color:#f4efe3;display:flex;flex-direction:column;overflow:hidden">
+          <div style="height:32px;padding:0 20px;display:flex;align-items:center;font-size:12px;font-weight:600">9:41</div>
+          <div style="padding:12px 16px 12px;display:flex;align-items:baseline;justify-content:space-between;border-bottom:2px solid #2b5257">
+            <span style="font-size:28px;font-weight:800;letter-spacing:-.015em">Songs</span>
+            <span style="font-size:13px;color:#b3cbca">142 · A–Z</span>
+          </div>
+          <div style="flex:1;overflow:hidden;padding:0 16px">
+            <div style="padding:14px 0;border-bottom:1px solid #2b5257;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center"><div><div style="font-family:'Noto Sans Ethiopic',sans-serif;font-size:19px;font-weight:800;line-height:1.4">አቤኔዘር</div><div style="font-size:13px;color:#b3cbca;margin-top:2px">4/4 · Worship</div></div><span style="background:#07100f;color:#e9b24a;font-weight:800;font-size:15px;min-width:44px;height:36px;display:flex;align-items:center;justify-content:center">A</span></div>
+            <div style="padding:14px 0;border-bottom:1px solid #2b5257;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center"><div><div style="font-family:'Noto Sans Ethiopic',sans-serif;font-size:19px;font-weight:800;line-height:1.4">እረድቶናል</div><div style="font-size:13px;color:#b3cbca;margin-top:2px">6/8 · Praise · 2 recordings</div></div><span style="background:#07100f;color:#e9b24a;font-weight:800;font-size:15px;min-width:44px;height:36px;display:flex;align-items:center;justify-content:center">D♭</span></div>
+            <div style="padding:14px 0;border-bottom:1px solid #2b5257;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center"><div><div style="font-family:'Noto Sans Ethiopic',sans-serif;font-size:19px;font-weight:800;line-height:1.4">ክብር ለስሙ</div><div style="font-size:13px;color:#b3cbca;margin-top:2px">6/8 · Worship</div></div><span style="background:#07100f;color:#e9b24a;font-weight:800;font-size:15px;min-width:44px;height:36px;display:flex;align-items:center;justify-content:center">G</span></div>
+            <div style="padding:14px 0;border-bottom:1px solid #2b5257;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center"><div><div style="font-size:17px;font-weight:600;line-height:1.4">Great Is Thy Faithfulness</div><div style="font-size:13px;color:#b3cbca;margin-top:2px">3/4 · Hymn</div></div><span style="background:#07100f;color:#e9b24a;font-weight:800;font-size:15px;min-width:44px;height:36px;display:flex;align-items:center;justify-content:center">E♭</span></div>
+            <div style="padding:14px 0;border-bottom:1px solid #2b5257;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center"><div><div style="font-family:'Noto Sans Ethiopic',sans-serif;font-size:19px;font-weight:800;line-height:1.4">ይገባዋል</div><div style="font-size:13px;color:#b3cbca;margin-top:2px">4/4 · Praise</div></div><span style="background:#07100f;color:#e9b24a;font-weight:800;font-size:15px;min-width:44px;height:36px;display:flex;align-items:center;justify-content:center">E</span></div>
+          </div>
+          <div style="padding:10px 12px;background:#0b2d31">
+            <div style="height:54px;background:#07100f;display:flex;align-items:center;gap:10px;padding:0 14px;border:2px solid #5ccdd6">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#5ccdd6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+              <span style="font-size:16px;color:#b3cbca">Search songs, lyrics, keys</span>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;border-top:2px solid #2b5257;height:68px;background:#07100f">
+            <div style="display:flex;flex-direction:column;justify-content:center;gap:4px;padding-left:18px;color:#5ccdd6"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg><span style="font-size:12px;font-weight:800">Catalogue</span></div>
+            <div style="display:flex;flex-direction:column;justify-content:center;gap:4px;padding-left:18px;color:#f4efe3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg><span style="font-size:12px;font-weight:600">Add song</span></div>
+            <div style="display:flex;flex-direction:column;justify-content:center;gap:4px;padding-left:18px;color:#f4efe3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg><span style="font-size:12px;font-weight:600">More</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- C3 more sheet -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#605d5d;text-transform:uppercase;letter-spacing:.06em">More · compact sheet above the bar</div>
+        <div data-screen-label="1c More sheet" style="width:360px;height:760px;background:#051618;color:#f4efe3;display:flex;flex-direction:column;overflow:hidden;position:relative">
+          <div style="flex:1"></div>
+          <div style="background:#0f3a3f;border-top:2px solid #5ccdd6;margin:0 12px 10px;display:flex;flex-direction:column">
+            <div style="padding:14px 16px 10px;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#b3cbca">Admin</div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid #2b5257">
+              <div style="height:88px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:8px;padding-left:12px;border-right:1px solid #2b5257"><svg viewBox="0 0 24 24" fill="none" stroke="#5ccdd6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M2 3h20"></path><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"></path><path d="m7 21 5-5 5 5"></path></svg><span style="font-size:13px;font-weight:600">Slides</span></div>
+              <div style="height:88px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:8px;padding-left:12px;border-right:1px solid #2b5257"><svg viewBox="0 0 24 24" fill="none" stroke="#5ccdd6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" x2="12" y1="3" y2="15"></line></svg><span style="font-size:13px;font-weight:600">Import</span></div>
+              <div style="height:88px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:8px;padding-left:12px;border-right:1px solid #2b5257"><svg viewBox="0 0 24 24" fill="none" stroke="#5ccdd6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg><span style="font-size:13px;font-weight:600">Members</span></div>
+              <div style="height:88px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:8px;padding-left:12px"><svg viewBox="0 0 24 24" fill="none" stroke="#5ccdd6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"></path><circle cx="7.5" cy="7.5" r=".5"></circle></svg><span style="font-size:13px;font-weight:600">Fields</span></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #2b5257;height:52px;font-size:14px">
+              <div style="display:flex;align-items:center;gap:10px;padding-left:14px;border-right:1px solid #2b5257"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>Dark · on</div>
+              <div style="display:flex;align-items:center;gap:10px;padding-left:14px;color:#b3cbca"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" x2="9" y1="12" y2="12"></line></svg>Sign out</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;border-top:2px solid #2b5257;height:68px;background:#07100f">
+            <div style="display:flex;flex-direction:column;justify-content:center;gap:4px;padding-left:18px;color:#f4efe3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg><span style="font-size:12px;font-weight:600">Catalogue</span></div>
+            <div style="display:flex;flex-direction:column;justify-content:center;gap:4px;padding-left:18px;color:#f4efe3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg><span style="font-size:12px;font-weight:600">Add song</span></div>
+            <div style="display:flex;flex-direction:column;justify-content:center;gap:4px;padding-left:18px;color:#5ccdd6;background:#0f3a3f"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg><span style="font-size:12px;font-weight:800">Close</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- C4 song detail (scrolled to recordings) -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#605d5d;text-transform:uppercase;letter-spacing:.06em">Song detail · scrolled to recordings</div>
+        <div data-screen-label="1c Song detail" style="width:360px;height:760px;background:#0b2d31;color:#f4efe3;display:flex;flex-direction:column;overflow:hidden">
+          <div style="height:32px;padding:0 20px;display:flex;align-items:center;font-size:12px;font-weight:600">9:41</div>
+          <div style="height:52px;display:flex;align-items:center;gap:6px;padding:0 8px;border-bottom:2px solid #2b5257">
+            <div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg></div>
+            <span style="flex:1;font-family:'Noto Sans Ethiopic',sans-serif;font-size:17px;font-weight:800">እረድቶናል</span>
+            <span style="background:#07100f;color:#e9b24a;font-weight:800;font-size:14px;padding:6px 10px;margin-right:8px">D♭ · 6/8</span>
+          </div>
+          <div style="flex:1;overflow:hidden;padding:18px 20px 0;display:flex;flex-direction:column;gap:18px;font-family:'Noto Sans Ethiopic',sans-serif;font-size:20px;font-weight:500;line-height:1.75">
+            <div>
+              <span style="display:inline-flex;background:#07100f;color:#5ccdd6;font-family:Archivo,sans-serif;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:4px 8px;margin-bottom:8px">Verse 2</span>
+              <div>ይፃፍ ስለእግዚአብሄር በቀለማት<br>ለኛ ስለአደረገው መልካምነት<br>በሰላሙ ከቦ ሆኖን መስፍን<br>ዘመናት ጨምሮ አስገረመን</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;height:48px;border-top:1px solid #2b5257;border-bottom:1px solid #2b5257;font-family:Archivo,sans-serif;font-size:14px">
+              <span style="background:#5ccdd6;color:#04191b;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:4px 8px">Chorus</span>
+              <span style="color:#b3cbca">Repeat · <span style="font-family:'Noto Sans Ethiopic',sans-serif;color:#f4efe3">ኑ እንቅረብ ምስጋና ይዘን…</span></span>
+            </div>
+            <div style="font-family:Archivo,sans-serif">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid #2b5257;padding-bottom:8px"><span style="font-size:18px;font-weight:800">Recordings</span><span style="font-size:13px;color:#b3cbca">2</span></div>
+              <div style="display:grid;grid-template-columns:48px 1fr;gap:12px;padding:12px 0;border-bottom:1px solid #2b5257;align-items:center">
+                <div style="width:48px;height:48px;background:#5ccdd6;color:#04191b;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg></div>
+                <div style="display:flex;flex-direction:column;gap:8px"><div style="display:flex;justify-content:space-between;font-size:14px"><span style="font-weight:600">Full choir · 12 May</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#b3cbca">1:42 / 4:32</span></div><div style="height:4px;background:#2b5257;position:relative"><div style="position:absolute;left:0;top:0;bottom:0;width:38%;background:#5ccdd6"></div><div style="position:absolute;left:38%;top:-5px;width:4px;height:14px;background:#f4efe3"></div></div></div>
+              </div>
+              <div style="display:grid;grid-template-columns:48px 1fr;gap:12px;padding:12px 0;align-items:center">
+                <div style="width:48px;height:48px;border:2px solid #4b7479;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg></div>
+                <div style="display:flex;justify-content:space-between;font-size:14px"><span style="font-weight:600">Alto part only</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#b3cbca">3:58</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  </div>
+</section>
+</x-dc>
+</body>
+</html>

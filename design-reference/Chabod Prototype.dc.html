@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/modernist-3b26e34c-e774-4b82-a1a7-3f1fa4613831/styles.css">
+<script src="_ds/modernist-3b26e34c-e774-4b82-a1a7-3f1fa4613831/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;800&family=Noto+Sans+Ethiopic:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#151a1a}
+*{box-sizing:border-box;scrollbar-width:none}
+*::-webkit-scrollbar{display:none}
+a{color:#e2ad4f}
+a:hover{color:#f3c75a}
+:focus-visible{outline:2px solid #e2ad4f;outline-offset:2px}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;margin:0;cursor:pointer;text-align:left}
+input{font:inherit}
+input::placeholder{color:var(--muted);opacity:1}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#151a1a">
+<div data-screen-label="Prototype" style="--bg:#0d2124;--surface:#152d31;--text:#efe9dc;--muted:#9fb3b1;--rule:#2f4649;--rule2:#4a6064;--fill:#e2ad4f;--onfill:#1a1206;--accent:#e2ad4f;--label:#7ccfd6;--hl:#3a3219;--hltext:#f3c75a;--band:#152d31;--scrim:rgba(3,11,12,.72);--danger:#ef8a6c;--mark:linear-gradient(180deg,#f3c75a 0%,#ea8a34 60%,#d9542a 100%);position:relative;width:390px;max-width:100%;height:min(844px,100vh);overflow:hidden;background:var(--bg);color:var(--text);font-family:Archivo,'Noto Sans Ethiopic',sans-serif">
+<div style="{{ themeStyle }}">
+
+<sc-if value="{{ isPhone }}" hint-placeholder-val="{{ true }}">
+  <div data-screen-label="Login · phone" style="position:absolute;inset:0;background:var(--bg);color:var(--text);display:flex;flex-direction:column;padding:72px 24px 28px">
+    <div style="font-family:'Noto Sans Ethiopic',sans-serif;font-weight:800;font-size:76px;line-height:1.05;background:var(--mark);-webkit-background-clip:text;background-clip:text;color:transparent;align-self:flex-start">ካቦድ</div>
+    <div style="margin-top:10px;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">Chabod Choir · Song catalogue</div>
+    <div style="height:2px;background:var(--rule);margin:40px 0 28px"></div>
+    <label style="font-size:13px;color:var(--muted);margin-bottom:8px">Phone number</label>
+    <div style="display:grid;grid-template-columns:72px 1fr;border:2px solid var(--fill);height:56px">
+      <div style="display:flex;align-items:center;padding-left:14px;font-size:17px;border-right:1px solid var(--rule);color:var(--muted)">+251</div>
+      <input type="tel" inputMode="numeric" placeholder="91 234 5678" value="{{ phone }}" onChange="{{ onPhone }}" style="width:100%;min-width:0;background:transparent;border:0;outline:none;color:var(--text);font-size:19px;font-weight:500;letter-spacing:.04em;padding:0 14px">
+    </div>
+    <div style="font-size:13px;line-height:1.5;color:var(--muted);margin-top:12px;text-wrap:pretty">We'll send a one-time code through <span style="color:var(--text)">@ChabodBot</span> on Telegram.</div>
+    <div style="flex:1"></div>
+    <button onClick="{{ sendCode }}" style="height:56px;width:100%;background:var(--fill);color:var(--onfill);display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-weight:800;font-size:16px">Send code<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></button>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isLink }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Login · link Telegram" style="position:absolute;inset:0;background:var(--bg);color:var(--text);display:flex;flex-direction:column;padding:16px 24px 28px">
+    <div style="display:flex;align-items:center;justify-content:space-between;height:48px">
+      <button onClick="{{ toPhone }}" aria-label="Back" style="width:44px;height:44px;margin-left:-10px;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg></button>
+      <div style="font-family:'Noto Sans Ethiopic',sans-serif;font-weight:800;font-size:26px;background:var(--mark);-webkit-background-clip:text;background-clip:text;color:transparent">ካቦድ</div>
+    </div>
+    <div style="margin-top:28px;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--label)">One-time setup</div>
+    <div style="font-size:26px;font-weight:800;letter-spacing:-.01em;margin-top:8px;line-height:1.2;text-wrap:pretty">Link your phone to our Telegram bot</div>
+    <div style="font-size:14px;line-height:1.5;color:var(--muted);margin-top:8px;text-wrap:pretty">Login codes come through Telegram, not SMS. You only do this once.</div>
+    <div style="margin-top:24px;border-top:2px solid var(--rule)">
+      <div style="display:grid;grid-template-columns:36px 1fr;padding:14px 0;border-bottom:1px solid var(--rule);font-size:15px;line-height:1.45"><span style="font-weight:800;color:var(--accent)">1</span><span>Open <b>@ChabodBot</b> and tap <b>Start</b></span></div>
+      <div style="display:grid;grid-template-columns:36px 1fr;padding:14px 0;border-bottom:1px solid var(--rule);font-size:15px;line-height:1.45"><span style="font-weight:800;color:var(--accent)">2</span><span>Tap <b>Share phone number</b> when the bot asks</span></div>
+      <div style="display:grid;grid-template-columns:36px 1fr;padding:14px 0;border-bottom:1px solid var(--rule);font-size:15px;line-height:1.45"><span style="font-weight:800;color:var(--accent)">3</span><span>Come back here and continue</span></div>
+    </div>
+    <div style="flex:1"></div>
+    <button onClick="{{ openBot }}" style="height:56px;width:100%;background:var(--fill);color:var(--onfill);display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-weight:800;font-size:16px">Open @ChabodBot<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="m22 2-7 20-4-9-9-4Z"></path><path d="M22 2 11 13"></path></svg></button>
+    <button onClick="{{ toCode }}" style="height:56px;width:100%;margin-top:10px;border:2px solid var(--rule2);display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-weight:600;font-size:15px">I've linked it, continue<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></button>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isCode }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Login · code" style="position:absolute;inset:0;background:var(--bg);color:var(--text);display:flex;flex-direction:column;padding:16px 24px 28px">
+    <div style="display:flex;align-items:center;justify-content:space-between;height:48px">
+      <button onClick="{{ toPhone }}" aria-label="Back" style="width:44px;height:44px;margin-left:-10px;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg></button>
+      <div style="font-family:'Noto Sans Ethiopic',sans-serif;font-weight:800;font-size:26px;background:var(--mark);-webkit-background-clip:text;background-clip:text;color:transparent">ካቦድ</div>
+    </div>
+    <div style="margin-top:28px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)">Last step</div>
+    <div style="font-size:26px;font-weight:800;letter-spacing:-.01em;margin-top:6px;line-height:1.2">Enter the code</div>
+    <div style="font-size:14px;line-height:1.5;color:var(--muted);margin-top:8px">@ChabodBot sent a 6-digit code to your Telegram for +251 {{ phoneShown }}.</div>
+    <div style="position:relative;display:grid;grid-template-columns:repeat(6,1fr);margin-top:24px;border:2px solid var(--rule2)">
+      <sc-for list="{{ codeCells }}" as="c" hint-placeholder-count="6">
+        <sc-if value="{{ c.active }}">
+          <div style="height:60px;display:flex;align-items:center;justify-content:center;border-right:1px solid var(--rule);box-shadow:inset 0 -3px 0 var(--fill)"><span style="width:2px;height:26px;background:var(--fill)"></span></div>
+        </sc-if>
+        <sc-if value="{{ c.idle }}">
+          <div style="height:60px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;border-right:1px solid var(--rule)">{{ c.ch }}</div>
+        </sc-if>
+      </sc-for>
+      <input autoFocus="{{ true }}" type="text" inputMode="numeric" autoComplete="one-time-code" maxLength="6" value="{{ code }}" onChange="{{ onCode }}" aria-label="6-digit code" style="position:absolute;inset:0;opacity:0;width:100%;height:100%;border:0;cursor:text">
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:14px;font-size:13px"><span style="color:var(--muted)">Resend in 0:42</span><button onClick="{{ toPhone }}" style="color:var(--accent);font-weight:600">Change number</button></div>
+    <div style="margin-top:18px;font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace">Prototype: any 6 digits work</div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isCatalogue }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Catalogue" style="position:absolute;inset:0;background:var(--bg);color:var(--text);display:flex;flex-direction:column">
+    <div style="padding:16px 16px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px">
+      <div style="font-family:'Noto Sans Ethiopic',sans-serif;font-weight:800;font-size:26px;line-height:1.1;background:var(--mark);-webkit-background-clip:text;background-clip:text;color:transparent">ካቦድ</div>
+      <div style="display:flex;align-items:center;gap:4px">
+        <span style="font-size:12px;color:var(--muted);margin-right:6px">{{ songCount }} songs</span>
+        <sc-if value="{{ isMember }}">
+          <button onClick="{{ toggleTheme }}" aria-label="Toggle dark mode" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--muted)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></button>
+          <button onClick="{{ signOut }}" aria-label="Sign out" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--muted)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" x2="9" y1="12" y2="12"></line></svg></button>
+        </sc-if>
+      </div>
+    </div>
+    <div style="padding:0 16px">
+      <div style="height:52px;border:2px solid var(--fill);background:var(--surface);display:flex;align-items:center;gap:10px;padding:0 4px 0 12px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="flex:none"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+        <input type="search" placeholder="Title, lyric line, key…" value="{{ q }}" onChange="{{ onQ }}" style="flex:1;min-width:0;height:100%;background:transparent;border:0;outline:none;color:var(--text);font-family:Archivo,'Noto Sans Ethiopic',sans-serif;font-size:17px">
+        <sc-if value="{{ hasQ }}">
+          <button onClick="{{ clearQ }}" aria-label="Clear search" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--muted)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+        </sc-if>
+      </div>
+      <div style="font-size:12px;color:var(--muted);padding:10px 0 8px;border-bottom:2px solid var(--rule)">{{ resultLine }}</div>
+    </div>
+    <div style="flex:1;overflow-y:auto">
+      <sc-for list="{{ results }}" as="r" hint-placeholder-count="5">
+        <button onClick="{{ r.open }}" style="width:100%;display:grid;grid-template-columns:52px minmax(0,1fr);border-bottom:1px solid var(--rule);padding:14px 16px 14px 0">
+          <span style="padding:4px 0 0 16px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)">{{ r.noText }}</span>
+          <span style="display:flex;flex-direction:column;gap:6px;min-width:0">
+            <span style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
+              <span style="font-size:19px;font-weight:700;line-height:1.35">{{ r.tPre }}<sc-if value="{{ r.tHasHit }}"><span style="color:var(--accent)">{{ r.tHit }}</span></sc-if>{{ r.tPost }}</span>
+              <sc-if value="{{ r.hasBadge }}"><span style="flex:none;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--label)">{{ r.badge }}</span></sc-if>
+            </span>
+            <sc-if value="{{ r.hasSnip }}"><span style="font-size:14px;line-height:1.6;color:var(--text);opacity:.86">…{{ r.sPre }}<span style="background:var(--hl);color:var(--hltext);padding:0 2px">{{ r.sHit }}</span>{{ r.sPost }}…</span></sc-if>
+            <span style="font-size:13px;color:var(--muted)">{{ r.meta }}</span>
+          </span>
+        </button>
+      </sc-for>
+      <sc-if value="{{ noResults }}">
+        <div style="padding:28px 16px;display:flex;flex-direction:column;gap:6px"><div style="font-size:17px;font-weight:800">Nothing matches “{{ q }}”</div><div style="font-size:14px;color:var(--muted);line-height:1.5">Try one word from a line, a key like “D♭”, or a song number.</div></div>
+      </sc-if>
+    </div>
+
+    <sc-if value="{{ isAdmin }}">
+      <div style="{{ scrimStyle }}" onClick="{{ closeMore }}"></div>
+      <div style="{{ sheetStyle }}">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 8px 8px 18px">
+          <span style="font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)">Admin tools</span>
+          <button onClick="{{ closeMore }}" aria-label="Close" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--muted)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)">
+          <button onClick="{{ toolSlides }}" style="background:var(--surface);padding:18px;display:flex;flex-direction:column;gap:10px"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M2 3h20"></path><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"></path><path d="m7 21 5-5 5 5"></path></svg><span><span style="display:block;font-size:16px;font-weight:800">Slides</span><span style="display:block;font-size:12px;color:var(--muted);margin-top:2px">Build a service deck</span></span></button>
+          <button onClick="{{ toolImport }}" style="background:var(--surface);padding:18px;display:flex;flex-direction:column;gap:10px"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" x2="12" y1="3" y2="15"></line></svg><span><span style="display:block;font-size:16px;font-weight:800">Import</span><span style="display:block;font-size:12px;color:var(--muted);margin-top:2px">Paste lyrics in bulk</span></span></button>
+          <button onClick="{{ toolMembers }}" style="background:var(--surface);padding:18px;display:flex;flex-direction:column;gap:10px"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg><span><span style="display:block;font-size:16px;font-weight:800">Members</span><span style="display:block;font-size:12px;color:var(--muted);margin-top:2px">Phone access · roles</span></span></button>
+          <button onClick="{{ toolFields }}" style="background:var(--surface);padding:18px;display:flex;flex-direction:column;gap:10px"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"></path><circle cx="7.5" cy="7.5" r=".5"></circle></svg><span><span style="display:block;font-size:16px;font-weight:800">Fields</span><span style="display:block;font-size:12px;color:var(--muted);margin-top:2px">Metadata cleanup</span></span></button>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:0 18px;height:60px;border-bottom:1px solid var(--rule)">
+          <span style="font-size:15px">Appearance</span>
+          <div style="display:flex;border:1px solid var(--rule2)">
+            <sc-if value="{{ isDark }}">
+              <button onClick="{{ setDark }}" style="padding:0 16px;height:40px;font-size:13px;background:var(--fill);color:var(--onfill);font-weight:600">Dark</button>
+              <button onClick="{{ setLight }}" style="padding:0 16px;height:40px;font-size:13px;color:var(--muted)">Light</button>
+            </sc-if>
+            <sc-if value="{{ isLight }}">
+              <button onClick="{{ setDark }}" style="padding:0 16px;height:40px;font-size:13px;color:var(--muted)">Dark</button>
+              <button onClick="{{ setLight }}" style="padding:0 16px;height:40px;font-size:13px;background:var(--fill);color:var(--onfill);font-weight:600">Light</button>
+            </sc-if>
+          </div>
+        </div>
+        <button onClick="{{ signOut }}" style="width:100%;display:flex;align-items:center;gap:12px;padding:0 18px;height:60px;color:var(--muted);font-size:15px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" x2="9" y1="12" y2="12"></line></svg>Sign out</button>
+      </div>
+      <div style="position:relative;z-index:6;display:grid;grid-template-columns:1fr 1fr 1fr;border-top:2px solid var(--rule);background:var(--bg);height:72px;flex:none">
+        <sc-if value="{{ moreClosed }}">
+          <button onClick="{{ closeMore }}" style="display:flex;flex-direction:column;justify-content:center;gap:4px;padding-left:18px;color:var(--accent);box-shadow:inset 0 3px 0 var(--fill)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg><span style="font-size:12px;font-weight:600">Catalogue</span></button>
+        </sc-if>
+        <sc-if value="{{ moreOpen }}">
+          <button onClick="{{ closeMore }}" style="display:flex;flex-direction:column;justify-content:center;gap:4px;padding-left:18px;color:var(--muted)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg><span style="font-size:12px;font-weight:600">Catalogue</span></button>
+        </sc-if>
+        <button onClick="{{ addSong }}" style="display:flex;flex-direction:column;justify-content:center;gap:4px;padding-left:18px;background:var(--fill);color:var(--onfill)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg><span style="font-size:12px;font-weight:800">Add song</span></button>
+        <sc-if value="{{ moreClosed }}">
+          <button onClick="{{ openMore }}" style="display:flex;flex-direction:column;justify-content:center;gap:4px;padding-left:18px;color:var(--muted)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg><span style="font-size:12px;font-weight:600">More</span></button>
+        </sc-if>
+        <sc-if value="{{ moreOpen }}">
+          <button onClick="{{ closeMore }}" style="display:flex;flex-direction:column;justify-content:center;gap:4px;padding-left:18px;color:var(--accent);box-shadow:inset 0 3px 0 var(--fill)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg><span style="font-size:12px;font-weight:600">More</span></button>
+        </sc-if>
+      </div>
+    </sc-if>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isSong }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Song detail" style="position:absolute;inset:0;background:var(--bg);color:var(--text);display:flex;flex-direction:column">
+    <div style="height:60px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 8px">
+      <button onClick="{{ back }}" aria-label="Back to catalogue" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg></button>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="display:flex;border:1px solid var(--rule2)">
+          <button onClick="{{ smaller }}" aria-label="Smaller lyrics" style="width:44px;height:40px;display:flex;align-items:center;justify-content:center;font-size:13px;border-right:1px solid var(--rule2)">A−</button>
+          <button onClick="{{ bigger }}" aria-label="Larger lyrics" style="width:44px;height:40px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600">A+</button>
+        </div>
+        <sc-if value="{{ isAdmin }}">
+          <button onClick="{{ editSong }}" aria-label="Edit song" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path></svg></button>
+        </sc-if>
+      </div>
+    </div>
+    <div ref="{{ songScroll }}" style="flex:1;overflow-y:auto">
+      <div style="padding:4px 20px 18px;border-bottom:2px solid var(--rule)">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)">No. {{ song.noText }}</div>
+        <h1 style="margin:4px 0 0;font-family:Archivo,'Noto Sans Ethiopic',sans-serif;font-size:34px;font-weight:700;line-height:1.25;letter-spacing:0">{{ song.title }}</h1>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--rule);border-bottom:2px solid var(--rule)">
+        <sc-for list="{{ fieldsTop }}" as="f" hint-placeholder-count="3">
+          <div style="background:var(--bg);padding:10px 12px 12px 20px">
+            <div style="font-size:11px;color:var(--muted)">{{ f.label }}</div>
+            <sc-if value="{{ f.isKey }}"><div style="font-size:20px;font-weight:800;color:var(--accent);margin-top:2px">{{ f.value }}</div></sc-if>
+            <sc-if value="{{ f.notKey }}"><div style="font-size:17px;font-weight:700;margin-top:4px">{{ f.value }}</div></sc-if>
+          </div>
+        </sc-for>
+      </div>
+      <sc-for list="{{ fieldsRest }}" as="f" hint-placeholder-count="1">
+        <div style="display:grid;grid-template-columns:96px minmax(0,1fr);gap:12px;padding:12px 20px;border-bottom:1px solid var(--rule);font-size:14px;line-height:1.5">
+          <span style="color:var(--muted);font-size:12px;padding-top:2px">{{ f.label }}</span>
+          <span>{{ f.value }}</span>
+        </div>
+      </sc-for>
+      <div style="{{ lyricStyle }}">
+        <sc-for list="{{ blocks }}" as="b" hint-placeholder-count="3">
+          <sc-if value="{{ b.isPlain }}">
+            <div style="display:grid;grid-template-columns:40px minmax(0,1fr)">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.4;color:var(--accent);padding-top:8px">{{ b.tag }}</div>
+              <div>
+                <sc-if value="{{ b.hasLabel }}"><div style="font-family:Archivo,'Noto Sans Ethiopic',sans-serif;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);line-height:1.4;margin:8px 0 4px">{{ b.label }}</div></sc-if>
+                <sc-for list="{{ b.lines }}" as="ln"><div>{{ ln }}</div></sc-for>
+                <sc-if value="{{ b.hasIndent }}"><div style="padding-left:20px;margin-top:6px"><sc-for list="{{ b.indent }}" as="ln"><div>{{ ln }}</div></sc-for></div></sc-if>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ b.isChorus }}">
+            <div style="display:grid;grid-template-columns:40px minmax(0,1fr);background:var(--band);margin:0 -20px;padding:14px 20px">
+              <div style="font-family:'Noto Sans Ethiopic',sans-serif;font-size:13px;line-height:1.4;font-weight:700;color:var(--label);padding-top:8px">{{ b.tag }}</div>
+              <div><sc-for list="{{ b.lines }}" as="ln"><div>{{ ln }}</div></sc-for></div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ b.isRepeat }}">
+            <div style="display:grid;grid-template-columns:40px minmax(0,1fr);align-items:center;min-height:48px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);font-family:Archivo,'Noto Sans Ethiopic',sans-serif;font-size:14px;line-height:1.4">
+              <span style="font-size:13px;font-weight:700;color:var(--label)">{{ b.tag }}</span>
+              <span style="color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Chorus · repeat · <span style="color:var(--text)">{{ b.first }}…</span></span>
+            </div>
+          </sc-if>
+        </sc-for>
+      </div>
+    </div>
+    <sc-if value="{{ hasRec }}">
+      <div style="flex:none;background:var(--surface);border-top:2px solid var(--fill);display:grid;grid-template-columns:64px minmax(0,1fr);height:72px">
+        <button onClick="{{ togglePlay }}" aria-label="Play or pause" style="background:var(--fill);color:var(--onfill);display:flex;align-items:center;justify-content:center">
+          <sc-if value="{{ playing }}"><svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg></sc-if>
+          <sc-if value="{{ paused }}"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round" width="20" height="20"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg></sc-if>
+        </button>
+        <div style="padding:10px 4px 10px 14px;display:flex;flex-direction:column;justify-content:center;gap:8px;min-width:0">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px">
+            <span style="font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ rec.title }}</span>
+            <button onClick="{{ nextRec }}" style="flex:none;height:32px;padding:0 10px;display:flex;align-items:center;gap:4px;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:12px">{{ recCount }}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="m9 18 6-6-6-6"></path></svg></button>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;padding-right:10px">
+            <div onClick="{{ seek }}" style="flex:1;height:16px;display:flex;align-items:center;cursor:pointer"><div style="width:100%;height:3px;background:var(--rule);position:relative"><div style="{{ progStyle }}"></div></div></div>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">{{ timeText }}</span>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isEditor }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Edit song" style="position:absolute;inset:0;background:var(--bg);color:var(--text);display:flex;flex-direction:column">
+    <div style="height:60px;flex:none;display:flex;align-items:center;gap:4px;padding:0 12px 0 8px;border-bottom:2px solid var(--rule)">
+      <button onClick="{{ cancelEdit }}" aria-label="Close without saving" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+      <span style="flex:1;font-size:18px;font-weight:800">{{ ed.heading }}</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)">No. {{ ed.noText }}</span>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:20px 16px 32px;display:flex;flex-direction:column;gap:32px">
+      <div>
+        <label style="display:block;font-size:12px;color:var(--muted);margin-bottom:6px">Title</label>
+        <input value="{{ ed.title }}" onChange="{{ ed.onTitle }}" placeholder="Song title" style="width:100%;height:56px;background:var(--surface);border:1px solid var(--rule2);color:var(--text);padding:0 14px;font-size:21px;font-weight:700;outline:none;border-radius:0;font-family:Archivo,'Noto Sans Ethiopic',sans-serif" style-focus="border-color:var(--fill)">
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--rule);padding-bottom:8px"><span style="font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)">Lyrics</span><span style="font-size:12px;color:var(--muted)">{{ ed.partCount }}</span></div>
+        <sc-for list="{{ ed.items }}" as="it" hint-placeholder-count="3">
+          <sc-if value="{{ it.isSection }}">
+            <div style="background:var(--surface);border-top:2px solid var(--rule2)">
+              <div style="display:flex;align-items:center;gap:8px;padding:6px 0 6px 12px">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);width:20px">{{ it.pos }}</span>
+                <select value="{{ it.type }}" onChange="{{ it.onType }}" aria-label="Section type" style="height:40px;background:var(--bg);color:var(--text);border:1px solid var(--rule2);border-radius:0;padding:0 8px;font-size:14px;font-weight:600;font-family:Archivo,sans-serif">
+                  <option value="verse">Verse</option><option value="chorus">Chorus</option><option value="bridge">Bridge</option><option value="intro">Intro</option><option value="outro">Outro</option><option value="other">Other</option>
+                </select>
+                <span style="flex:1"></span>
+                <button onClick="{{ it.up }}" aria-label="Move up" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--muted)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="m18 15-6-6-6 6"></path></svg></button>
+                <button onClick="{{ it.down }}" aria-label="Move down" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--muted)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="m6 9 6 6 6-6"></path></svg></button>
+                <button onClick="{{ it.remove }}" aria-label="Remove section" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--danger)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg></button>
+              </div>
+              <div style="padding:0 12px 12px;display:flex;flex-direction:column;gap:8px">
+                <input value="{{ it.label }}" onChange="{{ it.onLabel }}" placeholder="Label (optional)" style="width:100%;height:44px;background:var(--bg);border:1px solid var(--rule);color:var(--text);padding:0 12px;font-size:14px;outline:none;border-radius:0;font-family:Archivo,'Noto Sans Ethiopic',sans-serif" style-focus="border-color:var(--fill)">
+                <textarea value="{{ it.text }}" onChange="{{ it.onText }}" rows="{{ it.rows }}" placeholder="One lyric line per row. A blank line starts an indented response." style="width:100%;background:var(--bg);border:1px solid var(--rule);color:var(--text);padding:10px 12px;font-size:17px;line-height:1.7;outline:none;border-radius:0;resize:vertical;font-family:'Noto Sans Ethiopic',Archivo,sans-serif" style-focus="border-color:var(--fill)"></textarea>
+                <sc-if value="{{ it.isChorus }}"><button onClick="{{ it.onRepeat }}" style="align-self:flex-start;height:40px;display:flex;align-items:center;gap:8px;color:var(--accent);font-size:14px;font-weight:600"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="m17 2 4 4-4 4"></path><path d="M3 11v-1a4 4 0 0 1 4-4h14"></path><path d="m7 22-4-4 4-4"></path><path d="M21 13v1a4 4 0 0 1-4 4H3"></path></svg>Repeat this chorus</button></sc-if>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ it.isRepeat }}">
+            <div style="display:flex;align-items:center;gap:8px;padding-left:12px;min-height:56px;border:1px solid var(--rule2)">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);width:20px">{{ it.pos }}</span>
+              <span style="flex:1;min-width:0;font-size:14px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Repeat · {{ it.refName }} · <span style="color:var(--text)">{{ it.refFirst }}</span></span>
+              <button onClick="{{ it.up }}" aria-label="Move up" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--muted)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="m18 15-6-6-6 6"></path></svg></button>
+              <button onClick="{{ it.down }}" aria-label="Move down" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--muted)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="m6 9 6 6 6-6"></path></svg></button>
+              <button onClick="{{ it.remove }}" aria-label="Remove repeat" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--danger)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+            </div>
+          </sc-if>
+        </sc-for>
+        <button onClick="{{ ed.addSection }}" style="height:52px;border:2px solid var(--rule2);display:flex;align-items:center;gap:10px;padding:0 16px;font-weight:600;font-size:15px" style-hover="border-color:var(--fill)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>Add section</button>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="border-bottom:2px solid var(--rule);padding-bottom:8px"><span style="font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)">Details</span></div>
+        <sc-for list="{{ ed.fields }}" as="f" hint-placeholder-count="3">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;font-weight:600">{{ f.name }} <span style="font-weight:400;color:var(--muted)">· {{ f.typeLabel }}</span></span><button onClick="{{ f.remove }}" aria-label="Remove field from song" style="width:44px;height:36px;display:flex;align-items:center;justify-content:flex-end;color:var(--muted)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button></div>
+            <sc-if value="{{ f.isChips }}">
+              <div style="display:flex;flex-wrap:wrap;gap:6px">
+                <sc-for list="{{ f.options }}" as="o">
+                  <sc-if value="{{ o.on }}"><button onClick="{{ o.pick }}" style="min-width:44px;height:40px;padding:0 12px;background:var(--fill);color:var(--onfill);border:1px solid var(--fill);font-size:14px;font-weight:700;font-family:Archivo,'Noto Sans Ethiopic',sans-serif">{{ o.o }}</button></sc-if>
+                  <sc-if value="{{ o.off }}"><button onClick="{{ o.pick }}" style="min-width:44px;height:40px;padding:0 12px;border:1px solid var(--rule2);font-size:14px;font-family:Archivo,'Noto Sans Ethiopic',sans-serif" style-hover="border-color:var(--fill)">{{ o.o }}</button></sc-if>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ f.isText }}"><input value="{{ f.value }}" onChange="{{ f.onChange }}" style="width:100%;height:48px;background:var(--surface);border:1px solid var(--rule2);color:var(--text);padding:0 12px;font-size:15px;outline:none;border-radius:0;font-family:Archivo,'Noto Sans Ethiopic',sans-serif" style-focus="border-color:var(--fill)"></sc-if>
+            <sc-if value="{{ f.isNumber }}"><input type="number" inputMode="numeric" value="{{ f.value }}" onChange="{{ f.onChange }}" style="width:140px;height:48px;background:var(--surface);border:1px solid var(--rule2);color:var(--text);padding:0 12px;font-size:15px;outline:none;border-radius:0" style-focus="border-color:var(--fill)"></sc-if>
+          </div>
+        </sc-for>
+
+        <sc-if value="{{ ed.pickerClosed }}">
+          <button onClick="{{ ed.openPicker }}" style="height:52px;border:2px solid var(--rule2);display:flex;align-items:center;gap:10px;padding:0 16px;font-weight:600;font-size:15px" style-hover="border-color:var(--fill)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>Add field</button>
+        </sc-if>
+        <sc-if value="{{ ed.pickerOpen }}">
+          <div style="border:2px solid var(--fill);background:var(--surface)">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0 4px 14px;border-bottom:1px solid var(--rule)"><span style="font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)">Add a field</span><button onClick="{{ ed.closePicker }}" aria-label="Close" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--muted)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button></div>
+            <sc-for list="{{ ed.available }}" as="a">
+              <button onClick="{{ a.add }}" style="width:100%;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid var(--rule);font-size:15px"><span>{{ a.name }} <span style="color:var(--muted);font-size:13px">· {{ a.typeLabel }}</span></span><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></button>
+            </sc-for>
+            <button onClick="{{ ed.startNew }}" style="width:100%;height:56px;display:flex;align-items:center;gap:10px;padding:0 14px;color:var(--accent);font-weight:800;font-size:15px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>Create a new field</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ ed.creating }}">
+          <div style="border:2px solid var(--fill);background:var(--surface);padding:14px;display:flex;flex-direction:column;gap:14px">
+            <span style="font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)">New field</span>
+            <input value="{{ ed.nfName }}" onChange="{{ ed.onNfName }}" placeholder="Field name, e.g. Occasion" style="width:100%;height:48px;background:var(--bg);border:1px solid var(--rule2);color:var(--text);padding:0 12px;font-size:15px;outline:none;border-radius:0;font-family:Archivo,'Noto Sans Ethiopic',sans-serif" style-focus="border-color:var(--fill)">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule2);border:1px solid var(--rule2)">
+              <sc-for list="{{ ed.nfTypes }}" as="t" hint-placeholder-count="4">
+                <sc-if value="{{ t.on }}"><button onClick="{{ t.pick }}" style="height:44px;padding:0 12px;background:var(--fill);color:var(--onfill);font-size:14px;font-weight:700">{{ t.label }}</button></sc-if>
+                <sc-if value="{{ t.off }}"><button onClick="{{ t.pick }}" style="height:44px;padding:0 12px;background:var(--bg);font-size:14px">{{ t.label }}</button></sc-if>
+              </sc-for>
+            </div>
+            <sc-if value="{{ ed.nfHasOptions }}">
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <span style="font-size:12px;color:var(--muted)">Options</span>
+                <div style="display:flex;flex-wrap:wrap;gap:6px">
+                  <sc-for list="{{ ed.nfOptions }}" as="o">
+                    <span style="height:36px;display:flex;align-items:center;gap:2px;padding-left:10px;border:1px solid var(--rule2);font-size:14px">{{ o.o }}<button onClick="{{ o.remove }}" aria-label="Remove option" style="width:32px;height:34px;display:flex;align-items:center;justify-content:center;color:var(--muted)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button></span>
+                  </sc-for>
+                </div>
+                <div style="display:grid;grid-template-columns:minmax(0,1fr) auto">
+                  <input value="{{ ed.nfOpt }}" onChange="{{ ed.onNfOpt }}" onKeyDown="{{ ed.nfOptKey }}" placeholder="New option" style="height:44px;background:var(--bg);border:1px solid var(--rule2);border-right:0;color:var(--text);padding:0 12px;font-size:14px;outline:none;border-radius:0;font-family:Archivo,'Noto Sans Ethiopic',sans-serif" style-focus="border-color:var(--fill)">
+                  <button onClick="{{ ed.nfAddOpt }}" style="height:44px;padding:0 14px;border:1px solid var(--rule2);font-size:14px;font-weight:600">Add</button>
+                </div>
+              </div>
+            </sc-if>
+            <div style="display:grid;grid-template-columns:1fr auto;gap:8px">
+              <button onClick="{{ ed.nfCreate }}" style="height:48px;background:var(--fill);color:var(--onfill);padding:0 14px;font-weight:800;font-size:15px">Add field to song</button>
+              <button onClick="{{ ed.nfCancel }}" style="height:48px;border:1px solid var(--rule2);padding:0 14px;font-size:14px">Cancel</button>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+    <div style="flex:none;padding:12px 16px;border-top:2px solid var(--rule);background:var(--bg)">
+      <button onClick="{{ ed.save }}" style="height:56px;width:100%;background:var(--fill);color:var(--onfill);display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-weight:800;font-size:16px">Save song<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M20 6 9 17l-5-5"></path></svg></button>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isImport }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Bulk import" style="position:absolute;inset:0;background:var(--bg);color:var(--text);display:flex;flex-direction:column">
+    <div style="height:60px;flex:none;display:flex;align-items:center;gap:4px;padding:0 12px 0 8px;border-bottom:2px solid var(--rule)">
+      <button onClick="{{ toolBack }}" aria-label="Back" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg></button>
+      <span style="flex:1;font-size:18px;font-weight:800">Import lyrics</span>
+      <sc-if value="{{ isImportReview }}"><button onClick="{{ imp.edit }}" style="height:44px;color:var(--accent);font-size:14px;font-weight:600">Edit paste</button></sc-if>
+    </div>
+    <sc-if value="{{ isImportPaste }}">
+      <div style="flex:1;display:flex;flex-direction:column;gap:12px;padding:16px;min-height:0">
+        <div style="font-size:14px;line-height:1.5;color:var(--muted);text-wrap:pretty">Paste one song or many. Put the title on the first line and leave two blank lines between songs. Numbered lines start verses, and <span style="color:var(--text)">አዝ</span> starts a chorus.</div>
+        <textarea value="{{ imp.text }}" onChange="{{ imp.onText }}" placeholder="ተመስገን&#10;Key: G · 6/8&#10;1. ተመስገን ጌታ ሆይ…" style="flex:1;min-height:0;width:100%;background:var(--surface);border:1px solid var(--rule2);color:var(--text);padding:14px;font-size:16px;line-height:1.7;outline:none;border-radius:0;resize:none;font-family:'Noto Sans Ethiopic',Archivo,sans-serif" style-focus="border-color:var(--fill)"></textarea>
+        <button onClick="{{ imp.sample }}" style="align-self:flex-start;height:40px;color:var(--accent);font-size:14px;font-weight:600">Paste sample text (prototype)</button>
+      </div>
+      <div style="flex:none;padding:12px 16px;border-top:2px solid var(--rule)">
+        <button onClick="{{ imp.split }}" style="height:56px;width:100%;background:var(--fill);color:var(--onfill);display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-weight:800;font-size:16px">Split into songs<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></button>
+      </div>
+    </sc-if>
+    <sc-if value="{{ isImportReview }}">
+      <div style="flex:1;overflow-y:auto;padding:12px 16px 24px;display:flex;flex-direction:column;gap:16px">
+        <div style="font-size:13px;color:var(--muted);padding-bottom:8px;border-bottom:2px solid var(--rule)">{{ imp.summary }}</div>
+        <sc-for list="{{ imp.drafts }}" as="d" hint-placeholder-count="3">
+          <sc-if value="{{ d.isPending }}">
+            <div style="background:var(--surface);border-top:2px solid var(--rule2);display:flex;flex-direction:column">
+              <div style="padding:12px 14px 0;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)">{{ d.n }}</div>
+              <sc-if value="{{ d.orphan }}">
+                <div style="margin:10px 14px 0;padding:12px;border:1px solid var(--label);display:flex;flex-direction:column;gap:10px">
+                  <span style="font-size:14px;line-height:1.45">No title line found. This looks like the rest of {{ d.prevName }}.</span>
+                  <button onClick="{{ d.mergePrev }}" style="align-self:flex-start;height:40px;padding:0 12px;border:1px solid var(--label);color:var(--label);font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="m18 15-6-6-6 6"></path></svg>Merge into {{ d.prevName }}</button>
+                </div>
+              </sc-if>
+              <div style="padding:10px 14px 0">
+                <input value="{{ d.title }}" onChange="{{ d.onTitle }}" placeholder="Song title" style="width:100%;height:48px;background:var(--bg);border:1px solid var(--rule2);color:var(--text);padding:0 12px;font-size:18px;font-weight:700;outline:none;border-radius:0;font-family:Archivo,'Noto Sans Ethiopic',sans-serif" style-focus="border-color:var(--fill)">
+              </div>
+              <sc-if value="{{ d.hasMeta }}">
+                <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:10px 14px 0">
+                  <sc-for list="{{ d.meta }}" as="m"><span style="font-size:13px;padding:4px 8px;border:1px solid var(--rule2)"><span style="color:var(--muted)">{{ m.k }}</span> <b style="color:var(--accent)">{{ m.v }}</b></span></sc-for>
+                  <span style="font-size:12px;color:var(--muted)">guessed</span>
+                </div>
+              </sc-if>
+              <div style="margin:12px 14px 0;border-top:1px solid var(--rule)">
+                <sc-for list="{{ d.secs }}" as="x">
+                  <div style="display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:8px;align-items:center;min-height:40px;border-bottom:1px solid var(--rule);font-size:14px">
+                    <sc-if value="{{ x.isChorus }}"><span style="font-weight:700;color:var(--label);font-size:13px">{{ x.tag }}</span></sc-if>
+                    <sc-if value="{{ x.notChorus }}"><span style="font-family:'JetBrains Mono',monospace;color:var(--accent);font-size:12px">{{ x.tag }}</span></sc-if>
+                    <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'Noto Sans Ethiopic',Archivo,sans-serif">{{ x.first }}</span>
+                    <span style="font-size:12px;color:var(--muted)">{{ x.count }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;margin-top:12px;border-top:1px solid var(--rule)">
+                <button onClick="{{ d.save }}" style="height:52px;background:var(--fill);color:var(--onfill);font-weight:800;font-size:14px;padding-left:14px;display:flex;align-items:center;gap:6px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M20 6 9 17l-5-5"></path></svg>Save</button>
+                <sc-if value="{{ d.canMerge }}"><button onClick="{{ d.mergeNext }}" style="height:52px;font-weight:600;font-size:14px;padding-left:14px;border-right:1px solid var(--rule);display:flex;align-items:center;gap:6px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="m6 9 6 6 6-6"></path></svg>Merge next</button></sc-if>
+                <button onClick="{{ d.discard }}" style="height:52px;color:var(--danger);font-weight:600;font-size:14px;padding-left:14px;grid-column:3">Discard</button>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ d.isSaved }}">
+            <div style="display:grid;grid-template-columns:28px minmax(0,1fr);align-items:center;min-height:56px;padding:0 14px;border:1px solid var(--rule);font-size:14px">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--label)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M20 6 9 17l-5-5"></path></svg>
+              <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><b>{{ d.titleShown }}</b> <span style="color:var(--muted)">· {{ d.savedText }}</span></span>
+            </div>
+          </sc-if>
+          <sc-if value="{{ d.isDiscarded }}">
+            <div style="display:flex;align-items:center;justify-content:space-between;min-height:56px;padding:0 4px 0 14px;border:1px solid var(--rule);font-size:14px;color:var(--muted)">
+              <span>Discarded · {{ d.titleShown }}</span>
+              <button onClick="{{ d.undo }}" style="height:44px;padding:0 10px;color:var(--accent);font-weight:600">Undo</button>
+            </div>
+          </sc-if>
+        </sc-for>
+      </div>
+      <div style="flex:none;padding:12px 16px;border-top:2px solid var(--rule)">
+        <sc-if value="{{ imp.hasRemaining }}"><button onClick="{{ imp.saveAll }}" style="height:56px;width:100%;background:var(--fill);color:var(--onfill);display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-weight:800;font-size:16px">{{ imp.saveAllLabel }}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M20 6 9 17l-5-5"></path></svg></button></sc-if>
+        <sc-if value="{{ imp.noneRemaining }}"><button onClick="{{ imp.done }}" style="height:56px;width:100%;border:2px solid var(--rule2);display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-weight:600;font-size:15px">Done · back to catalogue<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></button></sc-if>
+      </div>
+    </sc-if>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isSlides }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Slide generator" style="position:absolute;inset:0;background:var(--bg);color:var(--text);display:flex;flex-direction:column">
+    <div style="height:60px;flex:none;display:flex;align-items:center;gap:4px;padding:0 16px 0 8px;border-bottom:2px solid var(--rule)">
+      <button onClick="{{ toolBack }}" aria-label="Back" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg></button>
+      <span style="flex:1;font-size:18px;font-weight:800">Slides</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)">{{ dk.countText }}</span>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:16px 16px 28px;display:flex;flex-direction:column;gap:28px">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div>
+          <label style="display:block;font-size:12px;color:var(--muted);margin-bottom:6px">Deck title</label>
+          <input value="{{ dk.title }}" onChange="{{ dk.onTitle }}" style="width:100%;height:52px;background:var(--surface);border:1px solid var(--rule2);color:var(--text);padding:0 14px;font-size:17px;font-weight:600;outline:none;border-radius:0;font-family:Archivo,'Noto Sans Ethiopic',sans-serif" style-focus="border-color:var(--fill)">
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:10px">
+          <div>
+            <label style="display:block;font-size:12px;color:var(--muted);margin-bottom:6px">Date</label>
+            <input type="date" value="{{ dk.date }}" onChange="{{ dk.onDate }}" style="width:100%;height:52px;background:var(--surface);border:1px solid var(--rule2);color:var(--text);padding:0 10px;font-size:15px;outline:none;border-radius:0" style-focus="border-color:var(--fill)">
+          </div>
+          <div>
+            <label style="display:block;font-size:12px;color:var(--muted);margin-bottom:6px">Closing slide</label>
+            <input value="{{ dk.closing }}" onChange="{{ dk.onClosing }}" style="width:100%;height:52px;background:var(--surface);border:1px solid var(--rule2);color:var(--text);padding:0 12px;font-size:15px;outline:none;border-radius:0;font-family:Archivo,'Noto Sans Ethiopic',sans-serif" style-focus="border-color:var(--fill)">
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column">
+        <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--rule);padding-bottom:4px"><span style="font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)">{{ dk.songHead }}</span><button onClick="{{ dk.openPicker }}" style="height:40px;display:flex;align-items:center;gap:6px;color:var(--accent);font-weight:700;font-size:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>Add songs</button></div>
+        <sc-if value="{{ dk.empty }}"><div style="padding:20px 0;font-size:14px;color:var(--muted)">No songs yet. Add the songs in the order they'll be sung.</div></sc-if>
+        <sc-for list="{{ dk.songs }}" as="g" hint-placeholder-count="2">
+          <div style="border-bottom:1px solid var(--rule)">
+            <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center">
+              <button onClick="{{ g.toggle }}" style="display:grid;grid-template-columns:32px minmax(0,1fr);align-items:baseline;padding:14px 0;min-width:0">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)">{{ g.pos }}</span>
+                <span style="display:flex;flex-direction:column;gap:3px;min-width:0"><span style="font-size:18px;font-weight:700;line-height:1.35">{{ g.title }}</span><span style="font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ g.meta }}</span></span>
+              </button>
+              <div style="display:flex">
+                <button onClick="{{ g.up }}" aria-label="Move song up" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--muted)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="m18 15-6-6-6 6"></path></svg></button>
+                <button onClick="{{ g.down }}" aria-label="Move song down" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--muted)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="m6 9 6 6 6-6"></path></svg></button>
+                <button onClick="{{ g.remove }}" aria-label="Remove song" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--danger)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+              </div>
+            </div>
+            <sc-if value="{{ g.open }}">
+              <div style="background:var(--surface);margin:0 -16px;padding:12px 16px 14px;display:flex;flex-direction:column;gap:10px">
+                <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:12px;color:var(--muted)">Sung order</span><button onClick="{{ g.reset }}" style="height:32px;font-size:13px;color:var(--accent);font-weight:600">Reset to song order</button></div>
+                <div style="border-top:1px solid var(--rule)">
+                  <sc-for list="{{ g.seq }}" as="q">
+                    <div style="display:grid;grid-template-columns:36px minmax(0,1fr) auto;align-items:center;min-height:48px;border-bottom:1px solid var(--rule)">
+                      <sc-if value="{{ q.isChorus }}"><span style="font-weight:700;color:var(--label);font-size:13px">{{ q.tag }}</span></sc-if>
+                      <sc-if value="{{ q.notChorus }}"><span style="font-family:'JetBrains Mono',monospace;color:var(--accent);font-size:12px">{{ q.tag }}</span></sc-if>
+                      <span style="font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'Noto Sans Ethiopic',Archivo,sans-serif">{{ q.first }}</span>
+                      <span style="display:flex">
+                        <button onClick="{{ q.up }}" aria-label="Move up" style="width:40px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--muted)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="m18 15-6-6-6 6"></path></svg></button>
+                        <button onClick="{{ q.down }}" aria-label="Move down" style="width:40px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--muted)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="m6 9 6 6 6-6"></path></svg></button>
+                        <button onClick="{{ q.remove }}" aria-label="Remove from order" style="width:40px;height:44px;display:flex;align-items:center;justify-content:center;color:var(--muted)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+                      </span>
+                    </div>
+                  </sc-for>
+                </div>
+                <span style="font-size:12px;color:var(--muted);margin-top:4px">Tap to add to the end</span>
+                <div style="display:flex;flex-wrap:wrap;gap:6px">
+                  <sc-for list="{{ g.palette }}" as="p">
+                    <button onClick="{{ p.add }}" style="height:40px;padding:0 12px;border:1px solid var(--rule2);background:var(--bg);display:flex;align-items:center;gap:8px;font-size:14px" style-hover="border-color:var(--fill)"><span style="font-weight:700;color:var(--accent)">{{ p.tag }}</span>{{ p.name }}</button>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="border-bottom:2px solid var(--rule);padding-bottom:8px"><span style="font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)">Preview</span></div>
+        <div style="display:flex;gap:10px;overflow-x:auto;margin:0 -16px;padding:0 16px 4px">
+          <sc-for list="{{ dk.thumbs }}" as="t" hint-placeholder-count="4">
+            <div style="flex:none;display:flex;flex-direction:column;gap:6px">
+              <div style="width:176px;height:99px;background:#000;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8px 10px;font-family:'Noto Sans Ethiopic',Archivo,sans-serif;font-weight:700;box-shadow:inset 0 0 0 1px var(--rule)">
+                <sc-if value="{{ t.isTitle }}"><div style="font-size:15px;line-height:1.3">{{ t.text }}</div><div style="font-size:9px;font-weight:400;margin-top:4px;opacity:.8">{{ t.sub }}</div></sc-if>
+                <sc-if value="{{ t.isDivider }}"><div style="font-size:17px;line-height:1.3">{{ t.text }}</div><div style="width:28px;height:2px;background:#fff;margin-top:6px"></div></sc-if>
+                <sc-if value="{{ t.isLyric }}"><sc-for list="{{ t.lines }}" as="ln"><div style="font-size:9.5px;line-height:1.5">{{ ln }}</div></sc-for></sc-if>
+                <sc-if value="{{ t.isClosing }}"><div style="font-size:13px;line-height:1.35">{{ t.text }}</div></sc-if>
+              </div>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">{{ t.cap }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+    <div style="flex:none;padding:12px 16px;border-top:2px solid var(--rule)">
+      <button onClick="{{ dk.generate }}" style="height:56px;width:100%;background:var(--fill);color:var(--onfill);display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-weight:800;font-size:16px">{{ dk.genLabel }}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg></button>
+    </div>
+
+    <sc-if value="{{ pk.open }}">
+      <div style="position:absolute;inset:0;z-index:30;background:var(--bg);display:flex;flex-direction:column">
+        <div style="height:60px;flex:none;display:flex;align-items:center;gap:4px;padding:0 12px 0 8px">
+          <button onClick="{{ pk.close }}" aria-label="Close" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+          <span style="flex:1;font-size:18px;font-weight:800">Add songs</span>
+        </div>
+        <div style="padding:0 16px 10px;border-bottom:2px solid var(--rule)">
+          <div style="height:52px;border:2px solid var(--fill);background:var(--surface);display:flex;align-items:center;gap:10px;padding:0 12px"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="flex:none"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg><input type="search" value="{{ pk.q }}" onChange="{{ pk.onQ }}" placeholder="Title or number" style="flex:1;min-width:0;height:100%;background:transparent;border:0;outline:none;color:var(--text);font-size:17px;font-family:Archivo,'Noto Sans Ethiopic',sans-serif"></div>
+        </div>
+        <div style="flex:1;overflow-y:auto">
+          <sc-for list="{{ pk.items }}" as="it" hint-placeholder-count="5">
+            <button onClick="{{ it.toggle }}" style="width:100%;display:grid;grid-template-columns:52px 44px minmax(0,1fr);align-items:center;min-height:64px;border-bottom:1px solid var(--rule);padding-right:16px">
+              <span style="padding-left:16px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)">{{ it.noText }}</span>
+              <sc-if value="{{ it.on }}"><span style="width:24px;height:24px;background:var(--fill);color:var(--onfill);display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M20 6 9 17l-5-5"></path></svg></span></sc-if>
+              <sc-if value="{{ it.off }}"><span style="width:24px;height:24px;border:2px solid var(--rule2)"></span></sc-if>
+              <span style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-size:17px;font-weight:700;line-height:1.35">{{ it.title }}</span><span style="font-size:12px;color:var(--muted)">{{ it.meta }}<sc-if value="{{ it.inDeck }}"><span style="color:var(--label)"> · Already in deck</span></sc-if></span></span>
+            </button>
+          </sc-for>
+        </div>
+        <div style="flex:none;padding:12px 16px;border-top:2px solid var(--rule)">
+          <button onClick="{{ pk.add }}" style="height:56px;width:100%;background:var(--fill);color:var(--onfill);display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-weight:800;font-size:16px">{{ pk.addLabel }}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></button>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isMembers }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Members" style="position:absolute;inset:0;background:var(--bg);color:var(--text);display:flex;flex-direction:column">
+    <div style="height:60px;flex:none;display:flex;align-items:center;gap:4px;padding:0 12px 0 8px;border-bottom:2px solid var(--rule)">
+      <button onClick="{{ toolBack }}" aria-label="Back" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg></button>
+      <span style="flex:1;font-size:18px;font-weight:800">Members</span>
+    </div>
+    <div style="flex:1;overflow-y:auto">
+      <div style="padding:16px 16px 12px;display:flex;flex-direction:column;gap:12px">
+        <sc-if value="{{ mem.notAdding }}">
+          <button onClick="{{ mem.startAdd }}" style="height:56px;width:100%;background:var(--fill);color:var(--onfill);display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-weight:800;font-size:16px">Add member<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></button>
+        </sc-if>
+        <sc-if value="{{ mem.adding }}">
+          <div style="border:2px solid var(--fill);background:var(--surface);padding:14px;display:flex;flex-direction:column;gap:12px">
+            <span style="font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)">New member</span>
+            <div style="display:grid;grid-template-columns:64px 1fr;border:1px solid var(--rule2);height:52px;background:var(--bg)">
+              <div style="display:flex;align-items:center;padding-left:12px;font-size:16px;border-right:1px solid var(--rule);color:var(--muted)">+251</div>
+              <input type="tel" inputMode="numeric" value="{{ mem.newPhone }}" onChange="{{ mem.onNewPhone }}" placeholder="91 234 5678" style="width:100%;min-width:0;background:transparent;border:0;outline:none;color:var(--text);font-size:17px;padding:0 12px">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--rule2)">
+              <sc-if value="{{ mem.newIsMember }}"><button onClick="{{ mem.setNewMember }}" style="height:44px;padding:0 12px;background:var(--fill);color:var(--onfill);font-weight:700;font-size:14px">Member</button><button onClick="{{ mem.setNewAdmin }}" style="height:44px;padding:0 12px;font-size:14px;border-left:1px solid var(--rule2)">Admin</button></sc-if>
+              <sc-if value="{{ mem.newIsAdmin }}"><button onClick="{{ mem.setNewMember }}" style="height:44px;padding:0 12px;font-size:14px">Member</button><button onClick="{{ mem.setNewAdmin }}" style="height:44px;padding:0 12px;background:var(--fill);color:var(--onfill);font-weight:700;font-size:14px">Admin</button></sc-if>
+            </div>
+            <div style="font-size:13px;color:var(--muted);line-height:1.45">They'll link Telegram the first time they sign in.</div>
+            <div style="display:grid;grid-template-columns:1fr auto;gap:8px">
+              <button onClick="{{ mem.add }}" style="height:48px;background:var(--fill);color:var(--onfill);padding:0 14px;font-weight:800;font-size:15px">Give access</button>
+              <button onClick="{{ mem.cancelAdd }}" style="height:48px;border:1px solid var(--rule2);padding:0 14px;font-size:14px">Cancel</button>
+            </div>
+          </div>
+        </sc-if>
+        <div style="font-size:12px;color:var(--muted)">{{ mem.summary }}</div>
+      </div>
+      <div style="border-top:2px solid var(--rule)">
+        <sc-for list="{{ mem.list }}" as="m" hint-placeholder-count="6">
+          <div style="border-bottom:1px solid var(--rule)">
+            <button onClick="{{ m.toggle }}" style="width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;min-height:68px;padding:10px 16px">
+              <span style="display:flex;flex-direction:column;gap:4px">
+                <span style="font-size:16px;font-weight:600;letter-spacing:.01em">{{ m.phone }}<sc-if value="{{ m.you }}"><span style="font-weight:400;font-size:13px;color:var(--muted)"> · You</span></sc-if></span>
+                <sc-if value="{{ m.linked }}"><span style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--label)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M20 6 9 17l-5-5"></path></svg>Telegram linked</span></sc-if>
+                <sc-if value="{{ m.unlinked }}"><span style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><circle cx="12" cy="12" r="9"></circle></svg>Not linked yet</span></sc-if>
+              </span>
+              <sc-if value="{{ m.isAdmin }}"><span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--fill);color:var(--onfill);padding:4px 8px">Admin</span></sc-if>
+              <sc-if value="{{ m.isMember }}"><span style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--rule2);color:var(--muted);padding:3px 8px">Member</span></sc-if>
+            </button>
+            <sc-if value="{{ m.open }}">
+              <div style="background:var(--surface);padding:12px 16px 16px;display:flex;flex-direction:column;gap:12px">
+                <sc-if value="{{ m.you }}"><div style="font-size:14px;color:var(--muted);line-height:1.45">This is you. Another admin has to change your role or remove your access.</div></sc-if>
+                <sc-if value="{{ m.notYou }}">
+                  <span style="font-size:12px;color:var(--muted)">Role</span>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--rule2)">
+                    <sc-if value="{{ m.isMember }}"><button onClick="{{ m.setMember }}" style="height:44px;padding:0 12px;background:var(--fill);color:var(--onfill);font-weight:700;font-size:14px">Member</button><button onClick="{{ m.setAdmin }}" style="height:44px;padding:0 12px;font-size:14px;border-left:1px solid var(--rule2)">Admin</button></sc-if>
+                    <sc-if value="{{ m.isAdmin }}"><button onClick="{{ m.setMember }}" style="height:44px;padding:0 12px;font-size:14px">Member</button><button onClick="{{ m.setAdmin }}" style="height:44px;padding:0 12px;background:var(--fill);color:var(--onfill);font-weight:700;font-size:14px">Admin</button></sc-if>
+                  </div>
+                  <sc-if value="{{ m.notConfirming }}"><button onClick="{{ m.remove }}" style="height:48px;border:1px solid var(--danger);color:var(--danger);padding:0 14px;font-weight:600;font-size:14px">Remove access</button></sc-if>
+                  <sc-if value="{{ m.confirming }}"><button onClick="{{ m.remove }}" style="height:48px;background:var(--danger);color:var(--bg);padding:0 14px;font-weight:800;font-size:14px">Tap again to remove {{ m.phone }}</button></sc-if>
+                </sc-if>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isFields }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Metadata fields" style="position:absolute;inset:0;background:var(--bg);color:var(--text);display:flex;flex-direction:column">
+    <div style="height:60px;flex:none;display:flex;align-items:center;gap:4px;padding:0 12px 0 8px;border-bottom:2px solid var(--rule)">
+      <button onClick="{{ toolBack }}" aria-label="Back" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg></button>
+      <span style="flex:1;font-size:18px;font-weight:800">Fields</span>
+    </div>
+    <div style="flex:1;overflow-y:auto">
+      <div style="padding:14px 16px;font-size:14px;line-height:1.5;color:var(--muted);text-wrap:pretty;border-bottom:2px solid var(--rule)">New fields are usually created while editing a song. Use this page to rename, tidy options, merge duplicates or delete fields that aren't used.</div>
+      <sc-for list="{{ fl.list }}" as="f" hint-placeholder-count="6">
+        <div style="border-bottom:1px solid var(--rule)">
+          <button onClick="{{ f.toggle }}" style="width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;min-height:64px;padding:10px 16px">
+            <span style="display:flex;flex-direction:column;gap:3px">
+              <span style="font-size:16px;font-weight:700">{{ f.name }}</span>
+              <span style="font-size:13px;color:var(--muted)">{{ f.meta }}</span>
+            </span>
+            <sc-if value="{{ f.isDup }}"><span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--label);border:1px solid var(--label);padding:3px 8px">Duplicate?</span></sc-if>
+          </button>
+          <sc-if value="{{ f.open }}">
+            <div style="background:var(--surface);padding:12px 16px 16px;display:flex;flex-direction:column;gap:14px">
+              <sc-if value="{{ f.isDup }}">
+                <div style="padding:12px;border:1px solid var(--label);display:flex;flex-direction:column;gap:10px">
+                  <span style="font-size:14px;line-height:1.45">Looks like a duplicate of <b>{{ f.dupOf }}</b>. Merging moves its values across and deletes this one.</span>
+                  <button onClick="{{ f.merge }}" style="align-self:flex-start;height:40px;padding:0 12px;background:var(--label);color:var(--bg);font-weight:800;font-size:14px">Merge into {{ f.dupOf }}</button>
+                </div>
+              </sc-if>
+              <div>
+                <label style="display:block;font-size:12px;color:var(--muted);margin-bottom:6px">Name</label>
+                <div style="display:grid;grid-template-columns:minmax(0,1fr) auto">
+                  <input value="{{ f.nameVal }}" onChange="{{ f.onName }}" style="height:48px;background:var(--bg);border:1px solid var(--rule2);color:var(--text);padding:0 12px;font-size:15px;outline:none;border-radius:0;font-family:Archivo,'Noto Sans Ethiopic',sans-serif" style-focus="border-color:var(--fill)">
+                  <sc-if value="{{ f.nameChanged }}"><button onClick="{{ f.rename }}" style="height:48px;padding:0 14px;background:var(--fill);color:var(--onfill);font-weight:800;font-size:14px">Rename</button></sc-if>
+                </div>
+              </div>
+              <sc-if value="{{ f.hasOpts }}">
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <span style="font-size:12px;color:var(--muted)">Options</span>
+                  <div style="display:flex;flex-wrap:wrap;gap:6px">
+                    <sc-for list="{{ f.options }}" as="o">
+                      <span style="height:36px;display:flex;align-items:center;gap:2px;padding-left:10px;border:1px solid var(--rule2);background:var(--bg);font-size:14px">{{ o.o }}<button onClick="{{ o.remove }}" aria-label="Remove option" style="width:32px;height:34px;display:flex;align-items:center;justify-content:center;color:var(--muted)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button></span>
+                    </sc-for>
+                  </div>
+                  <div style="display:grid;grid-template-columns:minmax(0,1fr) auto">
+                    <input value="{{ f.optVal }}" onChange="{{ f.onOpt }}" placeholder="New option" style="height:44px;background:var(--bg);border:1px solid var(--rule2);border-right:0;color:var(--text);padding:0 12px;font-size:14px;outline:none;border-radius:0;font-family:Archivo,'Noto Sans Ethiopic',sans-serif" style-focus="border-color:var(--fill)">
+                    <button onClick="{{ f.addOpt }}" style="height:44px;padding:0 14px;border:1px solid var(--rule2);font-size:14px;font-weight:600">Add</button>
+                  </div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ f.notConfirming }}"><button onClick="{{ f.del }}" style="height:48px;border:1px solid var(--danger);color:var(--danger);padding:0 14px;font-weight:600;font-size:14px">Delete field</button></sc-if>
+              <sc-if value="{{ f.confirming }}"><button onClick="{{ f.del }}" style="height:48px;background:var(--danger);color:var(--bg);padding:0 14px;font-weight:800;font-size:14px">{{ f.deleteLabel }}</button></sc-if>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ hasToast }}">
+  <div style="position:absolute;left:16px;right:16px;bottom:88px;z-index:20;background:var(--text);color:var(--bg);padding:14px 16px;font-size:14px;font-weight:600;display:flex;justify-content:space-between;gap:12px"><span>{{ toast }}</span></div>
+</sc-if>
+
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;role&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;admin&quot;,&quot;member&quot;],&quot;default&quot;:&quot;admin&quot;,&quot;tsType&quot;:&quot;'admin'|'member'&quot;},&quot;firstTime&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;startScreen&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;login&quot;,&quot;catalogue&quot;,&quot;song&quot;,&quot;editor&quot;,&quot;import&quot;,&quot;slides&quot;,&quot;members&quot;,&quot;fields&quot;],&quot;default&quot;:&quot;login&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;dark&quot;,&quot;light&quot;],&quot;default&quot;:&quot;dark&quot;,&quot;tsType&quot;:&quot;'dark'|'light'&quot;}}">
+const SONGS = [
+  { no: 14, title: 'እረድቶናል',
+    fields: [['Key','D♭'],['Time','6/8'],['Genre','Praise'],['Chant type','ዝማሬ'],['Notes','Women lead the verse response; full choir on the chorus.']],
+    sections: {
+      v1: { type:'verse', lines:['ይውጣ ድንቅ ዜማ ለምልክት','እርዳታችን ከላይ ለሆነበት','አቤኔዘር ብለን አኑረናል','ዜማችን ማህተም ሆኖ ተተክሏል'], indent:['እግዚአብሄር ይመስገን ላከበረን','በእውነት ድንቅ ሰርቶ ላስደነቀን','ያለን በእጃችን ምስጋና ነው','ላደረገው ምላሽ ምናቀርበው'] },
+      c: { type:'chorus', lines:['ኑ እንቅረብ ምስጋና ይዘን','በብርቱ ላቆመን ላፀናን','ረድቶናል የሰማዩ አምላክ','ይክበር ይግነን ስሙ ይባረክ'] },
+      v2: { type:'verse', lines:['ይፃፍ ስለእግዚአብሄር በቀለማት','ለኛ ስለአደረገው መልካምነት','በሰላሙ ከቦ ሆኖን መስፍን','ዘመናት ጨምሮ አስገረመን'] }
+    }, order:['v1','c','v2','c'],
+    recs:[['Full choir · 12 May',272],['Alto part only',238]] },
+  { no: 8, title: 'ምስጋና ይሁን',
+    fields: [['Key','G'],['Time','4/4'],['Genre','Worship'],['Chant type','ምስጋና']],
+    sections: { v1:{type:'verse',lines:['ምስጋና ይሁን ለአምላካችን','ክብር ይሁን ለንጉሳችን']}, c:{type:'chorus',lines:['ሃሌ ሉያ ሃሌ ሉያ','ስሙ ይባረክ ለዘላለም']} },
+    order:['v1','c','c'], recs:[['Rehearsal · 3 May',221]] },
+  { no: 2, title: 'አቤኔዘር',
+    fields: [['Key','A'],['Time','4/4'],['Genre','Worship']],
+    sections: { v1:{type:'verse',lines:['እስከዚህ ድረስ ረድቶናል','አቤኔዘር ብለን እንዘምራለን']} }, order:['v1'], recs:[] },
+  { no: 31, title: 'ይገባዋል',
+    fields: [['Key','E'],['Time','4/4'],['Genre','Praise'],['Chant type','ምስጋና']],
+    sections: { v1:{type:'verse',lines:['ክብር ይገባዋል ምስጋና ይገባዋል','ለሰራው ድንቅ ስራ']} }, order:['v1'], recs:[['Full choir',198]] },
+  { no: 40, title: 'ስሙ ይባረክ',
+    fields: [['Key','C'],['Time','4/4'],['Genre','Praise']],
+    sections: { v1:{type:'verse',lines:['ስሙ ይባረክ ከፍ ከፍ ይበል','ምስጋና ለአምላካችን']} }, order:['v1'], recs:[] },
+  { no: 57, title: 'Amazing Grace',
+    fields: [['Key','G'],['Time','3/4'],['Genre','Hymn'],['Notes','English. Sung at communion.']],
+    sections: { v1:{type:'verse',lines:['Amazing grace! how sweet the sound','That saved a wretch like me!','I once was lost, but now am found,','Was blind, but now I see.']} }, order:['v1'], recs:[['Congregation · Easter',244]] },
+  { no: 62, title: 'ክብር ለስሙ',
+    fields: [['Key','G'],['Time','6/8'],['Genre','Worship'],['Form','Call and response']],
+    sections: { v1:{type:'verse',lines:['ክብር ለስሙ ይሁን','ከፍ ከፍ ይበል']} }, order:['v1'], recs:[] }
+];
+SONGS.find(s => s.no === 2).fields.push(['chant type', 'ዝማሬ']);
+SONGS.find(s => s.no === 40).fields.push(['chant type', 'ምስጋና']);
+const FIELDS = [
+  { name: 'Key', type: 'single', options: ['C','D♭','D','E♭','E','F','F♯','G','A♭','A','B♭','B'] },
+  { name: 'Time', type: 'single', options: ['2/4','3/4','4/4','6/8','12/8'] },
+  { name: 'Genre', type: 'single', options: ['Praise','Worship','Hymn','Christmas'] },
+  { name: 'Chant type', type: 'single', options: ['ዝማሬ','ምስጋና'] },
+  { name: 'Form', type: 'text' },
+  { name: 'Notes', type: 'text' },
+  { name: 'Tempo', type: 'number' },
+  { name: 'chant type', type: 'text' }
+];
+const TYPE_LABEL = { text: 'Text', number: 'Number', single: 'Single-select', multi: 'Multi-select' };
+const SEC_TAG = { chorus: 'አዝ', bridge: 'BR', intro: 'IN', outro: 'OUT', other: '•' };
+const SEC_NAME = { verse: 'Verse', chorus: 'Chorus', bridge: 'Bridge', intro: 'Intro', outro: 'Outro', other: 'Other' };
+const MEMBERS = [
+  { phone: '+251 91 234 5678', role: 'admin', linked: true, you: true },
+  { phone: '+251 91 102 3344', role: 'admin', linked: true },
+  { phone: '+251 92 556 7812', role: 'member', linked: true },
+  { phone: '+251 93 880 1290', role: 'member', linked: false },
+  { phone: '+251 91 447 0921', role: 'member', linked: true },
+  { phone: '+251 94 310 6655', role: 'member', linked: true },
+  { phone: '+251 91 998 2103', role: 'member', linked: false },
+  { phone: '+251 90 221 4478', role: 'member', linked: true }
+];
+const SAMPLE = 'ተመስገን\nKey: G · 6/8\n1. ተመስገን ጌታ ሆይ ስለ ሁሉ\n   ስለ ቸርነትህ ስለ ፍቅርህ\n\nአዝ\nተመስገን ተመስገን\nክብር ላንተ ይሁን\n\n\nብርሃኔ ነህ\nKey: D\n1. ብርሃኔ ነህ መንገዴ ነህ\n   በጨለማ የምታበራ\n\n\nአዝ\nአንተ ነህ ብርሃኔ\nአንተ ነህ ተስፋዬ\n\n\nHoly, Holy, Holy\nKey: E♭ · 4/4\n1. Holy, holy, holy! Lord God Almighty!\n   Early in the morning our song shall rise to Thee\n\nአዝ\nHoly, holy, holy! merciful and mighty!';
+let uid = 1; const nid = () => 'i' + (uid++);
+const fieldDef = n => FIELDS.find(f => f.name === n);
+const nextNo = () => Math.max(...SONGS.map(s => s.no)) + 1;
+const secText = sec => sec.lines.join('\n') + (sec.indent && sec.indent.length ? '\n\n' + sec.indent.join('\n') : '');
+const parseText = t => { const p = t.split(/\n\s*\n/).map(x => x.split('\n').map(l => l.trim()).filter(Boolean)).filter(x => x.length); return { lines: p[0] || [], indent: p.slice(1).flat() }; };
+function draftFromSong(s) {
+  const ids = {}, items = [];
+  s.order.forEach(k => { if (ids[k]) items.push({ id: nid(), kind: 'repeat', ref: ids[k] }); else { const id = nid(); ids[k] = id; const sec = s.sections[k]; items.push({ id, kind: 'section', type: sec.type, label: sec.label || '', text: secText(sec) }); } });
+  return { isNew: false, no: s.no, title: s.title, items, fields: s.fields.map(([name, value]) => ({ name, value: (fieldDef(name) || {}).type === 'multi' ? value.split(', ') : value })) };
+}
+const blankDraft = () => ({ isNew: true, no: nextNo(), title: '', items: [{ id: nid(), kind: 'section', type: 'verse', label: '', text: '' }], fields: [{ name: 'Key', value: '' }, { name: 'Time', value: '' }, { name: 'Genre', value: '' }] });
+function songFromDraft(d, recs) {
+  const sections = {}, order = [], keyOf = {}; let i = 0;
+  d.items.forEach(it => {
+    if (it.kind === 'section') { const p = parseText(it.text); if (!p.lines.length) return; const k = 's' + (i++); keyOf[it.id] = k; sections[k] = { type: it.type, label: it.label.trim(), lines: p.lines, indent: p.indent }; order.push(k); }
+    else if (keyOf[it.ref]) order.push(keyOf[it.ref]);
+  });
+  return { no: d.no, title: d.title.trim(), fields: d.fields.map(f => [f.name, Array.isArray(f.value) ? f.value.join(', ') : String(f.value).trim()]).filter(f => f[1]), sections, order, recs };
+}
+function splitImport(text) {
+  const chunks = text.replace(/\r/g, '').split(/\n[ \t]*\n[ \t]*\n+/).map(c => c.trim()).filter(Boolean);
+  return chunks.map((c, n) => {
+    const lines = c.split('\n'); const meta = []; let title = '', start = 0;
+    const isMarker = l => /^(\d+[.)]|አዝ|chorus|verse)/i.test(l.trim());
+    if (!isMarker(lines[0])) { title = lines[0].trim(); start = 1; }
+    const sections = []; let cur = null;
+    for (let i = start; i < lines.length; i++) {
+      const t = lines[i].trim(); if (!t) continue;
+      const km = t.match(/^key\s*[:：]\s*(.+)$/i);
+      if (km) { km[1].split('·').map(x => x.trim()).forEach(v => { const k = /^\d+\/\d+$/.test(v) ? 'Time' : 'Key'; if (!meta.some(m => m[0] === k)) meta.push([k, v]); }); continue; }
+      const vm = t.match(/^(\d+)[.)]\s*(.*)$/);
+      if (vm) { cur = { type: 'verse', lines: vm[2] ? [vm[2]] : [] }; sections.push(cur); continue; }
+      if (/^(አዝ|chorus)/i.test(t)) { cur = { type: 'chorus', lines: [] }; sections.push(cur); const rest = t.replace(/^(አዝ|chorus)[:.\s]*/i, ''); if (rest) cur.lines.push(rest); continue; }
+      if (!cur) { cur = { type: 'verse', lines: [] }; sections.push(cur); }
+      cur.lines.push(t);
+    }
+    return { id: 'd' + n + Date.now(), title, meta, sections, orphan: !title, status: 'pending' };
+  });
+}
+function secLabel(song, k) {
+  const sec = song.sections[k];
+  if (sec.type === 'verse') { const vs = Object.keys(song.sections).filter(x => song.sections[x].type === 'verse'); return String(vs.indexOf(k) + 1).padStart(2, '0'); }
+  return SEC_TAG[sec.type] || '•';
+}
+const pad = n => String(n).padStart(3, '0');
+const pad2 = n => String(n).padStart(2, '0');
+const fmt = s => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
+const DARK = { display: 'contents' };
+const LIGHT = { display: 'contents', '--bg':'#f4f1ea','--surface':'#e9e3d6','--text':'#10282b','--muted':'#52676a','--rule':'#d3cbbb','--rule2':'#b4ab98','--fill':'#d9a03f','--onfill':'#1a1206','--accent':'#8a5a0e','--label':'#1f6f79','--hl':'#f1d99a','--hltext':'#5e3c05','--band':'#e9e3d6','--scrim':'rgba(16,40,43,.45)','--danger':'#a8401c','--mark':'linear-gradient(180deg,#d99a2b 0%,#c8662a 60%,#a8401c 100%)' };
+
+class Component extends DCLogic {
+  state = { screen: null, phone: '', code: '', q: '', songNo: null, more: false, theme: null, size: 20, playing: false, recIdx: 0, pos: 0, toast: null,
+    ed: null, edFrom: 'catalogue', edPicker: false, nf: null,
+    importText: '', drafts: null,
+    deck: { title: 'Sunday Service', date: '2026-10-04', closing: 'እግዚአብሄር ይባርካችሁ', songs: [{ no: 14, seq: ['v1','c','v2','c'] }, { no: 8, seq: ['v1','c','c'] }] },
+    deckOpen: 0, picker: false, pickerQ: '', pickerSel: [],
+    memOpen: null, memConfirm: null, addMem: null,
+    fOpen: null, fName: '', fOpt: '', fConfirm: null };
+  songScroll = React.createRef();
+  saveDraft() {
+    const d = this.state.ed;
+    if (!d.title.trim()) return this.toastMsg('Add a title first');
+    const old = SONGS.find(x => x.no === d.no);
+    const song = songFromDraft(d, old ? old.recs : []);
+    if (!song.order.length) return this.toastMsg('Add lyrics to at least one section');
+    if (old) SONGS[SONGS.indexOf(old)] = song; else SONGS.push(song);
+    this.go('song', { songNo: song.no, ed: null, nf: null, recIdx: 0, pos: 0, playing: false });
+    this.toastMsg(old ? 'Song saved' : 'Song added');
+  }
+  p2() {
+    const s = this.state, scr = this.screen();
+    const out = { isEditor: scr === 'editor', isImport: scr === 'import', isSlides: scr === 'slides', isMembers: scr === 'members', isFields: scr === 'fields', toolBack: () => this.go('catalogue') };
+    // — editor —
+    const d = s.ed;
+    out.cancelEdit = () => this.go(s.edFrom === 'song' ? 'song' : 'catalogue', { ed: null, nf: null });
+    out.ed = {};
+    if (d) {
+      const upd = fn => this.setState(st => { const ed = { ...st.ed, items: st.ed.items.map(x => ({ ...x })), fields: st.ed.fields.map(x => ({ ...x })) }; fn(ed); return { ed }; });
+      const move = (i, dir) => upd(ed => { const j = i + dir; if (j < 0 || j >= ed.items.length) return; [ed.items[i], ed.items[j]] = [ed.items[j], ed.items[i]]; });
+      const byId = {}; d.items.forEach(it => byId[it.id] = it);
+      const used = new Set(d.fields.map(f => f.name));
+      out.ed = {
+        heading: d.isNew ? 'New song' : 'Edit song', noText: pad(d.no), title: d.title,
+        onTitle: e => { const v = e.target.value; upd(ed => { ed.title = v; }); },
+        partCount: d.items.length + (d.items.length === 1 ? ' part' : ' parts'),
+        items: d.items.map((it, i) => {
+          const base = { key: it.id, pos: String(i + 1).padStart(2, '0'), up: () => move(i, -1), down: () => move(i, 1),
+            remove: () => upd(ed => { ed.items.splice(i, 1); ed.items = ed.items.filter(x => x.kind !== 'repeat' || ed.items.some(y => y.id === x.ref)); }) };
+          if (it.kind === 'repeat') { const r = byId[it.ref]; return { ...base, isRepeat: true, isSection: false, refName: r ? (r.label || SEC_NAME[r.type]) : '', refFirst: r ? (r.text.split('\n')[0] || '') : '' }; }
+          return { ...base, isSection: true, isRepeat: false, type: it.type, label: it.label, text: it.text, isChorus: it.type === 'chorus',
+            rows: Math.max(3, it.text.split('\n').length + 1),
+            onType: e => { const v = e.target.value; upd(ed => { ed.items[i].type = v; }); },
+            onLabel: e => { const v = e.target.value; upd(ed => { ed.items[i].label = v; }); },
+            onText: e => { const v = e.target.value; upd(ed => { ed.items[i].text = v; }); },
+            onRepeat: () => upd(ed => { ed.items.splice(i + 1, 0, { id: nid(), kind: 'repeat', ref: it.id }); }) };
+        }),
+        addSection: () => upd(ed => { ed.items.push({ id: nid(), kind: 'section', type: 'verse', label: '', text: '' }); }),
+        fields: d.fields.map((f, i) => {
+          const def = fieldDef(f.name) || { type: 'text' }; const val = f.value;
+          const set = v => upd(ed => { ed.fields[i].value = v; });
+          return { name: f.name, typeLabel: TYPE_LABEL[def.type], isChips: def.type === 'single' || def.type === 'multi', isText: def.type === 'text', isNumber: def.type === 'number', value: Array.isArray(val) ? '' : val,
+            options: (def.options || []).map(o => { const on = def.type === 'multi' ? (Array.isArray(val) && val.includes(o)) : val === o; return { o, on, off: !on, pick: () => set(def.type === 'multi' ? (on ? val.filter(x => x !== o) : [...(Array.isArray(val) ? val : []), o]) : (on ? '' : o)) }; }),
+            onChange: e => set(e.target.value), remove: () => upd(ed => { ed.fields.splice(i, 1); }) };
+        }),
+        pickerOpen: s.edPicker && !s.nf, pickerClosed: !s.edPicker && !s.nf, creating: !!s.nf,
+        openPicker: () => this.setState({ edPicker: true }), closePicker: () => this.setState({ edPicker: false }),
+        available: FIELDS.filter(f => !used.has(f.name)).map(f => ({ name: f.name, typeLabel: TYPE_LABEL[f.type], add: () => { upd(ed => { ed.fields.push({ name: f.name, value: f.type === 'multi' ? [] : '' }); }); this.setState({ edPicker: false }); } })),
+        startNew: () => this.setState({ nf: { name: '', type: 'single', options: [], opt: '' } }),
+        save: () => this.saveDraft()
+      };
+      if (s.nf) {
+        const nf = s.nf; const setNf = p => this.setState(st => ({ nf: { ...st.nf, ...p } }));
+        const hasOpts = nf.type === 'single' || nf.type === 'multi';
+        const addOpt = () => { const v = nf.opt.trim(); if (v && !nf.options.includes(v)) setNf({ options: [...nf.options, v], opt: '' }); };
+        Object.assign(out.ed, {
+          nfName: nf.name, onNfName: e => setNf({ name: e.target.value }),
+          nfTypes: ['text', 'number', 'single', 'multi'].map(t => ({ label: TYPE_LABEL[t], on: nf.type === t, off: nf.type !== t, pick: () => setNf({ type: t }) })),
+          nfHasOptions: hasOpts, nfOptions: nf.options.map((o, k) => ({ o, remove: () => setNf({ options: nf.options.filter((_, j) => j !== k) }) })),
+          nfOpt: nf.opt, onNfOpt: e => setNf({ opt: e.target.value }), nfOptKey: e => { if (e.key === 'Enter') { e.preventDefault(); addOpt(); } }, nfAddOpt: addOpt,
+          nfCancel: () => this.setState({ nf: null, edPicker: false }),
+          nfCreate: () => {
+            const name = nf.name.trim();
+            if (!name) return this.toastMsg('Give the field a name');
+            if (FIELDS.some(f => f.name.toLowerCase() === name.toLowerCase())) return this.toastMsg('A field with that name exists');
+            if (hasOpts && !nf.options.length) return this.toastMsg('Add at least one option');
+            FIELDS.push({ name, type: nf.type, options: hasOpts ? nf.options : undefined });
+            upd(ed => { ed.fields.push({ name, value: nf.type === 'multi' ? [] : '' }); });
+            this.setState({ nf: null, edPicker: false });
+          }
+        });
+      }
+    }
+    // — import —
+    const drafts = s.drafts;
+    out.isImportPaste = !drafts; out.isImportReview = !!drafts;
+    out.imp = { text: s.importText, onText: e => this.setState({ importText: e.target.value }), sample: () => this.setState({ importText: SAMPLE }),
+      split: () => { const ds = splitImport(s.importText); if (!ds.length) return this.toastMsg('Paste some lyrics first'); this.setState({ drafts: ds }); },
+      edit: () => this.setState({ drafts: null }), done: () => this.go('catalogue', { drafts: null, importText: '' }) };
+    if (drafts) {
+      const mutD = fn => { const ds = this.state.drafts.map(x => ({ ...x, sections: [...x.sections], meta: [...x.meta] })); fn(ds); this.setState({ drafts: ds }); };
+      const merge = (ds, a, b) => { ds[a].sections = [...ds[a].sections, ...ds[b].sections]; ds[b].meta.forEach(m => { if (!ds[a].meta.some(x => x[0] === m[0])) ds[a].meta.push(m); }); ds.splice(b, 1); };
+      const saveOne = (ds, i) => { const x = ds[i]; const no = nextNo(); const sections = {}, order = []; x.sections.forEach((sec, k) => { sections['s' + k] = { type: sec.type, lines: sec.lines }; order.push('s' + k); }); SONGS.push({ no, title: x.title.trim() || 'Untitled', fields: x.meta.map(m => [...m]), sections, order, recs: [] }); ds[i] = { ...x, status: 'saved', savedNo: no }; };
+      const pending = drafts.filter(x => x.status === 'pending').length;
+      Object.assign(out.imp, {
+        summary: `${drafts.length} drafts found` + (drafts.some(x => x.orphan && x.status === 'pending') ? ' · 1 needs a look' : ''),
+        hasRemaining: pending > 0, noneRemaining: pending === 0, saveAllLabel: `Save all ${pending} remaining`,
+        saveAll: () => { mutD(ds => ds.forEach((x, i) => { if (x.status === 'pending') saveOne(ds, i); })); this.toastMsg(`Saved ${pending} song${pending > 1 ? 's' : ''}`); },
+        drafts: drafts.map((x, i) => {
+          const nextP = drafts.findIndex((y, j) => j > i && y.status === 'pending');
+          let prevP = -1; for (let j = i - 1; j >= 0; j--) if (drafts[j].status === 'pending') { prevP = j; break; }
+          let v = 0;
+          return { key: x.id, n: 'Draft ' + (i + 1), isPending: x.status === 'pending', isSaved: x.status === 'saved', isDiscarded: x.status === 'discarded',
+            title: x.title, titleShown: x.title || 'Untitled', savedText: 'Saved as No. ' + pad(x.savedNo || 0),
+            onTitle: e => { const val = e.target.value; mutD(ds => { ds[i].title = val; if (val.trim()) ds[i].orphan = false; }); },
+            orphan: x.orphan && prevP >= 0, prevName: 'Draft ' + (prevP + 1), mergePrev: () => mutD(ds => merge(ds, prevP, i)),
+            meta: x.meta.map(([k, val]) => ({ k, v: val })), hasMeta: x.meta.length > 0, noMeta: !x.meta.length,
+            secs: x.sections.map(sec => ({ tag: sec.type === 'chorus' ? 'አዝ' : String(++v).padStart(2, '0'), isChorus: sec.type === 'chorus', notChorus: sec.type !== 'chorus', first: sec.lines[0] || '—', count: sec.lines.length + (sec.lines.length === 1 ? ' line' : ' lines') })),
+            canMerge: nextP >= 0, mergeNext: () => mutD(ds => merge(ds, i, nextP)),
+            save: () => { mutD(ds => saveOne(ds, i)); }, discard: () => mutD(ds => { ds[i].status = 'discarded'; }), undo: () => mutD(ds => { ds[i].status = 'pending'; }) };
+        })
+      });
+    }
+    // — slides —
+    const deck = s.deck;
+    const getSong = no => SONGS.find(x => x.no === no);
+    const setDeck = fn => { const dk = { ...this.state.deck, songs: this.state.deck.songs.map(x => ({ ...x, seq: [...x.seq] })) }; fn(dk); this.setState({ deck: dk }); };
+    let slideCount = 2; deck.songs.forEach(x => { slideCount += 1 + x.seq.length; });
+    const dateText = (() => { const dt = new Date(deck.date + 'T00:00'); return isNaN(dt) ? deck.date : dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); })();
+    const thumbs = [{ isTitle: true, text: deck.title || 'Untitled deck', sub: dateText, cap: '01 · Title' }];
+    deck.songs.forEach(x => { const sg = getSong(x.no); if (!sg) return; thumbs.push({ isDivider: true, text: sg.title, cap: pad2(thumbs.length + 1) + ' · Song' }); x.seq.forEach(k => { const sec = sg.sections[k]; if (sec) thumbs.push({ isLyric: true, lines: sec.lines.slice(0, 4), cap: pad2(thumbs.length + 1) + ' · ' + secLabel(sg, k) }); }); });
+    thumbs.push({ isClosing: true, text: deck.closing, cap: pad2(thumbs.length + 1) + ' · Closing' });
+    out.dk = {
+      title: deck.title, date: deck.date, closing: deck.closing,
+      onTitle: e => { const v = e.target.value; setDeck(dk => { dk.title = v; }); },
+      onDate: e => { const v = e.target.value; setDeck(dk => { dk.date = v; }); },
+      onClosing: e => { const v = e.target.value; setDeck(dk => { dk.closing = v; }); },
+      countText: slideCount + ' slides', genLabel: `Generate PowerPoint · ${slideCount} slides`,
+      songHead: 'Songs · ' + deck.songs.length, empty: deck.songs.length === 0,
+      songs: deck.songs.map((x, i) => {
+        const sg = getSong(x.no); const open = s.deckOpen === i;
+        return { key: i + '-' + x.no, pos: String(i + 1).padStart(2, '0'), title: sg.title, open, closed: !open,
+          meta: (1 + x.seq.length) + ' slides · ' + x.seq.map(k => secLabel(sg, k)).join(' '),
+          toggle: () => this.setState({ deckOpen: open ? null : i }),
+          up: () => setDeck(dk => { if (i > 0) [dk.songs[i - 1], dk.songs[i]] = [dk.songs[i], dk.songs[i - 1]]; }),
+          down: () => setDeck(dk => { if (i < dk.songs.length - 1) [dk.songs[i + 1], dk.songs[i]] = [dk.songs[i], dk.songs[i + 1]]; }),
+          remove: () => { setDeck(dk => { dk.songs.splice(i, 1); }); this.setState({ deckOpen: null }); },
+          seq: x.seq.map((k, j) => ({ key: j + k, tag: secLabel(sg, k), isChorus: sg.sections[k].type === 'chorus', notChorus: sg.sections[k].type !== 'chorus', first: sg.sections[k].lines[0],
+            up: () => setDeck(dk => { const q = dk.songs[i].seq; if (j > 0) [q[j - 1], q[j]] = [q[j], q[j - 1]]; }),
+            down: () => setDeck(dk => { const q = dk.songs[i].seq; if (j < q.length - 1) [q[j + 1], q[j]] = [q[j], q[j + 1]]; }),
+            remove: () => setDeck(dk => { dk.songs[i].seq.splice(j, 1); }) })),
+          palette: Object.keys(sg.sections).map(k => { const sec = sg.sections[k]; return { tag: secLabel(sg, k), name: sec.type === 'verse' ? 'Verse ' + Number(secLabel(sg, k)) : SEC_NAME[sec.type], add: () => setDeck(dk => { dk.songs[i].seq.push(k); }) }; }),
+          reset: () => setDeck(dk => { dk.songs[i].seq = [...sg.order]; }) };
+      }),
+      thumbs,
+      generate: () => this.toastMsg(`${(deck.title || 'deck').replace(/\s+/g, '-')}-${deck.date}.pptx downloaded`),
+      openPicker: () => this.setState({ picker: true, pickerQ: '', pickerSel: [] })
+    };
+    const pq = s.pickerQ.trim().toLowerCase();
+    out.pk = { open: s.picker, q: s.pickerQ, onQ: e => this.setState({ pickerQ: e.target.value }), close: () => this.setState({ picker: false }),
+      items: SONGS.filter(sg => !pq || sg.title.toLowerCase().includes(pq) || String(sg.no) === pq.replace(/^0+/, '')).sort((a, b) => a.no - b.no).map(sg => {
+        const on = s.pickerSel.includes(sg.no);
+        return { key: sg.no, noText: pad(sg.no), title: sg.title, meta: sg.fields.slice(0, 2).map(f => f[1]).join(' · '), on, off: !on, inDeck: deck.songs.some(x => x.no === sg.no),
+          toggle: () => this.setState(st => ({ pickerSel: on ? st.pickerSel.filter(n => n !== sg.no) : [...st.pickerSel, sg.no] })) };
+      }),
+      addLabel: s.pickerSel.length ? `Add ${s.pickerSel.length} song${s.pickerSel.length > 1 ? 's' : ''}` : 'Select songs to add',
+      add: () => { if (!s.pickerSel.length) return; const at = deck.songs.length; setDeck(dk => s.pickerSel.forEach(no => dk.songs.push({ no, seq: [...getSong(no).order] }))); this.setState({ picker: false, pickerSel: [], deckOpen: at }); } };
+    // — members —
+    const am = s.addMem;
+    out.mem = {
+      summary: `${MEMBERS.length} numbers · ${MEMBERS.filter(m => m.role === 'admin').length} admins · ${MEMBERS.filter(m => !m.linked).length} not linked`,
+      adding: !!am, notAdding: !am, startAdd: () => this.setState({ addMem: { phone: '', role: 'member' } }), cancelAdd: () => this.setState({ addMem: null }),
+      newPhone: am ? am.phone : '', onNewPhone: e => { const v = e.target.value; this.setState(st => ({ addMem: { ...st.addMem, phone: v } })); },
+      newIsAdmin: !!am && am.role === 'admin', newIsMember: !am || am.role !== 'admin',
+      setNewMember: () => this.setState(st => ({ addMem: { ...st.addMem, role: 'member' } })), setNewAdmin: () => this.setState(st => ({ addMem: { ...st.addMem, role: 'admin' } })),
+      add: () => {
+        const ph = (am.phone || '').replace(/\D/g, '');
+        if (ph.length < 9) return this.toastMsg('Enter a 9-digit number');
+        const f = '+251 ' + ph.slice(-9).replace(/(\d{2})(\d{3})(\d{4})/, '$1 $2 $3');
+        if (MEMBERS.some(m => m.phone === f)) return this.toastMsg('That number already has access');
+        MEMBERS.unshift({ phone: f, role: am.role, linked: false });
+        this.setState({ addMem: null, memOpen: null }); this.toastMsg('Added · they link Telegram on first login');
+      },
+      list: MEMBERS.map(m => {
+        const open = s.memOpen === m.phone, confirming = s.memConfirm === m.phone;
+        return { key: m.phone, phone: m.phone, you: !!m.you, notYou: !m.you, linked: m.linked, unlinked: !m.linked, isAdmin: m.role === 'admin', isMember: m.role !== 'admin', open, confirming, notConfirming: !confirming,
+          toggle: () => this.setState({ memOpen: open ? null : m.phone, memConfirm: null }),
+          setMember: () => { m.role = 'member'; this.forceUpdate(); }, setAdmin: () => { m.role = 'admin'; this.forceUpdate(); },
+          remove: () => { if (!confirming) return this.setState({ memConfirm: m.phone }); MEMBERS.splice(MEMBERS.indexOf(m), 1); this.setState({ memOpen: null, memConfirm: null }); this.toastMsg('Access removed'); } };
+      })
+    };
+    // — fields —
+    const usage = name => SONGS.filter(sg => sg.fields.some(f => f[0] === name)).length;
+    const isLower = n => n[0] === n[0].toLowerCase() && n[0] !== n[0].toUpperCase();
+    out.fl = { list: FIELDS.map(f => {
+      const open = s.fOpen === f.name, confirming = s.fConfirm === f.name, n = usage(f.name);
+      const hasOpts = f.type === 'single' || f.type === 'multi';
+      const dupOf = isLower(f.name) ? FIELDS.find(g => g !== f && g.name.toLowerCase() === f.name.toLowerCase()) : null;
+      return { key: f.name, name: f.name, open, isDup: !!dupOf, dupOf: dupOf ? dupOf.name : '', unused: n === 0,
+        meta: TYPE_LABEL[f.type] + (hasOpts ? ` · ${f.options.length} option${f.options.length === 1 ? '' : 's'}` : '') + ' · ' + (n ? `${n} song${n > 1 ? 's' : ''}` : 'unused'),
+        toggle: () => this.setState({ fOpen: open ? null : f.name, fName: f.name, fOpt: '', fConfirm: null }),
+        nameVal: s.fName, onName: e => this.setState({ fName: e.target.value }), nameChanged: open && !!s.fName.trim() && s.fName.trim() !== f.name,
+        rename: () => { const nn = s.fName.trim(); if (FIELDS.some(g => g !== f && g.name === nn)) return this.toastMsg('That name is already in use'); SONGS.forEach(sg => sg.fields.forEach(x => { if (x[0] === f.name) x[0] = nn; })); f.name = nn; this.setState({ fOpen: nn, fName: nn }); this.toastMsg(`Renamed in ${n} song${n === 1 ? '' : 's'}`); },
+        hasOpts, options: (f.options || []).map(o => ({ o, remove: () => { f.options = f.options.filter(x => x !== o); this.forceUpdate(); } })),
+        optVal: s.fOpt, onOpt: e => this.setState({ fOpt: e.target.value }),
+        addOpt: () => { const v = s.fOpt.trim(); if (v && !f.options.includes(v)) { f.options = [...f.options, v]; this.setState({ fOpt: '' }); } },
+        merge: () => { SONGS.forEach(sg => { const x = sg.fields.find(y => y[0] === f.name); if (!x) return; if (!sg.fields.some(y => y[0] === dupOf.name)) x[0] = dupOf.name; else sg.fields.splice(sg.fields.indexOf(x), 1); }); FIELDS.splice(FIELDS.indexOf(f), 1); this.setState({ fOpen: null }); this.toastMsg(`Merged into ${dupOf.name}`); },
+        confirming, notConfirming: !confirming, deleteLabel: n ? `Tap again · removes it from ${n} song${n > 1 ? 's' : ''}` : 'Tap again to delete',
+        del: () => { if (!confirming) return this.setState({ fConfirm: f.name }); SONGS.forEach(sg => { sg.fields = sg.fields.filter(x => x[0] !== f.name); }); FIELDS.splice(FIELDS.indexOf(f), 1); this.setState({ fOpen: null, fConfirm: null }); this.toastMsg('Field deleted'); } };
+    }) };
+    return out;
+  }
+  componentWillUnmount() { clearInterval(this.timer); clearTimeout(this.tt); }
+  componentDidUpdate() { if (this._lastSong !== this.state.songNo) { this._lastSong = this.state.songNo; if (this.songScroll.current) this.songScroll.current.scrollTop = 0; } }
+  screen() { return this.state.screen ?? ({ catalogue: 'catalogue', song: 'song', editor: 'editor', import: 'import', slides: 'slides', members: 'members', fields: 'fields' }[this.props.startScreen] || 'phone'); }
+  componentDidMount() { if (this.props.startScreen === 'editor' && !this.state.ed) this.setState({ ed: draftFromSong(SONGS[0]), edFrom: 'song' }); }
+  theme() { return this.state.theme ?? (this.props.theme || 'dark'); }
+  go(screen, extra) { this.setState({ screen, more: false, ...extra }); }
+  toastMsg(t) { clearTimeout(this.tt); this.setState({ toast: t, more: false }); this.tt = setTimeout(() => this.setState({ toast: null }), 2200); }
+  stop() { clearInterval(this.timer); this.timer = null; }
+  togglePlay(song) {
+    if (this.state.playing) { this.stop(); this.setState({ playing: false }); return; }
+    const dur = song.recs[this.state.recIdx][1];
+    this.setState({ playing: true });
+    this.timer = setInterval(() => this.setState(s => {
+      if (s.pos + 1 >= dur) { this.stop(); return { pos: 0, playing: false }; }
+      return { pos: s.pos + 1 };
+    }), 1000);
+  }
+  search(q) {
+    const n = q.trim().toLowerCase();
+    const meta = s => s.fields.slice(0, 3).map(f => f[1]).join(' · ');
+    const base = s => ({ s, rank: 0, tPre: s.title, tHit: '', tPost: '', badge: '', snip: null, meta: meta(s) });
+    if (!n) return SONGS.slice().sort((a, b) => a.no - b.no).map(base);
+    const out = [];
+    for (const s of SONGS) {
+      const ti = s.title.toLowerCase().indexOf(n);
+      if (ti >= 0) { out.push({ ...base(s), rank: 1, tPre: s.title.slice(0, ti), tHit: s.title.slice(ti, ti + n.length), tPost: s.title.slice(ti + n.length), badge: 'Title' }); continue; }
+      if (String(s.no) === n.replace(/^0+/, '')) { out.push({ ...base(s), rank: 1, badge: 'No.' }); continue; }
+      const lines = Object.values(s.sections).flatMap(x => [...x.lines, ...(x.indent || [])]);
+      const line = lines.find(l => l.toLowerCase().includes(n));
+      if (line) {
+        const i = line.toLowerCase().indexOf(n);
+        let pre = line.slice(0, i); if (pre.length > 16) pre = pre.slice(-16);
+        out.push({ ...base(s), rank: 2, badge: 'Lyrics', snip: { pre, hit: line.slice(i, i + n.length), post: line.slice(i + n.length) } });
+        continue;
+      }
+      const f = s.fields.find(f => f[1].toLowerCase().includes(n));
+      if (f) out.push({ ...base(s), rank: 3, badge: 'Field', meta: s.fields.slice(0, 2).map(x => x[1]).join(' · ') + ' · ' + f[0] + ': ' + f[1] });
+    }
+    return out.sort((a, b) => a.rank - b.rank);
+  }
+  renderVals() {
+    const scr = this.screen();
+    const isAdmin = (this.props.role ?? 'admin') === 'admin';
+    const th = this.theme();
+    const { q, code, more, size, playing, recIdx, pos } = this.state;
+    const songNo = this.state.songNo ?? 14;
+    const song = SONGS.find(s => s.no === songNo) || SONGS[0];
+    const res = this.search(q);
+    const hasQ = q.trim().length > 0;
+
+    const seen = new Set(); let v = 0;
+    const blocks = song.order.map(k => {
+      const sec = song.sections[k];
+      if (seen.has(k)) return { isRepeat: true, tag: sec.type === 'chorus' ? 'አዝ' : '↺', first: sec.lines[0] };
+      seen.add(k);
+      const lab = { hasLabel: !!sec.label, label: sec.label || '' };
+      if (sec.type === 'chorus') return { isChorus: true, tag: 'አዝ', lines: sec.lines, ...lab };
+      const tag = sec.type === 'verse' ? String(++v).padStart(2, '0') : (SEC_TAG[sec.type] || '•');
+      return { isPlain: true, tag, lines: sec.lines, indent: sec.indent || [], hasIndent: !!(sec.indent && sec.indent.length), ...lab };
+    });
+    const rec = song.recs[recIdx] || song.recs[0];
+    const dur = rec ? rec[1] : 1;
+
+    return {
+      themeStyle: th === 'light' ? LIGHT : DARK,
+      isPhone: scr === 'phone', isLink: scr === 'link', isCode: scr === 'code', isCatalogue: scr === 'catalogue', isSong: scr === 'song',
+      isAdmin, isMember: !isAdmin, isDark: th === 'dark', isLight: th === 'light',
+      phone: this.state.phone, phoneShown: this.state.phone || '91 234 5678',
+      onPhone: e => this.setState({ phone: e.target.value }),
+      sendCode: () => this.go(this.props.firstTime ? 'link' : 'code', { code: '' }),
+      toPhone: () => this.go('phone'), toCode: () => this.go('code', { code: '' }),
+      openBot: () => this.toastMsg('Opens @ChabodBot in Telegram'),
+      code,
+      codeCells: Array.from({ length: 6 }, (_, i) => ({ ch: code[i] || '', active: i === code.length, idle: i !== code.length })),
+      onCode: e => { const c = e.target.value.replace(/\D/g, '').slice(0, 6); this.setState({ code: c }); if (c.length === 6) setTimeout(() => this.go('catalogue', { code: '' }), 250); },
+      songCount: SONGS.length,
+      q, hasQ, onQ: e => this.setState({ q: e.target.value }), clearQ: () => this.setState({ q: '' }),
+      resultLine: hasQ ? `${res.length} ${res.length === 1 ? 'match' : 'matches'} in titles, lyrics and fields` : 'All songs · by number',
+      noResults: hasQ && res.length === 0,
+      results: res.map(r => ({
+        noText: pad(r.s.no), tPre: r.tPre, tHit: r.tHit, tPost: r.tPost, tHasHit: !!r.tHit,
+        badge: r.badge, hasBadge: !!r.badge, hasSnip: !!r.snip,
+        sPre: r.snip ? r.snip.pre : '', sHit: r.snip ? r.snip.hit : '', sPost: r.snip ? r.snip.post : '',
+        meta: r.meta,
+        open: () => { this.stop(); this.go('song', { songNo: r.s.no, recIdx: 0, pos: 0, playing: false }); }
+      })),
+      moreOpen: more, moreClosed: !more,
+      openMore: () => this.setState({ more: true }), closeMore: () => this.setState({ more: false }),
+      scrimStyle: { position: 'absolute', left: 0, right: 0, top: 0, bottom: 72, zIndex: 4, background: 'var(--scrim)', opacity: more ? 1 : 0, pointerEvents: more ? 'auto' : 'none', transition: 'opacity 200ms ease' },
+      sheetStyle: { position: 'absolute', left: 0, right: 0, bottom: 72, zIndex: 5, background: 'var(--surface)', color: 'var(--text)', borderTop: '2px solid var(--fill)', transform: more ? 'translateY(0)' : 'translateY(110%)', transition: 'transform 240ms cubic-bezier(.2,.8,.2,1)', visibility: more ? 'visible' : 'hidden', transitionProperty: 'transform, visibility' },
+      toolSlides: () => this.go('slides', { picker: false }), toolImport: () => this.go('import'),
+      toolMembers: () => this.go('members', { memOpen: null, addMem: null }), toolFields: () => this.go('fields', { fOpen: null }),
+      addSong: () => this.go('editor', { ed: blankDraft(), edFrom: 'catalogue', edPicker: false, nf: null }),
+      editSong: () => { this.stop(); this.go('editor', { ed: draftFromSong(song), edFrom: 'song', edPicker: false, nf: null, playing: false }); },
+      setDark: () => this.setState({ theme: 'dark' }), setLight: () => this.setState({ theme: 'light' }),
+      toggleTheme: () => this.setState({ theme: th === 'dark' ? 'light' : 'dark' }),
+      signOut: () => { this.stop(); this.go('phone', { phone: '', q: '', playing: false }); },
+      song: { noText: pad(song.no), title: song.title },
+      fieldsTop: song.fields.slice(0, 3).map(f => ({ label: f[0], value: f[1], isKey: f[0] === 'Key', notKey: f[0] !== 'Key' })),
+      fieldsRest: song.fields.slice(3).map(f => ({ label: f[0], value: f[1] })),
+      blocks,
+      lyricStyle: { padding: '22px 20px 32px', display: 'flex', flexDirection: 'column', gap: 20, fontFamily: "'Noto Sans Ethiopic', Archivo, sans-serif", fontSize: size, lineHeight: 1.75 },
+      back: () => { this.stop(); this.go('catalogue', { playing: false, pos: 0 }); },
+      smaller: () => this.setState({ size: Math.max(16, size - 2) }), bigger: () => this.setState({ size: Math.min(32, size + 2) }),
+      hasRec: song.recs.length > 0,
+      rec: { title: rec ? rec[0] : '' },
+      recCount: `${recIdx + 1} of ${song.recs.length}`,
+      nextRec: () => { this.stop(); this.setState({ recIdx: (recIdx + 1) % song.recs.length, pos: 0, playing: false }); },
+      playing, paused: !playing,
+      togglePlay: () => this.togglePlay(song),
+      seek: e => { const r = e.currentTarget.getBoundingClientRect(); this.setState({ pos: Math.round(dur * Math.min(1, Math.max(0, (e.clientX - r.left) / r.width))) }); },
+      progStyle: { position: 'absolute', left: 0, top: 0, bottom: 0, width: (pos / dur * 100) + '%', background: 'var(--fill)' },
+      timeText: `${fmt(pos)} / ${fmt(dur)}`,
+      hasToast: !!this.state.toast, toast: this.state.toast,
+      ...this.p2()
+    };
+  }
+}
+</script>
+</body>
+</html>
