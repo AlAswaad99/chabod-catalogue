@@ -24,6 +24,7 @@ export type SongMetadata = Record<string, string | number | string[]>;
 
 export interface Song {
   id: string;
+  number: number;
   title: string;
   lyrics: LyricsSection[];
   metadata: SongMetadata;
