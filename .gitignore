@@ -17,6 +17,9 @@
 /.next/
 /out/
 
+# vendored at install time by scripts/copy-ffmpeg-core.js — see postinstall
+/public/ffmpeg/
+
 # production
 /build
 

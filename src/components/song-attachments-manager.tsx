@@ -4,11 +4,13 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Trash, Upload } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { convertToMp3 } from "@/lib/audio/convert-to-mp3";
 import { Button } from "@/components/ui/button";
 import type { SongAttachment } from "@/types/song";
 
 const MAX_SIZE = 25 * 1024 * 1024;
-const ACCEPT = ".mp3,.wav,.aac,.m4a,audio/mpeg,audio/wav,audio/x-wav,audio/aac,audio/mp4,audio/x-m4a";
+const ACCEPT =
+  ".mp3,.wav,.aac,.m4a,.ogg,audio/mpeg,audio/wav,audio/x-wav,audio/aac,audio/mp4,audio/x-m4a,audio/ogg,application/ogg";
 
 export interface AttachmentWithUrl extends SongAttachment {
   url: string | null;
@@ -41,7 +43,7 @@ export function SongAttachmentsManager({
   const router = useRouter();
   const supabase = createClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [uploading, setUploading] = useState(false);
+  const [phase, setPhase] = useState<"idle" | "converting" | "uploading">("idle");
   const [error, setError] = useState<string | null>(null);
   const [confirmingId, setConfirmingId] = useState<string | null>(null);
 
@@ -55,16 +57,18 @@ export function SongAttachmentsManager({
       return;
     }
 
-    setUploading(true);
     setError(null);
     try {
-      const ext = file.name.split(".").pop()?.toLowerCase() || "mp3";
-      const storagePath = `${songId}/${crypto.randomUUID()}.${ext}`;
-      const displayFilename = `${sanitizeForFilename(songTitle)} - ${timestampLabel()}.${ext}`;
+      setPhase("converting");
+      const mp3File = await convertToMp3(file);
+
+      setPhase("uploading");
+      const storagePath = `${songId}/${crypto.randomUUID()}.mp3`;
+      const displayFilename = `${sanitizeForFilename(songTitle)} - ${timestampLabel()}.mp3`;
 
       const { error: uploadError } = await supabase.storage
         .from("song-audio")
-        .upload(storagePath, file, { contentType: file.type || undefined });
+        .upload(storagePath, mp3File, { contentType: "audio/mpeg" });
       if (uploadError) {
         setError(uploadError.message);
         return;
@@ -78,7 +82,7 @@ export function SongAttachmentsManager({
         song_id: songId,
         storage_path: storagePath,
         filename: displayFilename,
-        mime_type: file.type || null,
+        mime_type: "audio/mpeg",
         uploaded_by: user?.id ?? null,
       });
       if (insertError) {
@@ -87,8 +91,10 @@ export function SongAttachmentsManager({
       }
 
       router.refresh();
+    } catch {
+      setError("Couldn't process this recording. Try again or use a different file.");
     } finally {
-      setUploading(false);
+      setPhase("idle");
     }
   }
 
@@ -119,10 +125,10 @@ export function SongAttachmentsManager({
         <Button
           variant="text"
           icon={Upload}
-          disabled={uploading}
+          disabled={phase !== "idle"}
           onClick={() => fileInputRef.current?.click()}
         >
-          {uploading ? "Uploading…" : "Upload recording"}
+          {phase === "converting" ? "Converting…" : phase === "uploading" ? "Uploading…" : "Upload recording"}
         </Button>
       </div>
 
