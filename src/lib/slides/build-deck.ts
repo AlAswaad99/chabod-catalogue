@@ -1,5 +1,6 @@
 import PptxGenJS from "pptxgenjs";
 import type { SlideDeckSpec } from "./types";
+import { chunkLines } from "./chunk-lines";
 
 // Measurements and colors lifted from the choir's own reference deck
 // ("Chabod Meskerem Ale! Yahweh, Betalakenetu"), so generated decks match
@@ -92,15 +93,6 @@ function addLyricsSlide(pres: PptxGenJS, lines: string[]) {
       margin: 0,
     },
   );
-}
-
-function chunkLines(text: string, maxLines: number): string[][] {
-  const lines = text.split("\n").filter((l) => l.trim() !== "");
-  const chunks: string[][] = [];
-  for (let i = 0; i < lines.length; i += maxLines) {
-    chunks.push(lines.slice(i, i + maxLines));
-  }
-  return chunks.length > 0 ? chunks : [[]];
 }
 
 export async function buildSlideDeck(spec: SlideDeckSpec): Promise<Buffer> {
