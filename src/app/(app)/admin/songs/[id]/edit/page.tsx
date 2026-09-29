@@ -15,12 +15,10 @@ export default async function EditSongPage({ params }: { params: Promise<{ id: s
   if (error || !song) notFound();
 
   return (
-    <div>
-      <h1 className="mx-auto max-w-2xl px-4 pt-6 text-xl font-semibold">Edit song</h1>
-      <SongForm
-        initialSong={song as unknown as Song}
-        initialFieldDefs={(fieldDefs ?? []) as unknown as MetadataFieldDefinition[]}
-      />
-    </div>
+    <SongForm
+      initialSong={song as unknown as Song}
+      initialFieldDefs={(fieldDefs ?? []) as unknown as MetadataFieldDefinition[]}
+      closeHref={`/songs/${id}`}
+    />
   );
 }

@@ -2,8 +2,16 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createOrGetMetadataField, addOptionToField } from "@/lib/actions/metadata-fields";
+import { ArrowDown, ArrowUp, Check, Plus, Trash, X } from "lucide-react";
+import { createOrGetMetadataField } from "@/lib/actions/metadata-fields";
 import { saveSong } from "@/lib/actions/songs";
+import { useToast } from "@/components/ui/toast";
+import { Button } from "@/components/ui/button";
+import { TextInput, TextArea, Select } from "@/components/ui/text-input";
+import { Chip } from "@/components/ui/chip";
+import { SegmentedControl } from "@/components/ui/segmented-control";
+import { TopBar } from "@/components/ui/top-bar";
+import { StickyFooterAction } from "@/components/ui/sticky-footer-action";
 import type {
   LyricsSection,
   LyricsSectionType,
@@ -13,111 +21,270 @@ import type {
   SongMetadata,
 } from "@/types/song";
 
-const SECTION_TYPES: LyricsSectionType[] = ["verse", "chorus", "bridge", "intro", "outro", "other"];
+const SECTION_TYPES: { value: LyricsSectionType; label: string }[] = [
+  { value: "verse", label: "Verse" },
+  { value: "chorus", label: "Chorus" },
+  { value: "bridge", label: "Bridge" },
+  { value: "intro", label: "Intro" },
+  { value: "outro", label: "Outro" },
+  { value: "other", label: "Other" },
+];
+
 const FIELD_TYPES: { value: MetadataFieldType; label: string }[] = [
   { value: "text", label: "Text" },
   { value: "number", label: "Number" },
-  { value: "single_select", label: "Single select" },
-  { value: "multi_select", label: "Multi select" },
+  { value: "single_select", label: "Single-select" },
+  { value: "multi_select", label: "Multi-select" },
 ];
 
-function emptySection(): LyricsSection {
-  return { type: "verse", label: "", text: "" };
+function makeId(): string {
+  return typeof crypto !== "undefined" && "randomUUID" in crypto
+    ? crypto.randomUUID()
+    : Math.random().toString(36).slice(2);
+}
+
+interface FormItem {
+  id: string;
+  type: LyricsSectionType;
+  label: string;
+  text: string;
+  isRepeat: boolean;
+  repeatOfId: string | null;
+}
+
+// Reconstructs the form's client-only item list (with stable ids and
+// repeat-linkage) from stored sections — a repeat is a literal duplicate
+// {type, text} of an earlier non-repeat entry, per src/lib/lyrics.ts's own
+// detection rule.
+function itemsFromSections(sections: LyricsSection[]): FormItem[] {
+  const items: FormItem[] = [];
+  for (const s of sections) {
+    const source = items.find((it) => !it.isRepeat && it.type === s.type && it.text === s.text);
+    items.push({
+      id: makeId(),
+      type: s.type,
+      label: s.label ?? "",
+      text: s.text,
+      isRepeat: !!source,
+      repeatOfId: source?.id ?? null,
+    });
+  }
+  return items.length > 0 ? items : [{ id: makeId(), type: "verse", label: "", text: "", isRepeat: false, repeatOfId: null }];
+}
+
+// Repeats always mirror their source's CURRENT text at save time, so a later
+// edit to the original chorus keeps the repeat detectable on read.
+function itemsToSections(items: FormItem[]): LyricsSection[] {
+  return items
+    .filter((it) => it.isRepeat || it.text.trim().length > 0)
+    .map((it) => {
+      const text = it.isRepeat ? (items.find((s) => s.id === it.repeatOfId)?.text ?? it.text) : it.text;
+      return { type: it.type, label: it.label.trim() || undefined, text };
+    });
+}
+
+function autoGrow(e: React.FormEvent<HTMLTextAreaElement>) {
+  const el = e.currentTarget;
+  el.style.height = "auto";
+  el.style.height = `${el.scrollHeight}px`;
 }
 
 export function SongForm({
   initialSong,
   initialFieldDefs,
+  closeHref,
+  provisionalNumber,
 }: {
   initialSong?: Song;
   initialFieldDefs: MetadataFieldDefinition[];
+  closeHref: string;
+  /** Next sequence value, shown as "No. 0XX" for a brand-new song (Step 7). Ignored when editing. */
+  provisionalNumber?: number;
 }) {
   const router = useRouter();
+  const { showToast } = useToast();
+
   const [title, setTitle] = useState(initialSong?.title ?? "");
-  const [sections, setSections] = useState<LyricsSection[]>(
-    initialSong?.lyrics?.length ? initialSong.lyrics : [emptySection()],
-  );
+  const [items, setItems] = useState<FormItem[]>(() => itemsFromSections(initialSong?.lyrics ?? []));
   const [metadata, setMetadata] = useState<SongMetadata>(initialSong?.metadata ?? {});
+  const [assignedFieldIds, setAssignedFieldIds] = useState<string[]>(() =>
+    Object.keys(initialSong?.metadata ?? {}),
+  );
   const [fieldDefs, setFieldDefs] = useState<MetadataFieldDefinition[]>(initialFieldDefs);
+
+  const [dirty, setDirty] = useState(false);
+  const [showDiscardConfirm, setShowDiscardConfirm] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const [showAddField, setShowAddField] = useState(false);
-  const [newFieldName, setNewFieldName] = useState("");
-  const [newFieldType, setNewFieldType] = useState<MetadataFieldType>("text");
-  const [newFieldOptions, setNewFieldOptions] = useState("");
+  const [addFieldMode, setAddFieldMode] = useState<"pick" | "create">("pick");
+  const [createName, setCreateName] = useState("");
+  const [createType, setCreateType] = useState<MetadataFieldType>("text");
+  const [createOptions, setCreateOptions] = useState<string[]>([]);
+  const [createOptionInput, setCreateOptionInput] = useState("");
+  const [createError, setCreateError] = useState<string | null>(null);
 
-  const [addingOptionFieldId, setAddingOptionFieldId] = useState<string | null>(null);
-  const [newOptionValue, setNewOptionValue] = useState("");
+  const fieldDefMap = new Map(fieldDefs.map((f) => [f.id, f]));
+  const unassignedFields = fieldDefs.filter((f) => !assignedFieldIds.includes(f.id));
 
-  function updateSection(index: number, patch: Partial<LyricsSection>) {
-    setSections((prev) => prev.map((s, i) => (i === index ? { ...s, ...patch } : s)));
+  function markDirty() {
+    if (!dirty) setDirty(true);
   }
 
-  function removeSection(index: number) {
-    setSections((prev) => prev.filter((_, i) => i !== index));
+  function updateItem(id: string, patch: Partial<FormItem>) {
+    markDirty();
+    setItems((prev) => prev.map((it) => (it.id === id ? { ...it, ...patch } : it)));
+  }
+
+  function moveItem(id: string, direction: -1 | 1) {
+    markDirty();
+    setItems((prev) => {
+      const idx = prev.findIndex((it) => it.id === id);
+      const swapIdx = idx + direction;
+      if (idx === -1 || swapIdx < 0 || swapIdx >= prev.length) return prev;
+      const next = [...prev];
+      [next[idx], next[swapIdx]] = [next[swapIdx], next[idx]];
+      return next;
+    });
+  }
+
+  function removeItem(id: string) {
+    markDirty();
+    setItems((prev) => prev.filter((it) => it.id !== id && it.repeatOfId !== id));
+  }
+
+  function addSection() {
+    markDirty();
+    setItems((prev) => [
+      ...prev,
+      { id: makeId(), type: "verse", label: "", text: "", isRepeat: false, repeatOfId: null },
+    ]);
+  }
+
+  function addRepeat(sourceId: string) {
+    markDirty();
+    setItems((prev) => {
+      const idx = prev.findIndex((it) => it.id === sourceId);
+      if (idx === -1) return prev;
+      const source = prev[idx];
+      const repeat: FormItem = {
+        id: makeId(),
+        type: source.type,
+        label: "",
+        text: source.text,
+        isRepeat: true,
+        repeatOfId: sourceId,
+      };
+      const next = [...prev];
+      next.splice(idx + 1, 0, repeat);
+      return next;
+    });
   }
 
   function setMetadataValue(fieldId: string, value: string | number | string[]) {
+    markDirty();
     setMetadata((prev) => ({ ...prev, [fieldId]: value }));
   }
 
   function toggleMultiSelectValue(fieldId: string, option: string) {
     const current = (metadata[fieldId] as string[] | undefined) ?? [];
-    const next = current.includes(option)
-      ? current.filter((o) => o !== option)
-      : [...current, option];
+    const next = current.includes(option) ? current.filter((o) => o !== option) : [...current, option];
     setMetadataValue(fieldId, next);
   }
 
-  async function handleAddField() {
-    const options = newFieldOptions
-      .split(",")
-      .map((o) => o.trim())
-      .filter(Boolean);
-    const { data, error } = await createOrGetMetadataField({
-      name: newFieldName,
-      type: newFieldType,
-      options,
+  function assignField(fieldId: string) {
+    markDirty();
+    const def = fieldDefMap.get(fieldId);
+    setAssignedFieldIds((prev) => (prev.includes(fieldId) ? prev : [...prev, fieldId]));
+    setMetadata((prev) => (fieldId in prev ? prev : { ...prev, [fieldId]: def?.type === "multi_select" ? [] : "" }));
+    setShowAddField(false);
+    setAddFieldMode("pick");
+  }
+
+  function removeField(fieldId: string) {
+    markDirty();
+    setAssignedFieldIds((prev) => prev.filter((id) => id !== fieldId));
+    setMetadata((prev) => {
+      const next = { ...prev };
+      delete next[fieldId];
+      return next;
     });
-    if (error || !data) {
-      setError(error ?? "Couldn't create field.");
+  }
+
+  function openAddField() {
+    setShowAddField(true);
+    setAddFieldMode(unassignedFields.length > 0 ? "pick" : "create");
+    setCreateName("");
+    setCreateType("text");
+    setCreateOptions([]);
+    setCreateOptionInput("");
+    setCreateError(null);
+  }
+
+  function addCreateOption() {
+    const value = createOptionInput.trim();
+    if (!value || createOptions.includes(value)) return;
+    setCreateOptions((prev) => [...prev, value]);
+    setCreateOptionInput("");
+  }
+
+  async function handleCreateField() {
+    const name = createName.trim();
+    if (!name) {
+      setCreateError("Field name is required.");
+      return;
+    }
+    if (fieldDefs.some((f) => f.name.toLowerCase() === name.toLowerCase())) {
+      setCreateError(`A field named "${name}" already exists.`);
+      return;
+    }
+    if ((createType === "single_select" || createType === "multi_select") && createOptions.length === 0) {
+      setCreateError("Add at least one option.");
+      return;
+    }
+
+    const { data, error: createErr } = await createOrGetMetadataField({
+      name,
+      type: createType,
+      options: createOptions,
+    });
+    if (createErr || !data) {
+      setCreateError(createErr ?? "Couldn't create field.");
       return;
     }
     setFieldDefs((prev) => (prev.some((f) => f.id === data.id) ? prev : [...prev, data]));
-    setNewFieldName("");
-    setNewFieldOptions("");
-    setShowAddField(false);
+    assignField(data.id);
   }
 
-  async function handleAddOption(fieldId: string) {
-    const option = newOptionValue.trim();
-    if (!option) return;
-    const { data, error } = await addOptionToField(fieldId, option);
-    if (error || !data) {
-      setError(error ?? "Couldn't add option.");
-      return;
-    }
-    setFieldDefs((prev) => prev.map((f) => (f.id === fieldId ? data : f)));
-    setAddingOptionFieldId(null);
-    setNewOptionValue("");
+  function handleCloseClick() {
+    if (dirty) setShowDiscardConfirm(true);
+    else router.push(closeHref);
   }
+
+  const hasLyrics = items.some((it) => !it.isRepeat && it.text.trim().length > 0);
+  const canSave = title.trim().length > 0 && hasLyrics;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!canSave) {
+      setError(!title.trim() ? "Title is required." : "Add at least one section with lyrics.");
+      return;
+    }
     setSaving(true);
     setError(null);
     try {
-      const { data, error } = await saveSong({
+      const { data, error: saveErr } = await saveSong({
         id: initialSong?.id,
-        title,
-        lyrics: sections.filter((s) => s.text.trim().length > 0),
+        title: title.trim(),
+        lyrics: itemsToSections(items),
         metadata,
       });
-      if (error || !data) {
-        setError(error ?? "Couldn't save song.");
+      if (saveErr || !data) {
+        setError(saveErr ?? "Couldn't save song.");
         return;
       }
+      showToast(initialSong ? "Song saved" : "Song added");
       router.push(`/songs/${data.id}`);
       router.refresh();
     } finally {
@@ -125,282 +292,354 @@ export function SongForm({
     }
   }
 
-  return (
-    <form onSubmit={handleSubmit} className="mx-auto max-w-2xl px-4 py-6 space-y-8">
-      <div className="space-y-1">
-        <label htmlFor="title" className="block text-sm font-medium">
-          Title
-        </label>
-        <input
-          id="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-          className="w-full rounded-lg border border-foreground/20 bg-transparent px-4 py-3 text-base outline-none focus:border-foreground/50"
-        />
-      </div>
+  const displayNumber = initialSong ? initialSong.number : provisionalNumber;
+  let sectionPosition = 0;
 
-      <section className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-medium">Lyrics</h2>
-          <button
-            type="button"
-            onClick={() => setSections((prev) => [...prev, emptySection()])}
-            className="text-sm text-foreground/60 underline"
-          >
-            + Add section
-          </button>
+  return (
+    <form onSubmit={handleSubmit} className="pb-24">
+      <TopBar
+        title={initialSong ? "Edit song" : "New song"}
+        onClose={handleCloseClick}
+        right={displayNumber != null && <span className="type-mono text-muted">No. {String(displayNumber).padStart(3, "0")}</span>}
+      />
+
+      {showDiscardConfirm && (
+        <div className="flex items-center justify-between gap-3 border-b-2 border-danger bg-surface px-5 py-3">
+          <p className="type-body text-ink">Discard unsaved changes?</p>
+          <div className="flex items-center gap-2">
+            <Button variant="text" onClick={() => setShowDiscardConfirm(false)}>
+              Keep editing
+            </Button>
+            <Button
+              type="button"
+              variant="danger"
+              fullWidth={false}
+              className="h-10 px-3"
+              onClick={() => router.push(closeHref)}
+            >
+              Discard
+            </Button>
+          </div>
         </div>
-        {sections.map((section, i) => (
-          <div key={i} className="space-y-2 rounded-lg border border-foreground/10 p-3">
-            <div className="flex gap-2">
-              <select
-                value={section.type}
-                onChange={(e) => updateSection(i, { type: e.target.value as LyricsSectionType })}
-                className="rounded-md border border-foreground/20 bg-transparent px-2 py-1 text-sm"
-              >
-                {SECTION_TYPES.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
-              <input
-                placeholder="Label (optional), e.g. Verse 1"
-                value={section.label ?? ""}
-                onChange={(e) => updateSection(i, { label: e.target.value })}
-                className="flex-1 rounded-md border border-foreground/20 bg-transparent px-2 py-1 text-sm"
-              />
-              {sections.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() => removeSection(i)}
-                  className="text-sm text-red-600"
-                >
-                  Remove
-                </button>
+      )}
+
+      <div className="space-y-8 px-5 py-5 desktop:mx-auto desktop:max-w-[720px]">
+        <TextInput
+          value={title}
+          onChange={(e) => {
+            markDirty();
+            setTitle(e.target.value);
+          }}
+          placeholder="Song title"
+          className="h-14 text-[21px] font-bold"
+          aria-label="Title"
+          autoFocus={!initialSong}
+        />
+
+        <section className="space-y-3">
+          <div className="flex items-center justify-between">
+            <p className="type-section-label">
+              Lyrics · {items.filter((it) => !it.isRepeat).length}{" "}
+              {items.filter((it) => !it.isRepeat).length === 1 ? "part" : "parts"}
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            {items.map((item, idx) => {
+              if (item.isRepeat) {
+                const source = items.find((it) => it.id === item.repeatOfId);
+                const firstLine = (source?.text ?? item.text).split("\n")[0] ?? "";
+                return (
+                  <div
+                    key={item.id}
+                    className="grid h-14 grid-cols-[1fr_auto] items-center gap-2 border-2 border-rule-2 px-3"
+                  >
+                    <p className="type-body min-w-0 truncate text-muted">
+                      Repeat · <span className="text-ink">Chorus</span> · {firstLine}…
+                    </p>
+                    <div className="flex shrink-0 items-center gap-1">
+                      <Button
+                        type="button"
+                        variant="icon"
+                        icon={ArrowUp}
+                        aria-label="Move up"
+                        disabled={idx === 0}
+                        onClick={() => moveItem(item.id, -1)}
+                      />
+                      <Button
+                        type="button"
+                        variant="icon"
+                        icon={ArrowDown}
+                        aria-label="Move down"
+                        disabled={idx === items.length - 1}
+                        onClick={() => moveItem(item.id, 1)}
+                      />
+                      <Button
+                        type="button"
+                        variant="icon"
+                        icon={X}
+                        aria-label="Remove repeat"
+                        onClick={() => removeItem(item.id)}
+                      />
+                    </div>
+                  </div>
+                );
+              }
+
+              sectionPosition++;
+              const position = sectionPosition;
+
+              return (
+                <div key={item.id} className="space-y-3 border-t-2 border-rule-2 bg-surface p-4">
+                  <div className="flex items-center gap-2">
+                    <span className="type-mono text-accent">{String(position).padStart(2, "0")}</span>
+                    <Select
+                      value={item.type}
+                      onChange={(e) => updateItem(item.id, { type: e.target.value as LyricsSectionType })}
+                      compact
+                      className="flex-1"
+                      aria-label="Section type"
+                    >
+                      {SECTION_TYPES.map((t) => (
+                        <option key={t.value} value={t.value}>
+                          {t.label}
+                        </option>
+                      ))}
+                    </Select>
+                    <div className="flex shrink-0 items-center gap-1">
+                      <Button
+                        type="button"
+                        variant="icon"
+                        icon={ArrowUp}
+                        aria-label="Move up"
+                        disabled={idx === 0}
+                        onClick={() => moveItem(item.id, -1)}
+                      />
+                      <Button
+                        type="button"
+                        variant="icon"
+                        icon={ArrowDown}
+                        aria-label="Move down"
+                        disabled={idx === items.length - 1}
+                        onClick={() => moveItem(item.id, 1)}
+                      />
+                      <Button
+                        type="button"
+                        variant="icon"
+                        icon={Trash}
+                        aria-label="Delete section"
+                        className="text-danger"
+                        onClick={() => removeItem(item.id)}
+                      />
+                    </div>
+                  </div>
+
+                  <TextInput
+                    value={item.label}
+                    onChange={(e) => updateItem(item.id, { label: e.target.value })}
+                    placeholder="Label (optional), e.g. Verse 1"
+                    compact
+                  />
+
+                  <TextArea
+                    value={item.text}
+                    onChange={(e) => updateItem(item.id, { text: e.target.value })}
+                    onInput={autoGrow}
+                    placeholder="One lyric line per row. A blank line starts an indented response."
+                    className="min-h-[100px] overflow-hidden"
+                  />
+
+                  {item.type === "chorus" && (
+                    <Button type="button" variant="text" onClick={() => addRepeat(item.id)}>
+                      Repeat this chorus
+                    </Button>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          <Button type="button" variant="secondary" icon={Plus} onClick={addSection}>
+            Add section
+          </Button>
+        </section>
+
+        <section className="space-y-3">
+          <p className="type-section-label">Details</p>
+
+          {assignedFieldIds.length > 0 && (
+            <div className="space-y-3">
+              {assignedFieldIds.map((fieldId) => {
+                const def = fieldDefMap.get(fieldId);
+                if (!def) return null;
+                return (
+                  <div key={fieldId} className="space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <p className="type-field-label text-muted">
+                        {def.name} <span className="text-muted">· {FIELD_TYPES.find((t) => t.value === def.type)?.label}</span>
+                      </p>
+                      <Button
+                        type="button"
+                        variant="icon"
+                        icon={X}
+                        aria-label={`Remove ${def.name}`}
+                        onClick={() => removeField(fieldId)}
+                      />
+                    </div>
+
+                    {def.type === "text" && (
+                      <TextInput
+                        value={(metadata[fieldId] as string) ?? ""}
+                        onChange={(e) => setMetadataValue(fieldId, e.target.value)}
+                        compact
+                      />
+                    )}
+                    {def.type === "number" && (
+                      <TextInput
+                        type="number"
+                        value={(metadata[fieldId] as string) ?? ""}
+                        onChange={(e) => setMetadataValue(fieldId, e.target.value)}
+                        compact
+                        className="w-[140px]"
+                      />
+                    )}
+                    {def.type === "single_select" && (
+                      <div className="flex flex-wrap gap-2">
+                        {def.options.map((o) => (
+                          <Chip
+                            key={o}
+                            label={o}
+                            selected={metadata[fieldId] === o}
+                            onClick={() => setMetadataValue(fieldId, metadata[fieldId] === o ? "" : o)}
+                          />
+                        ))}
+                      </div>
+                    )}
+                    {def.type === "multi_select" && (
+                      <div className="flex flex-wrap gap-2">
+                        {def.options.map((o) => (
+                          <Chip
+                            key={o}
+                            label={o}
+                            selected={((metadata[fieldId] as string[]) ?? []).includes(o)}
+                            onClick={() => toggleMultiSelectValue(fieldId, o)}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {!showAddField ? (
+            <Button type="button" variant="secondary" icon={Plus} onClick={openAddField}>
+              Add field
+            </Button>
+          ) : (
+            <div className="space-y-3 border-2 border-fill p-4">
+              {addFieldMode === "pick" ? (
+                <>
+                  {unassignedFields.length > 0 ? (
+                    <div className="divide-y divide-rule">
+                      {unassignedFields.map((f) => (
+                        <button
+                          key={f.id}
+                          type="button"
+                          onClick={() => assignField(f.id)}
+                          className="flex w-full items-center justify-between py-2.5 text-left"
+                        >
+                          <span className="type-body text-ink">{f.name}</span>
+                          <span className="type-meta">{FIELD_TYPES.find((t) => t.value === f.type)?.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="type-meta">No other fields yet.</p>
+                  )}
+                  <Button type="button" variant="text" onClick={() => setAddFieldMode("create")}>
+                    Create a new field
+                  </Button>
+                  <Button type="button" variant="text" onClick={() => setShowAddField(false)}>
+                    Cancel
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <TextInput
+                    value={createName}
+                    onChange={(e) => setCreateName(e.target.value)}
+                    placeholder="Field name, e.g. Key"
+                    label="Name"
+                    compact
+                    autoFocus
+                  />
+                  <div className="space-y-1">
+                    <p className="type-field-label text-muted">Type</p>
+                    <SegmentedControl
+                      aria-label="Field type"
+                      grid
+                      value={createType}
+                      onChange={setCreateType}
+                      options={FIELD_TYPES}
+                    />
+                  </div>
+                  {(createType === "single_select" || createType === "multi_select") && (
+                    <div className="space-y-2">
+                      <p className="type-field-label text-muted">Options</p>
+                      <div className="flex flex-wrap gap-2">
+                        {createOptions.map((o) => (
+                          <Chip
+                            key={o}
+                            label={o}
+                            onRemove={() => setCreateOptions((prev) => prev.filter((x) => x !== o))}
+                          />
+                        ))}
+                      </div>
+                      <div className="flex gap-2">
+                        <TextInput
+                          value={createOptionInput}
+                          onChange={(e) => setCreateOptionInput(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              addCreateOption();
+                            }
+                          }}
+                          placeholder="New option"
+                          compact
+                          className="flex-1"
+                        />
+                        <Button type="button" variant="secondary" fullWidth={false} onClick={addCreateOption}>
+                          Add
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                  {createError && <p className="type-meta text-danger">{createError}</p>}
+                  <Button type="button" onClick={handleCreateField}>
+                    Add field to song
+                  </Button>
+                  <Button type="button" variant="text" onClick={() => setAddFieldMode("pick")}>
+                    Cancel
+                  </Button>
+                </>
               )}
             </div>
-            <textarea
-              value={section.text}
-              onChange={(e) => updateSection(i, { text: e.target.value })}
-              rows={4}
-              placeholder="Lyrics for this section…"
-              className="w-full rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground/50"
-            />
-          </div>
-        ))}
-      </section>
+          )}
+        </section>
 
-      <section className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-medium">Metadata</h2>
-          <button
-            type="button"
-            onClick={() => setShowAddField((v) => !v)}
-            className="text-sm text-foreground/60 underline"
-          >
-            + Add field
-          </button>
+        {error && <p className="type-body text-danger">{error}</p>}
+      </div>
+
+      <StickyFooterAction>
+        <div className="desktop:mx-auto desktop:max-w-[720px]">
+          <Button type="submit" icon={Check} disabled={saving}>
+            {saving ? "Saving…" : "Save song"}
+          </Button>
         </div>
-
-        {showAddField && (
-          <div className="space-y-2 rounded-lg border border-foreground/10 p-3">
-            <input
-              placeholder="Field name, e.g. Key"
-              value={newFieldName}
-              onChange={(e) => setNewFieldName(e.target.value)}
-              className="w-full rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm"
-            />
-            <select
-              value={newFieldType}
-              onChange={(e) => setNewFieldType(e.target.value as MetadataFieldType)}
-              className="w-full rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm"
-            >
-              {FIELD_TYPES.map((t) => (
-                <option key={t.value} value={t.value}>
-                  {t.label}
-                </option>
-              ))}
-            </select>
-            {(newFieldType === "single_select" || newFieldType === "multi_select") && (
-              <input
-                placeholder="Options, comma separated, e.g. C, D, E"
-                value={newFieldOptions}
-                onChange={(e) => setNewFieldOptions(e.target.value)}
-                className="w-full rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm"
-              />
-            )}
-            <button
-              type="button"
-              onClick={handleAddField}
-              className="w-full rounded-md bg-foreground text-background py-2 text-sm font-medium"
-            >
-              Create field
-            </button>
-          </div>
-        )}
-
-        {fieldDefs.length === 0 ? (
-          <p className="text-sm text-foreground/50">No metadata fields yet — add one above.</p>
-        ) : (
-          <div className="space-y-3">
-            {fieldDefs.map((field) => (
-              <div key={field.id} className="space-y-1">
-                <label className="block text-sm font-medium">{field.name}</label>
-                {field.type === "text" && (
-                  <input
-                    value={(metadata[field.id] as string) ?? ""}
-                    onChange={(e) => setMetadataValue(field.id, e.target.value)}
-                    className="w-full rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm"
-                  />
-                )}
-                {field.type === "number" && (
-                  <input
-                    type="number"
-                    value={(metadata[field.id] as string) ?? ""}
-                    onChange={(e) => setMetadataValue(field.id, e.target.value)}
-                    className="w-full rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm"
-                  />
-                )}
-                {field.type === "single_select" && (
-                  <div className="space-y-2">
-                    <div className="flex gap-2">
-                      <select
-                        value={(metadata[field.id] as string) ?? ""}
-                        onChange={(e) => setMetadataValue(field.id, e.target.value)}
-                        className="flex-1 rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm"
-                      >
-                        <option value="">—</option>
-                        {field.options.map((o) => (
-                          <option key={o} value={o}>
-                            {o}
-                          </option>
-                        ))}
-                      </select>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setAddingOptionFieldId(field.id);
-                          setNewOptionValue("");
-                        }}
-                        className="text-sm text-foreground/60 underline whitespace-nowrap"
-                      >
-                        + option
-                      </button>
-                    </div>
-                    {addingOptionFieldId === field.id && (
-                      <div className="flex gap-2">
-                        <input
-                          autoFocus
-                          placeholder="New option value"
-                          value={newOptionValue}
-                          onChange={(e) => setNewOptionValue(e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                              e.preventDefault();
-                              handleAddOption(field.id);
-                            }
-                          }}
-                          className="flex-1 rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => handleAddOption(field.id)}
-                          className="rounded-md bg-foreground text-background px-3 py-2 text-sm font-medium"
-                        >
-                          Add
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setAddingOptionFieldId(null)}
-                          className="text-sm text-foreground/60"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                )}
-                {field.type === "multi_select" && (
-                  <div className="space-y-1">
-                    <div className="flex flex-wrap gap-2">
-                      {field.options.map((o) => {
-                        const selected = ((metadata[field.id] as string[]) ?? []).includes(o);
-                        return (
-                          <button
-                            type="button"
-                            key={o}
-                            onClick={() => toggleMultiSelectValue(field.id, o)}
-                            className={`rounded-full border px-3 py-1 text-xs ${
-                              selected
-                                ? "border-foreground bg-foreground text-background"
-                                : "border-foreground/20"
-                            }`}
-                          >
-                            {o}
-                          </button>
-                        );
-                      })}
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setAddingOptionFieldId(field.id);
-                        setNewOptionValue("");
-                      }}
-                      className="text-sm text-foreground/60 underline"
-                    >
-                      + option
-                    </button>
-                    {addingOptionFieldId === field.id && (
-                      <div className="flex gap-2">
-                        <input
-                          autoFocus
-                          placeholder="New option value"
-                          value={newOptionValue}
-                          onChange={(e) => setNewOptionValue(e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                              e.preventDefault();
-                              handleAddOption(field.id);
-                            }
-                          }}
-                          className="flex-1 rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-sm"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => handleAddOption(field.id)}
-                          className="rounded-md bg-foreground text-background px-3 py-2 text-sm font-medium"
-                        >
-                          Add
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setAddingOptionFieldId(null)}
-                          className="text-sm text-foreground/60"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
-
-      {error && <p className="text-sm text-red-600">{error}</p>}
-
-      <button
-        type="submit"
-        disabled={saving}
-        className="w-full rounded-lg bg-foreground text-background py-3 font-medium disabled:opacity-50"
-      >
-        {saving ? "Saving…" : initialSong ? "Save changes" : "Add song"}
-      </button>
+      </StickyFooterAction>
     </form>
   );
 }
