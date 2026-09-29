@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { ArrowRight, Check, Undo2, X } from "lucide-react";
 import { parseBulkImportText, type ParsedSongDraft, type MetadataGuess } from "@/lib/bulk-import/parse";
 import { createOrGetMetadataField, addOptionToField } from "@/lib/actions/metadata-fields";
@@ -24,7 +25,7 @@ const TYPE_MARK: Partial<Record<LyricsSectionType, string>> = {
 
 type EntryStatus =
   | { kind: "pending" }
-  | { kind: "saved"; number: number }
+  | { kind: "saved"; id: string; number: number }
   | { kind: "discarded" };
 
 interface Entry {
@@ -35,7 +36,9 @@ interface Entry {
   error: string | null;
 }
 
-async function commitDraft(draft: ParsedSongDraft): Promise<{ number: number | null; error: string | null }> {
+async function commitDraft(
+  draft: ParsedSongDraft,
+): Promise<{ id: string | null; number: number | null; error: string | null }> {
   const metadata: Record<string, string> = {};
 
   for (const guess of draft.metadataGuesses) {
@@ -45,14 +48,14 @@ async function commitDraft(draft: ParsedSongDraft): Promise<{ number: number | n
       options: guess.fieldType === "single_select" ? [guess.value] : [],
     });
     if (error || !field) {
-      return { number: null, error: error ?? `Couldn't create field "${guess.fieldName}".` };
+      return { id: null, number: null, error: error ?? `Couldn't create field "${guess.fieldName}".` };
     }
 
     if (guess.fieldType === "single_select") {
       const hasOption = field.options.some((o) => o.toLowerCase() === guess.value.toLowerCase());
       if (!hasOption) {
         const { error: optionError } = await addOptionToField(field.id, guess.value);
-        if (optionError) return { number: null, error: optionError };
+        if (optionError) return { id: null, number: null, error: optionError };
       }
     }
 
@@ -61,9 +64,9 @@ async function commitDraft(draft: ParsedSongDraft): Promise<{ number: number | n
 
   const { data, error } = await saveSong({ title: draft.title, lyrics: draft.lyrics, metadata });
   if (error || !data) {
-    return { number: null, error: error ?? "Couldn't save song." };
+    return { id: null, number: null, error: error ?? "Couldn't save song." };
   }
-  return { number: data.number, error: null };
+  return { id: data.id, number: data.number, error: null };
 }
 
 function sectionSummaryMark(type: LyricsSectionType, verseNumber?: number): string {
@@ -245,12 +248,20 @@ export function BulkImport() {
     const entry = entries?.[index];
     if (!entry) return;
     updateEntry(index, { saving: true, error: null });
-    const { number, error } = await commitDraft(entry.draft);
-    if (error || number === null) {
+    const { id, number, error } = await commitDraft(entry.draft);
+    if (error || id === null || number === null) {
       updateEntry(index, { saving: false, error: error ?? "Couldn't save song." });
       return;
     }
-    updateEntry(index, { saving: false, status: { kind: "saved", number } });
+    // A single-song paste is the common "fix mislabeling/repeats right
+    // after import" case — skip the review screen and go straight to
+    // editing it. A multi-song batch stays here so the rest can still be
+    // reviewed; each "Saved as No. X" row links to its own edit page.
+    if (entries && entries.length === 1) {
+      router.push(`/admin/songs/${id}/edit`);
+      return;
+    }
+    updateEntry(index, { saving: false, status: { kind: "saved", id, number } });
   }
 
   async function handleSaveAll() {
@@ -311,11 +322,17 @@ export function BulkImport() {
         {entries.map((entry, i) => {
           if (entry.status.kind === "saved") {
             return (
-              <div key={i} className="flex items-center gap-3 border-b border-rule py-3">
+              <Link
+                key={i}
+                href={`/admin/songs/${entry.status.id}/edit`}
+                className="flex items-center gap-3 border-b border-rule py-3"
+              >
                 <Check size={18} strokeWidth={2.4} className="shrink-0 text-label" aria-hidden />
                 <p className="type-body min-w-0 flex-1 truncate text-ink">{entry.draft.title}</p>
-                <span className="type-meta shrink-0">Saved as No. {String(entry.status.number).padStart(3, "0")}</span>
-              </div>
+                <span className="type-meta shrink-0 text-accent">
+                  Saved as No. {String(entry.status.number).padStart(3, "0")} · Edit
+                </span>
+              </Link>
             );
           }
           if (entry.status.kind === "discarded") {

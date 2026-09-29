@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ToastProvider } from "@/components/ui/toast";
+import { FullscreenProvider } from "@/lib/fullscreen";
 import { AdminShell } from "@/components/admin-shell";
 
 // The nav-restructure fix: members get no persistent chrome from this
@@ -22,8 +23,10 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const phoneNumber = user.phone ? `+${user.phone}` : null;
 
   return (
-    <ToastProvider>
-      {isAdmin ? <AdminShell phoneNumber={phoneNumber}>{children}</AdminShell> : children}
-    </ToastProvider>
+    <FullscreenProvider>
+      <ToastProvider>
+        {isAdmin ? <AdminShell phoneNumber={phoneNumber}>{children}</AdminShell> : children}
+      </ToastProvider>
+    </FullscreenProvider>
   );
 }

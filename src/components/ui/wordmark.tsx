@@ -1,7 +1,13 @@
 // "ካቦድ" with the --mark gradient. This is the ONLY place in the app the
 // painterly gradient treatment appears — never on buttons, cards, or body
 // text (design-reference/CLAUDE_CODE_PROMPT.md §1).
-export function Wordmark({ size = 26, className }: { size?: number; className?: string }) {
+export function Wordmark({
+  size = 26,
+  className,
+}: {
+  size?: number;
+  className?: string;
+}) {
   return (
     <span
       className={className}
@@ -17,7 +23,7 @@ export function Wordmark({ size = 26, className }: { size?: number; className?: 
         display: "inline-block",
       }}
     >
-      ካቦድ
+      ካቦድ ኳየር
     </span>
   );
 }
