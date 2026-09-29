@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowDown, ArrowUp, Check, Plus, Trash, X } from "lucide-react";
+import { ArrowDown, ArrowUp, Check, Copy, Plus, Trash, X } from "lucide-react";
 import { createOrGetMetadataField } from "@/lib/actions/metadata-fields";
 import { saveSong } from "@/lib/actions/songs";
 import { useToast } from "@/components/ui/toast";
@@ -48,39 +48,21 @@ interface FormItem {
   type: LyricsSectionType;
   label: string;
   text: string;
-  isRepeat: boolean;
-  repeatOfId: string | null;
 }
 
-// Reconstructs the form's client-only item list (with stable ids and
-// repeat-linkage) from stored sections — a repeat is a literal duplicate
-// {type, text} of an earlier non-repeat entry, per src/lib/lyrics.ts's own
-// detection rule.
+// Reconstructs the form's client-only item list (with stable ids) from
+// stored sections. A section that happens to duplicate another's
+// {type, text} is still detected and collapsed as a repeat on read
+// (src/lib/lyrics.ts), but here every item is fully independent and editable.
 function itemsFromSections(sections: LyricsSection[]): FormItem[] {
-  const items: FormItem[] = [];
-  for (const s of sections) {
-    const source = items.find((it) => !it.isRepeat && it.type === s.type && it.text === s.text);
-    items.push({
-      id: makeId(),
-      type: s.type,
-      label: s.label ?? "",
-      text: s.text,
-      isRepeat: !!source,
-      repeatOfId: source?.id ?? null,
-    });
-  }
-  return items.length > 0 ? items : [{ id: makeId(), type: "verse", label: "", text: "", isRepeat: false, repeatOfId: null }];
+  const items = sections.map((s) => ({ id: makeId(), type: s.type, label: s.label ?? "", text: s.text }));
+  return items.length > 0 ? items : [{ id: makeId(), type: "verse" as LyricsSectionType, label: "", text: "" }];
 }
 
-// Repeats always mirror their source's CURRENT text at save time, so a later
-// edit to the original chorus keeps the repeat detectable on read.
 function itemsToSections(items: FormItem[]): LyricsSection[] {
   return items
-    .filter((it) => it.isRepeat || it.text.trim().length > 0)
-    .map((it) => {
-      const text = it.isRepeat ? (items.find((s) => s.id === it.repeatOfId)?.text ?? it.text) : it.text;
-      return { type: it.type, label: it.label.trim() || undefined, text };
-    });
+    .filter((it) => it.text.trim().length > 0)
+    .map((it) => ({ type: it.type, label: it.label.trim() || undefined, text: it.text }));
 }
 
 function autoGrow(e: React.FormEvent<HTMLTextAreaElement>) {
@@ -151,33 +133,23 @@ export function SongForm({
 
   function removeItem(id: string) {
     markDirty();
-    setItems((prev) => prev.filter((it) => it.id !== id && it.repeatOfId !== id));
+    setItems((prev) => prev.filter((it) => it.id !== id));
   }
 
   function addSection() {
     markDirty();
-    setItems((prev) => [
-      ...prev,
-      { id: makeId(), type: "verse", label: "", text: "", isRepeat: false, repeatOfId: null },
-    ]);
+    setItems((prev) => [...prev, { id: makeId(), type: "verse", label: "", text: "" }]);
   }
 
-  function addRepeat(sourceId: string) {
+  function duplicateSection(id: string) {
     markDirty();
     setItems((prev) => {
-      const idx = prev.findIndex((it) => it.id === sourceId);
+      const idx = prev.findIndex((it) => it.id === id);
       if (idx === -1) return prev;
       const source = prev[idx];
-      const repeat: FormItem = {
-        id: makeId(),
-        type: source.type,
-        label: "",
-        text: source.text,
-        isRepeat: true,
-        repeatOfId: sourceId,
-      };
+      const copy: FormItem = { id: makeId(), type: source.type, label: source.label, text: source.text };
       const next = [...prev];
-      next.splice(idx + 1, 0, repeat);
+      next.splice(idx + 1, 0, copy);
       return next;
     });
   }
@@ -262,7 +234,7 @@ export function SongForm({
     else router.push(closeHref);
   }
 
-  const hasLyrics = items.some((it) => !it.isRepeat && it.text.trim().length > 0);
+  const hasLyrics = items.some((it) => it.text.trim().length > 0);
   const canSave = title.trim().length > 0 && hasLyrics;
 
   async function handleSubmit(e: React.FormEvent) {
@@ -293,7 +265,6 @@ export function SongForm({
   }
 
   const displayNumber = initialSong ? initialSong.number : provisionalNumber;
-  let sectionPosition = 0;
 
   return (
     <form onSubmit={handleSubmit} className="pb-24">
@@ -339,55 +310,13 @@ export function SongForm({
         <section className="space-y-3">
           <div className="flex items-center justify-between">
             <p className="type-section-label">
-              Lyrics · {items.filter((it) => !it.isRepeat).length}{" "}
-              {items.filter((it) => !it.isRepeat).length === 1 ? "part" : "parts"}
+              Lyrics · {items.length} {items.length === 1 ? "part" : "parts"}
             </p>
           </div>
 
           <div className="space-y-3">
             {items.map((item, idx) => {
-              if (item.isRepeat) {
-                const source = items.find((it) => it.id === item.repeatOfId);
-                const firstLine = (source?.text ?? item.text).split("\n")[0] ?? "";
-                return (
-                  <div
-                    key={item.id}
-                    className="grid h-14 grid-cols-[1fr_auto] items-center gap-2 border-2 border-rule-2 px-3"
-                  >
-                    <p className="type-body min-w-0 truncate text-muted">
-                      Repeat · <span className="text-ink">Chorus</span> · {firstLine}…
-                    </p>
-                    <div className="flex shrink-0 items-center gap-1">
-                      <Button
-                        type="button"
-                        variant="icon"
-                        icon={ArrowUp}
-                        aria-label="Move up"
-                        disabled={idx === 0}
-                        onClick={() => moveItem(item.id, -1)}
-                      />
-                      <Button
-                        type="button"
-                        variant="icon"
-                        icon={ArrowDown}
-                        aria-label="Move down"
-                        disabled={idx === items.length - 1}
-                        onClick={() => moveItem(item.id, 1)}
-                      />
-                      <Button
-                        type="button"
-                        variant="icon"
-                        icon={X}
-                        aria-label="Remove repeat"
-                        onClick={() => removeItem(item.id)}
-                      />
-                    </div>
-                  </div>
-                );
-              }
-
-              sectionPosition++;
-              const position = sectionPosition;
+              const position = idx + 1;
 
               return (
                 <div key={item.id} className="space-y-3 border-t-2 border-rule-2 bg-surface p-4">
@@ -449,11 +378,9 @@ export function SongForm({
                     className="min-h-[100px] overflow-hidden"
                   />
 
-                  {item.type === "chorus" && (
-                    <Button type="button" variant="text" onClick={() => addRepeat(item.id)}>
-                      Repeat this chorus
-                    </Button>
-                  )}
+                  <Button type="button" variant="text" icon={Copy} onClick={() => duplicateSection(item.id)}>
+                    Duplicate section
+                  </Button>
                 </div>
               );
             })}
