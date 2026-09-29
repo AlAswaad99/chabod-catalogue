@@ -20,25 +20,9 @@ interface LyricSectionProps {
   label?: string;
   text: string;
   verseNumber?: number;
-  /** Render as a collapsed 48px row instead of the full text — see src/lib/lyrics.ts. */
-  isRepeat?: boolean;
 }
 
-export function LyricSection({ type, label, text, verseNumber, isRepeat }: LyricSectionProps) {
-  if (isRepeat) {
-    const firstLine = text.split("\n")[0] ?? "";
-    return (
-      <div className="grid h-12 grid-cols-[40px_1fr] items-center gap-2 border-y border-rule">
-        <span style={{ fontFamily: "var(--font-noto-ethiopic)" }} className="text-[13px] font-bold text-label">
-          አዝ
-        </span>
-        <p className="type-body truncate text-muted">
-          <span className="text-ink">Chorus</span> · repeat · {firstLine}…
-        </p>
-      </div>
-    );
-  }
-
+export function LyricSection({ type, label, text, verseNumber }: LyricSectionProps) {
   const { main, indented } = parseIndented(text);
   const isChorus = type === "chorus";
 

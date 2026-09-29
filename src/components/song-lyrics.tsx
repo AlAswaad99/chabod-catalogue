@@ -62,7 +62,6 @@ export function SongLyrics({ sections }: { sections: LyricsSection[] }) {
           label={section.label}
           text={section.text}
           verseNumber={section.verseNumber}
-          isRepeat={section.isRepeat}
         />
       ))}
     </div>
