@@ -109,9 +109,16 @@ Phone + desktop-rail together per screen, tablet split-view deferred (Q10). Memb
 
 ---
 
+### Step 18: Tablet split-view (768-1199px)
+- **Touches:** `src/app/globals.css` (new `tablet:` breakpoint), `src/components/catalogue-list-pane.tsx` (new, shared), `src/app/(app)/catalogue/page.tsx`, `src/app/(app)/songs/[id]/page.tsx`, `src/components/catalogue-search-bar.tsx`, `src/components/admin-shell.tsx`, `src/components/ui/bottom-nav.tsx`, `src/components/ui/meta-grid.tsx`, `src/components/song-lyrics.tsx`, `src/components/ui/docked-player.tsx`
+- Requested as an explicit follow-up after Step 17 shipped Q10's deferral. Built the 380px list column + right pane split view for `/catalogue` (empty state) and `/songs/[id]` (reading pane, selected row), search-without-closing via pathname-relative navigation, BottomNav constrained to the list column's width on these two routes, MetaGrid's real 3-on-phone/4-on-tablet field count (not just a wider grid), and DockedPlayer spanning the right column instead of full-bleed. See `decisions.md` Q10's "Update" note for the full implementation notes.
+- **Done-check:** verified in the browser at 900px (tablet) and re-confirmed 375px (phone) and 1280px (desktop) are visually unchanged, for both an admin and a member session — split view, selected-row highlight, search-without-closing, BottomNav width, 4-column MetaGrid, and the docked player's right-column-only span all behave as specced; zero console errors in a fresh tab.
+
+---
+
 ## Not in this plan (explicitly deferred per grilling)
 
-- Tablet split-view (768–1199px) — Q10.
+Originally included tablet split-view (768–1199px) — Q10 — until Step 18 above built it as a follow-up.
 - Slide deck persistence/reuse — Q8.
 - Ge'ez letter-variant search normalization — Q4.
 - Any schema/feature not already called for above (brief §6 "out of scope").

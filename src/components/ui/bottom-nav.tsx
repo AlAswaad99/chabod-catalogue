@@ -8,16 +8,24 @@ interface BottomNavProps {
   moreOpen: boolean;
   onToggleMore: () => void;
   moreButtonRef?: React.RefObject<HTMLButtonElement | null>;
+  /** True on the catalogue/song-detail routes, where the 768-1199px tablet
+   * split-view's 380px list column means BottomNav spans under it only,
+   * not the full viewport width (§4.10). */
+  constrainWidthAtTablet?: boolean;
 }
 
 // Admin, mobile/tablet only (§3.14) — hidden at the desktop breakpoint,
 // where DesktopRail takes over both this and MoreSheet.
-export function BottomNav({ moreOpen, onToggleMore, moreButtonRef }: BottomNavProps) {
+export function BottomNav({ moreOpen, onToggleMore, moreButtonRef, constrainWidthAtTablet }: BottomNavProps) {
   const pathname = usePathname();
   const catalogueActive = pathname === "/catalogue" && !moreOpen;
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-30 grid h-[72px] grid-cols-3 border-t-2 border-rule bg-ground pb-[env(safe-area-inset-bottom)] desktop:hidden">
+    <nav
+      className={`fixed bottom-0 left-0 z-30 grid h-[72px] grid-cols-3 border-t-2 border-rule bg-ground pb-[env(safe-area-inset-bottom)] desktop:hidden ${
+        constrainWidthAtTablet ? "right-auto w-full tablet:w-[380px] tablet:border-r-2" : "right-0"
+      }`}
+    >
       <Link
         href="/catalogue"
         onClick={() => moreOpen && onToggleMore()}

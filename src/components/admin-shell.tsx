@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { BottomNav } from "./ui/bottom-nav";
 import { MoreSheet } from "./ui/more-sheet";
@@ -9,6 +10,12 @@ import { DesktopRail } from "./ui/desktop-rail";
 export function AdminShell({ phoneNumber, children }: { phoneNumber: string | null; children: ReactNode }) {
   const [moreOpen, setMoreOpen] = useState(false);
   const moreButtonRef = useRef<HTMLButtonElement>(null);
+  const pathname = usePathname();
+
+  // Tablet split-view (§4.10): on the catalogue/song-detail routes, the
+  // 380px list column is the only thing BottomNav sits under — everywhere
+  // else it still spans the full width below the desktop breakpoint.
+  const isSplitViewRoute = pathname === "/catalogue" || pathname.startsWith("/songs/");
 
   return (
     <>
@@ -18,6 +25,7 @@ export function AdminShell({ phoneNumber, children }: { phoneNumber: string | nu
         moreOpen={moreOpen}
         onToggleMore={() => setMoreOpen((v) => !v)}
         moreButtonRef={moreButtonRef}
+        constrainWidthAtTablet={isSplitViewRoute}
       />
       <MoreSheet open={moreOpen} onClose={() => setMoreOpen(false)} triggerRef={moreButtonRef} />
     </>

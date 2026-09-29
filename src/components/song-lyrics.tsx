@@ -52,7 +52,7 @@ export function SongLyrics({ sections }: { sections: LyricsSection[] }) {
 
   return (
     <div
-      className="space-y-5 px-5 pb-8 pt-[22px]"
+      className="space-y-5 px-5 pb-8 pt-[22px] tablet:max-w-[560px] desktop:max-w-none"
       style={{ "--lyrics-size": `${size}px` } as CSSProperties}
     >
       {annotated.map((section, i) => (

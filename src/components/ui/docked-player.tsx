@@ -24,9 +24,14 @@ export function DockedPlayer({
    * it's replaced by DesktopRail at the desktop breakpoint), so this needs
    * to dock above it instead of overlapping at the same bottom-0 edge. */
   aboveBottomNav,
+  /** True on song detail, where the 768-1199px tablet split-view puts a
+   * 380px+2px-border list column to the left — the player should start
+   * after it ("spanning the right column", §4.10) instead of full-bleed. */
+  spanTabletRightColumn,
 }: {
   recordings: DockedPlayerRecording[];
   aboveBottomNav?: boolean;
+  spanTabletRightColumn?: boolean;
 }) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [index, setIndex] = useState(0);
@@ -74,7 +79,9 @@ export function DockedPlayer({
 
   return (
     <div
-      className={`fixed inset-x-0 z-20 grid h-[72px] grid-cols-[64px_1fr] border-t-2 border-fill bg-surface ${
+      className={`fixed left-0 right-0 z-20 grid h-[72px] grid-cols-[64px_1fr] border-t-2 border-fill bg-surface ${
+        spanTabletRightColumn ? "tablet:left-[382px] desktop:left-0" : ""
+      } ${
         aboveBottomNav
           ? "bottom-[72px] desktop:bottom-0 desktop:pb-[env(safe-area-inset-bottom)]"
           : "bottom-0 pb-[env(safe-area-inset-bottom)]"

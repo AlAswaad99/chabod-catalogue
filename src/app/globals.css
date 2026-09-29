@@ -72,10 +72,12 @@
   --font-lyrics: var(--font-lyrics);
   --font-mono: var(--font-mono-stack);
 
-  /* Matches the brief's own breakpoint (§4.10), not Tailwind's default lg
-     (1024px) — lets components use `desktop:` for real. Tablet split-view
-     (768-1199px) is deferred (Q10), so there is no `tablet:` breakpoint
-     yet; that range falls through to phone styles in the meantime. */
+  /* Matches the brief's own breakpoints (§4.10), not Tailwind's defaults.
+     `tablet:` (768px+) carries the 768-1199px split-view styles; since
+     Tailwind breakpoints are min-width and cascade, anything tablet: sets
+     also applies at desktop width unless a later desktop: rule overrides
+     it — exactly the layering used elsewhere (e.g. MetaGrid's grid-cols). */
+  --breakpoint-tablet: 768px;
   --breakpoint-desktop: 1200px;
 }
 
