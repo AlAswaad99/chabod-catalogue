@@ -79,7 +79,7 @@ export function DesktopRail({ phoneNumber }: { phoneNumber: string | null }) {
         />
         {phoneNumber && <p className="type-meta">{phoneNumber}</p>}
         <form action="/api/auth/sign-out" method="post">
-          <button type="submit" className="flex h-10 w-full items-center gap-2 text-danger">
+          <button type="submit" className="flex h-11 w-full items-center gap-2 text-danger">
             <LogOut size={18} strokeWidth={2} aria-hidden />
             <span className="type-body">Sign out</span>
           </button>

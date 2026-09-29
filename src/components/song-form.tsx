@@ -314,7 +314,7 @@ export function SongForm({
               type="button"
               variant="danger"
               fullWidth={false}
-              className="h-10 px-3"
+              className="h-11 px-3"
               onClick={() => router.push(closeHref)}
             >
               Discard

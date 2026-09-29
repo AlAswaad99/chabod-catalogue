@@ -406,7 +406,7 @@ export function SlideGenerator({ songs }: { songs: SongLite[] }) {
                             return (
                               <div key={item.id} className="flex items-center gap-3 py-2">
                                 <span
-                                  className={item.type === "chorus" ? "type-badge shrink-0 text-label" : "type-mono shrink-0 text-accent"}
+                                  className={item.type === "chorus" ? "text-[13px] font-bold shrink-0 text-label" : "type-mono shrink-0 text-accent"}
                                   style={item.type === "chorus" ? { fontFamily: "var(--font-noto-ethiopic)" } : undefined}
                                 >
                                   {sectionMark(item.type, verseIdx)}

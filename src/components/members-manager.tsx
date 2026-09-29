@@ -130,7 +130,7 @@ export function MembersManager({
             <p className="type-meta">They&apos;ll link Telegram the first time they sign in.</p>
             {addError && <p className="type-meta text-danger">{addError}</p>}
             <div className="flex items-center gap-2">
-              <Button onClick={handleAdd} disabled={isPending} fullWidth={false} className="h-10 px-4">
+              <Button onClick={handleAdd} disabled={isPending} fullWidth={false} className="h-11 px-4">
                 Give access
               </Button>
               <Button variant="text" onClick={() => setShowAddForm(false)}>

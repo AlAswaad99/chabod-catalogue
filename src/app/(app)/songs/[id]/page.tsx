@@ -91,7 +91,7 @@ export default async function SongDetailPage({
                     icon={Pencil}
                     href={`/admin/songs/${song.id}/edit`}
                     fullWidth={false}
-                    className="h-10 px-3"
+                    className="h-11 px-3"
                   >
                     Edit
                   </Button>

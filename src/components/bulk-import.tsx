@@ -136,7 +136,7 @@ function DraftCard({
               <span
                 className={
                   section.type === "chorus"
-                    ? "type-badge shrink-0 text-label"
+                    ? "text-[13px] font-bold shrink-0 text-label"
                     : "type-mono shrink-0 text-accent"
                 }
                 style={section.type === "chorus" ? { fontFamily: "var(--font-noto-ethiopic)" } : undefined}

@@ -172,7 +172,7 @@ export function MetadataFieldsList({
                           <Button
                             variant="secondary"
                             fullWidth={false}
-                            className="h-10 px-3"
+                            className="h-11 px-3"
                             onClick={() => handleMerge(field, canonical)}
                           >
                             Merge into {canonical.name}
@@ -191,7 +191,7 @@ export function MetadataFieldsList({
                         {nameDraft.trim() !== field.name && nameDraft.trim() !== "" && (
                           <Button
                             fullWidth={false}
-                            className="h-10 px-3"
+                            className="h-11 px-3"
                             disabled={isPending}
                             onClick={() => handleRename(field)}
                           >
