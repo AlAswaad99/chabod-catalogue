@@ -14,7 +14,7 @@ export interface SaveSongInput {
 
 export async function saveSong(
   input: SaveSongInput,
-): Promise<{ data: { id: string } | null; error: string | null }> {
+): Promise<{ data: { id: string; number: number } | null; error: string | null }> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -27,11 +27,11 @@ export async function saveSong(
   };
 
   const query = input.id
-    ? supabase.from("songs").update(payload).eq("id", input.id).select("id").single()
+    ? supabase.from("songs").update(payload).eq("id", input.id).select("id, number").single()
     : supabase
         .from("songs")
         .insert({ ...payload, created_by: user?.id ?? null })
-        .select("id")
+        .select("id, number")
         .single();
 
   const { data, error } = await query;

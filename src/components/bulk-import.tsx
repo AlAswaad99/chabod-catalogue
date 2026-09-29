@@ -1,15 +1,41 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { ArrowRight, Check, Undo2, X } from "lucide-react";
 import { parseBulkImportText, type ParsedSongDraft, type MetadataGuess } from "@/lib/bulk-import/parse";
 import { createOrGetMetadataField, addOptionToField } from "@/lib/actions/metadata-fields";
 import { saveSong } from "@/lib/actions/songs";
-import type { LyricsSection, LyricsSectionType } from "@/types/song";
+import { annotateSections } from "@/lib/lyrics";
+import { TopBar } from "@/components/ui/top-bar";
+import { TextArea, TextInput } from "@/components/ui/text-input";
+import { Chip } from "@/components/ui/chip";
+import { Button } from "@/components/ui/button";
+import { StickyFooterAction } from "@/components/ui/sticky-footer-action";
+import type { LyricsSectionType } from "@/types/song";
 
-const SECTION_TYPES: LyricsSectionType[] = ["verse", "chorus", "bridge", "intro", "outro", "other"];
+const CHORUS_MARK = "አዝ";
+const TYPE_MARK: Partial<Record<LyricsSectionType, string>> = {
+  bridge: "BR",
+  intro: "IN",
+  outro: "OUT",
+  other: "•",
+};
 
-async function commitDraft(draft: ParsedSongDraft): Promise<{ songId: string | null; error: string | null }> {
+type EntryStatus =
+  | { kind: "pending" }
+  | { kind: "saved"; number: number }
+  | { kind: "discarded" };
+
+interface Entry {
+  draft: ParsedSongDraft;
+  displayNumber: number;
+  status: EntryStatus;
+  saving: boolean;
+  error: string | null;
+}
+
+async function commitDraft(draft: ParsedSongDraft): Promise<{ number: number | null; error: string | null }> {
   const metadata: Record<string, string> = {};
 
   for (const guess of draft.metadataGuesses) {
@@ -19,14 +45,14 @@ async function commitDraft(draft: ParsedSongDraft): Promise<{ songId: string | n
       options: guess.fieldType === "single_select" ? [guess.value] : [],
     });
     if (error || !field) {
-      return { songId: null, error: error ?? `Couldn't create field "${guess.fieldName}".` };
+      return { number: null, error: error ?? `Couldn't create field "${guess.fieldName}".` };
     }
 
     if (guess.fieldType === "single_select") {
       const hasOption = field.options.some((o) => o.toLowerCase() === guess.value.toLowerCase());
       if (!hasOption) {
         const { error: optionError } = await addOptionToField(field.id, guess.value);
-        if (optionError) return { songId: null, error: optionError };
+        if (optionError) return { number: null, error: optionError };
       }
     }
 
@@ -35,155 +61,122 @@ async function commitDraft(draft: ParsedSongDraft): Promise<{ songId: string | n
 
   const { data, error } = await saveSong({ title: draft.title, lyrics: draft.lyrics, metadata });
   if (error || !data) {
-    return { songId: null, error: error ?? "Couldn't save song." };
+    return { number: null, error: error ?? "Couldn't save song." };
   }
-  return { songId: data.id, error: null };
+  return { number: data.number, error: null };
 }
 
-function DraftEditor({
-  draft,
-  onChange,
+function sectionSummaryMark(type: LyricsSectionType, verseNumber?: number): string {
+  if (type === "verse") return String(verseNumber ?? 1).padStart(2, "0");
+  if (type === "chorus") return CHORUS_MARK;
+  return TYPE_MARK[type] ?? "•";
+}
+
+function DraftCard({
+  entry,
+  onChangeTitle,
+  onRemoveGuess,
+  onSave,
+  onMergeNext,
+  canMergeNext,
   onDiscard,
-  onMergeUp,
-  canMergeUp,
-  onSaved,
 }: {
-  draft: ParsedSongDraft;
-  onChange: (next: ParsedSongDraft) => void;
+  entry: Entry;
+  onChangeTitle: (title: string) => void;
+  onRemoveGuess: (index: number) => void;
+  onSave: () => void;
+  onMergeNext: () => void;
+  canMergeNext: boolean;
   onDiscard: () => void;
-  onMergeUp: () => void;
-  canMergeUp: boolean;
-  onSaved: (songId: string) => void;
 }) {
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [showRaw, setShowRaw] = useState(false);
-
-  function updateSection(index: number, patch: Partial<LyricsSection>) {
-    onChange({
-      ...draft,
-      lyrics: draft.lyrics.map((s, i) => (i === index ? { ...s, ...patch } : s)),
-    });
-  }
-
-  function removeSection(index: number) {
-    onChange({ ...draft, lyrics: draft.lyrics.filter((_, i) => i !== index) });
-  }
-
-  function updateGuess(index: number, patch: Partial<MetadataGuess>) {
-    onChange({
-      ...draft,
-      metadataGuesses: draft.metadataGuesses.map((g, i) => (i === index ? { ...g, ...patch } : g)),
-    });
-  }
-
-  function removeGuess(index: number) {
-    onChange({ ...draft, metadataGuesses: draft.metadataGuesses.filter((_, i) => i !== index) });
-  }
-
-  async function handleSave() {
-    setSaving(true);
-    setError(null);
-    const { songId, error } = await commitDraft(draft);
-    setSaving(false);
-    if (error || !songId) {
-      setError(error ?? "Couldn't save song.");
-      return;
-    }
-    onSaved(songId);
-  }
+  const { draft, saving, error } = entry;
 
   return (
-    <div className="space-y-3 rounded-lg border border-foreground/10 p-4">
-      <div className="flex items-start justify-between gap-2">
-        <input
+    <div className="space-y-3 border-t-2 border-rule-2 bg-surface p-4">
+      <div className="flex items-center gap-2">
+        <span className="type-mono text-muted shrink-0">Draft {entry.displayNumber}</span>
+        <TextInput
           value={draft.title}
-          onChange={(e) => onChange({ ...draft, title: e.target.value, titleIsGuess: false })}
-          className="flex-1 rounded-md border border-foreground/20 bg-transparent px-3 py-2 text-base font-medium"
+          onChange={(e) => onChangeTitle(e.target.value)}
+          compact
+          className="flex-1"
+          aria-label="Song title"
         />
-        {draft.titleIsGuess && (
-          <span className="shrink-0 rounded-full bg-amber-600/10 px-2 py-1 text-xs text-amber-700">
-            guessed title
-          </span>
-        )}
-      </div>
-
-      <div className="space-y-2">
-        {draft.lyrics.map((section, i) => (
-          <div key={i} className="space-y-1 rounded-md border border-foreground/10 p-2">
-            <div className="flex gap-2">
-              <select
-                value={section.type}
-                onChange={(e) => updateSection(i, { type: e.target.value as LyricsSectionType })}
-                className="rounded-md border border-foreground/20 bg-transparent px-2 py-1 text-xs"
-              >
-                {SECTION_TYPES.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
-              <input
-                placeholder="Label"
-                value={section.label ?? ""}
-                onChange={(e) => updateSection(i, { label: e.target.value })}
-                className="flex-1 rounded-md border border-foreground/20 bg-transparent px-2 py-1 text-xs"
-              />
-              <button type="button" onClick={() => removeSection(i)} className="text-xs text-red-600">
-                Remove
-              </button>
-            </div>
-            <textarea
-              value={section.text}
-              onChange={(e) => updateSection(i, { text: e.target.value })}
-              rows={3}
-              className="w-full rounded-md border border-foreground/20 bg-transparent px-2 py-1.5 text-sm"
-            />
-          </div>
-        ))}
       </div>
 
       {draft.metadataGuesses.length > 0 && (
-        <div className="space-y-1">
-          <p className="text-xs font-medium text-foreground/60">Detected metadata</p>
-          {draft.metadataGuesses.map((guess, i) => (
-            <div key={i} className="flex items-center gap-2">
-              <span className="w-32 shrink-0 text-xs text-foreground/60">{guess.fieldName}</span>
-              <input
-                value={guess.value}
-                onChange={(e) => updateGuess(i, { value: e.target.value })}
-                className="flex-1 rounded-md border border-foreground/20 bg-transparent px-2 py-1 text-sm"
-              />
-              <button type="button" onClick={() => removeGuess(i)} className="text-xs text-red-600">
-                Remove
-              </button>
-            </div>
+        <div className="flex flex-wrap items-center gap-2">
+          {draft.metadataGuesses.map((guess: MetadataGuess, i) => (
+            <Chip
+              key={`${guess.fieldName}-${i}`}
+              label={`${guess.fieldName} ${guess.value}`}
+              onRemove={() => onRemoveGuess(i)}
+            />
           ))}
+          <span className="type-meta">guessed</span>
         </div>
       )}
 
-      <details open={showRaw} onToggle={(e) => setShowRaw(e.currentTarget.open)}>
-        <summary className="cursor-pointer text-xs text-foreground/50">Original pasted text</summary>
-        <pre className="mt-1 whitespace-pre-wrap text-xs text-foreground/50">{draft.rawBlock}</pre>
-      </details>
+      <div className="divide-y divide-rule border-y border-rule">
+        {annotateSections(draft.lyrics).map((section, i) => {
+          if (section.isRepeat) {
+            const firstLine = section.text.split("\n")[0] ?? "";
+            return (
+              <div key={i} className="flex items-center gap-3 py-2">
+                <p className="type-body min-w-0 flex-1 truncate text-muted">
+                  Repeat · <span className="text-ink">Chorus</span> · {firstLine}
+                </p>
+              </div>
+            );
+          }
+          const firstLine = section.text.split("\n")[0] ?? "";
+          const lineCount = section.text.split("\n").filter((l) => l.trim() !== "").length;
+          return (
+            <div key={i} className="flex items-center gap-3 py-2">
+              <span
+                className={
+                  section.type === "chorus"
+                    ? "type-badge shrink-0 text-label"
+                    : "type-mono shrink-0 text-accent"
+                }
+                style={section.type === "chorus" ? { fontFamily: "var(--font-noto-ethiopic)" } : undefined}
+              >
+                {sectionSummaryMark(section.type, section.verseNumber)}
+              </span>
+              <p className="type-body min-w-0 flex-1 truncate text-ink">{firstLine}</p>
+              <span className="type-meta shrink-0">
+                {lineCount} {lineCount === 1 ? "line" : "lines"}
+              </span>
+            </div>
+          );
+        })}
+      </div>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="type-meta text-danger">{error}</p>}
 
-      <div className="flex flex-wrap items-center gap-3 pt-1">
+      <div className="grid grid-cols-3 gap-px border border-rule bg-rule">
         <button
           type="button"
-          onClick={handleSave}
+          onClick={onSave}
           disabled={saving}
-          className="rounded-md bg-foreground text-background px-4 py-2 text-sm font-medium disabled:opacity-50"
+          className="flex h-11 items-center justify-center gap-1.5 bg-fill type-action text-on-fill disabled:opacity-45"
         >
-          {saving ? "Saving…" : "Save this song"}
+          <Check size={16} strokeWidth={2.4} aria-hidden />
+          {saving ? "Saving…" : "Save"}
         </button>
-        {canMergeUp && (
-          <button type="button" onClick={onMergeUp} className="text-sm text-foreground/60 underline">
-            Merge with previous
-          </button>
-        )}
-        <button type="button" onClick={onDiscard} className="text-sm text-red-600">
+        <button
+          type="button"
+          onClick={onMergeNext}
+          disabled={!canMergeNext}
+          className="flex h-11 items-center justify-center bg-surface type-body font-semibold text-ink disabled:opacity-45"
+        >
+          Merge next
+        </button>
+        <button
+          type="button"
+          onClick={onDiscard}
+          className="flex h-11 items-center justify-center bg-surface type-body font-semibold text-danger"
+        >
           Discard
         </button>
       </div>
@@ -192,154 +185,180 @@ function DraftEditor({
 }
 
 export function BulkImport() {
+  const router = useRouter();
   const [rawText, setRawText] = useState("");
-  const [drafts, setDrafts] = useState<ParsedSongDraft[] | null>(null);
-  const [savedSongs, setSavedSongs] = useState<{ id: string; title: string }[]>([]);
-  const [savingAll, setSavingAll] = useState(false);
+  const [entries, setEntries] = useState<Entry[] | null>(null);
 
   function handleParse() {
-    setDrafts(parseBulkImportText(rawText));
-    setSavedSongs([]);
+    setEntries(
+      parseBulkImportText(rawText).map((draft, i) => ({
+        draft,
+        displayNumber: i + 1,
+        status: { kind: "pending" },
+        saving: false,
+        error: null,
+      })),
+    );
   }
 
-  function updateDraft(id: string, next: ParsedSongDraft) {
-    setDrafts((prev) => prev?.map((d) => (d.id === id ? next : d)) ?? null);
+  function updateEntry(index: number, patch: Partial<Entry>) {
+    setEntries((prev) => (prev ? prev.map((e, i) => (i === index ? { ...e, ...patch } : e)) : prev));
   }
 
-  function discardDraft(id: string) {
-    setDrafts((prev) => prev?.filter((d) => d.id !== id) ?? null);
+  function updateDraft(index: number, patch: Partial<ParsedSongDraft>) {
+    setEntries((prev) =>
+      prev ? prev.map((e, i) => (i === index ? { ...e, draft: { ...e.draft, ...patch } } : e)) : prev,
+    );
   }
 
-  function mergeUp(index: number) {
-    setDrafts((prev) => {
+  function removeGuess(index: number, guessIndex: number) {
+    setEntries((prev) =>
+      prev
+        ? prev.map((e, i) =>
+            i === index
+              ? { ...e, draft: { ...e.draft, metadataGuesses: e.draft.metadataGuesses.filter((_, gi) => gi !== guessIndex) } }
+              : e,
+          )
+        : prev,
+    );
+  }
+
+  function mergeNext(index: number) {
+    setEntries((prev) => {
       if (!prev) return prev;
-      const upper = prev[index - 1];
-      const lower = prev[index];
+      const current = prev[index];
+      const next = prev[index + 1];
+      if (!current || !next) return prev;
       const merged: ParsedSongDraft = {
-        ...upper,
-        lyrics: [...upper.lyrics, ...lower.lyrics],
-        metadataGuesses: [...upper.metadataGuesses, ...lower.metadataGuesses],
-        rawBlock: `${upper.rawBlock}\n\n${lower.rawBlock}`,
+        ...current.draft,
+        lyrics: [...current.draft.lyrics, ...next.draft.lyrics],
+        metadataGuesses: [...current.draft.metadataGuesses, ...next.draft.metadataGuesses],
+        rawBlock: `${current.draft.rawBlock}\n\n${next.draft.rawBlock}`,
       };
-      const next = [...prev];
-      next.splice(index - 1, 2, merged);
-      return next;
+      const out = [...prev];
+      out.splice(index, 2, { ...current, draft: merged });
+      return out;
     });
   }
 
-  function handleSaved(id: string, songId: string, title: string) {
-    setSavedSongs((prev) => [...prev, { id: songId, title }]);
-    setDrafts((prev) => prev?.filter((d) => d.id !== id) ?? null);
+  async function saveEntry(index: number) {
+    const entry = entries?.[index];
+    if (!entry) return;
+    updateEntry(index, { saving: true, error: null });
+    const { number, error } = await commitDraft(entry.draft);
+    if (error || number === null) {
+      updateEntry(index, { saving: false, error: error ?? "Couldn't save song." });
+      return;
+    }
+    updateEntry(index, { saving: false, status: { kind: "saved", number } });
   }
 
   async function handleSaveAll() {
-    if (!drafts) return;
-    setSavingAll(true);
-    // Sequential on purpose: Server Actions dispatch one at a time per
-    // client anyway, and each save can create/reuse metadata fields that a
+    if (!entries) return;
+    // Sequential on purpose: each save can create/reuse metadata fields a
     // later draft in the same batch might also reference.
-    for (const draft of [...drafts]) {
-      const { songId, error } = await commitDraft(draft);
-      if (!error && songId) {
-        handleSaved(draft.id, songId, draft.title);
-      }
+    for (let i = 0; i < entries.length; i++) {
+      if (entries[i].status.kind !== "pending") continue;
+      await saveEntry(i);
     }
-    setSavingAll(false);
   }
 
-  return (
-    <div className="mx-auto max-w-2xl px-4 py-6 space-y-6">
-      <div>
-        <h1 className="text-xl font-semibold">Bulk import</h1>
-        <p className="text-sm text-foreground/60">
-          Paste one or more songs below. Separate distinct songs with a blank line or two — a run of
-          🎤 tag lines (e.g. <code>🎤Title, Song Name</code>) is recognized as metadata for the song
-          that follows it. Review and fix each proposed song before saving.
-        </p>
-      </div>
+  const pendingCount = entries?.filter((e) => e.status.kind === "pending").length ?? 0;
 
-      {savedSongs.length > 0 && (
-        <div className="rounded-lg border border-green-600/20 bg-green-600/5 p-3 text-sm">
-          <p className="font-medium text-green-700">Saved {savedSongs.length} song(s):</p>
-          <ul className="mt-1 space-y-0.5">
-            {savedSongs.map((s) => (
-              <li key={s.id}>
-                <Link href={`/songs/${s.id}`} className="underline">
-                  {s.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {!drafts && (
-        <div className="space-y-3">
-          <textarea
+  if (!entries) {
+    return (
+      <div className="flex min-h-dvh flex-col">
+        <TopBar title="Import lyrics" backHref="/catalogue" />
+        <div className="flex flex-1 flex-col gap-4 px-5 py-5">
+          <p className="type-meta">
+            Paste one or more songs below. Separate distinct songs with a blank line or two — a run of
+            🎤 tag lines (e.g. 🎤Key, G) is recognized as metadata for the song that follows it.
+          </p>
+          <TextArea
             value={rawText}
             onChange={(e) => setRawText(e.target.value)}
-            rows={16}
             placeholder="Paste raw lyrics here…"
-            className="w-full rounded-lg border border-foreground/20 bg-transparent px-3 py-2 text-sm"
+            className="type-lyrics min-h-[50vh] flex-1 text-[16px]"
           />
-          <button
-            type="button"
-            onClick={handleParse}
-            disabled={!rawText.trim()}
-            className="rounded-lg bg-foreground text-background px-4 py-3 text-sm font-medium disabled:opacity-50"
-          >
-            Parse into songs
-          </button>
         </div>
-      )}
+        <StickyFooterAction>
+          <Button icon={ArrowRight} disabled={!rawText.trim()} onClick={handleParse}>
+            Split into songs
+          </Button>
+        </StickyFooterAction>
+      </div>
+    );
+  }
 
-      {drafts && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-foreground/60">{drafts.length} song(s) found</p>
-            <div className="flex gap-3">
-              {drafts.length > 0 && (
-                <button
-                  type="button"
-                  onClick={handleSaveAll}
-                  disabled={savingAll}
-                  className="rounded-md bg-foreground text-background px-3 py-1.5 text-sm font-medium disabled:opacity-50"
+  const needsALook = entries.filter((e) => e.status.kind === "pending" && e.draft.titleIsGuess).length;
+
+  return (
+    <div className="pb-24">
+      <TopBar
+        title="Import lyrics"
+        right={
+          <Button variant="text" onClick={() => setEntries(null)}>
+            Edit paste
+          </Button>
+        }
+      />
+      <p className="type-meta border-b-2 border-rule px-5 pb-3 pt-1">
+        {entries.length} {entries.length === 1 ? "draft" : "drafts"} found
+        {needsALook > 0 ? ` · ${needsALook} needs a look` : ""}
+      </p>
+
+      <div className="space-y-4 px-5 py-4">
+        {entries.map((entry, i) => {
+          if (entry.status.kind === "saved") {
+            return (
+              <div key={i} className="flex items-center gap-3 border-b border-rule py-3">
+                <Check size={18} strokeWidth={2.4} className="shrink-0 text-label" aria-hidden />
+                <p className="type-body min-w-0 flex-1 truncate text-ink">{entry.draft.title}</p>
+                <span className="type-meta shrink-0">Saved as No. {String(entry.status.number).padStart(3, "0")}</span>
+              </div>
+            );
+          }
+          if (entry.status.kind === "discarded") {
+            return (
+              <div key={i} className="flex items-center gap-3 border-b border-rule py-3">
+                <X size={18} strokeWidth={2} className="shrink-0 text-muted" aria-hidden />
+                <p className="type-body min-w-0 flex-1 truncate text-muted line-through">{entry.draft.title}</p>
+                <Button
+                  variant="text"
+                  icon={Undo2}
+                  onClick={() => updateEntry(i, { status: { kind: "pending" } })}
                 >
-                  {savingAll ? "Saving all…" : "Save all"}
-                </button>
-              )}
-              <button
-                type="button"
-                onClick={() => {
-                  setDrafts(null);
-                  setRawText("");
-                }}
-                className="text-sm text-foreground/60 underline"
-              >
-                Start over
-              </button>
-            </div>
-          </div>
+                  Undo
+                </Button>
+              </div>
+            );
+          }
+          return (
+            <DraftCard
+              key={i}
+              entry={entry}
+              onChangeTitle={(title) => updateDraft(i, { title, titleIsGuess: false })}
+              onRemoveGuess={(gi) => removeGuess(i, gi)}
+              onSave={() => saveEntry(i)}
+              onMergeNext={() => mergeNext(i)}
+              canMergeNext={i < entries.length - 1 && entries[i + 1].status.kind === "pending"}
+              onDiscard={() => updateEntry(i, { status: { kind: "discarded" } })}
+            />
+          );
+        })}
+      </div>
 
-          {drafts.length === 0 ? (
-            <p className="text-sm text-foreground/50">
-              All songs from this paste have been saved or discarded.
-            </p>
-          ) : (
-            drafts.map((draft, i) => (
-              <DraftEditor
-                key={draft.id}
-                draft={draft}
-                onChange={(next) => updateDraft(draft.id, next)}
-                onDiscard={() => discardDraft(draft.id)}
-                onMergeUp={() => mergeUp(i)}
-                canMergeUp={i > 0}
-                onSaved={(songId) => handleSaved(draft.id, songId, draft.title)}
-              />
-            ))
-          )}
-        </div>
-      )}
+      <StickyFooterAction>
+        {pendingCount > 0 ? (
+          <Button icon={Check} onClick={handleSaveAll}>
+            Save all {pendingCount} remaining
+          </Button>
+        ) : (
+          <Button variant="secondary" onClick={() => router.push("/catalogue")}>
+            Done · back to catalogue
+          </Button>
+        )}
+      </StickyFooterAction>
     </div>
   );
 }
