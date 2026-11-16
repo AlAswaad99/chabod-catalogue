@@ -2,12 +2,94 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import type { MetadataFieldDefinition, SongMetadata } from "@/types/song";
+import type { MetadataFieldDefinition, MetadataFieldType, SongMetadata } from "@/types/song";
+
+const FIELD_TYPES: MetadataFieldType[] = ["text", "number", "single_select", "multi_select"];
+const isSelectType = (t: MetadataFieldType) => t === "single_select" || t === "multi_select";
+
+// Unlike createOrGetMetadataField (used while editing a song, where reusing an
+// existing field is the friendly behaviour), the Fields page is the place to
+// make a deliberate new field, so a name that already exists is an error.
+export async function createMetadataField(input: {
+  name: string;
+  type: MetadataFieldType;
+  options?: string[];
+}): Promise<{ data: MetadataFieldDefinition | null; error: string | null }> {
+  const name = input.name.trim();
+  if (!name) return { data: null, error: "Field name is required." };
+  if (!FIELD_TYPES.includes(input.type)) return { data: null, error: "Choose a field type." };
+
+  const options = isSelectType(input.type)
+    ? [...new Set((input.options ?? []).map((o) => o.trim()).filter(Boolean))]
+    : [];
+  if (isSelectType(input.type) && options.length === 0) {
+    return { data: null, error: "Add at least one option." };
+  }
+
+  const supabase = await createClient();
+  const { data: existing } = await supabase
+    .from("metadata_field_definitions")
+    .select("id")
+    .ilike("name", name.replace(/[%_\\]/g, "\\$&"))
+    .maybeSingle();
+  if (existing) return { data: null, error: `A field named “${name}” already exists.` };
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { data, error } = await supabase
+    .from("metadata_field_definitions")
+    .insert({ name, type: input.type, options, created_by: user?.id ?? null })
+    .select("*")
+    .single();
+  if (error) return { data: null, error: error.message };
+
+  revalidatePath("/", "layout");
+  return { data: data as unknown as MetadataFieldDefinition, error: null };
+}
+
+// Changing a type reinterprets every song's stored value, so it's only allowed
+// while no song uses the field. Switching to a non-select type clears options.
+export async function changeMetadataFieldType(
+  id: string,
+  type: MetadataFieldType,
+): Promise<{ data: MetadataFieldDefinition | null; error: string | null }> {
+  if (!FIELD_TYPES.includes(type)) return { data: null, error: "Choose a field type." };
+
+  const supabase = await createClient();
+  const { data: songs, error: songsErr } = await supabase.from("songs").select("metadata");
+  if (songsErr) return { data: null, error: songsErr.message };
+
+  const inUse = (songs ?? []).some((s) => {
+    const value = (s.metadata as SongMetadata)[id];
+    return value !== undefined && value !== null && value !== "" && !(Array.isArray(value) && value.length === 0);
+  });
+  if (inUse) return { data: null, error: "This field is used by songs, so its type can't change." };
+
+  const { data: field, error: fieldErr } = await supabase
+    .from("metadata_field_definitions")
+    .select("options")
+    .eq("id", id)
+    .single();
+  if (fieldErr || !field) return { data: null, error: fieldErr?.message ?? "Field not found." };
+
+  const { data, error } = await supabase
+    .from("metadata_field_definitions")
+    .update({ type, options: isSelectType(type) ? (field.options as unknown as string[]) : [] })
+    .eq("id", id)
+    .select("*")
+    .single();
+  if (error) return { data: null, error: error.message };
+
+  revalidatePath("/", "layout");
+  return { data: data as unknown as MetadataFieldDefinition, error: null };
+}
 
 export async function deleteMetadataField(id: string): Promise<{ error: string | null }> {
   const supabase = await createClient();
   const { error } = await supabase.from("metadata_field_definitions").delete().eq("id", id);
-  if (!error) revalidatePath("/admin/metadata-fields");
+  if (!error) revalidatePath("/", "layout");
   return { error: error?.message ?? null };
 }
 
@@ -16,7 +98,7 @@ export async function renameMetadataField(id: string, name: string): Promise<{ e
   if (!trimmed) return { error: "Name is required." };
   const supabase = await createClient();
   const { error } = await supabase.from("metadata_field_definitions").update({ name: trimmed }).eq("id", id);
-  if (!error) revalidatePath("/admin/metadata-fields");
+  if (!error) revalidatePath("/", "layout");
   return { error: error?.message ?? null };
 }
 
@@ -50,7 +132,7 @@ export async function removeFieldOption(
     .single();
   if (error) return { data: null, error: error.message };
 
-  revalidatePath("/admin/metadata-fields");
+  revalidatePath("/", "layout");
   return { data: data as unknown as MetadataFieldDefinition, error: null };
 }
 
@@ -112,7 +194,6 @@ export async function mergeMetadataFields(
   const { error: deleteErr } = await supabase.from("metadata_field_definitions").delete().eq("id", duplicateId);
   if (deleteErr) return { data: null, error: deleteErr.message };
 
-  revalidatePath("/admin/metadata-fields");
   revalidatePath("/", "layout");
   return { data: mergedCanonical as unknown as MetadataFieldDefinition, error: null };
 }
