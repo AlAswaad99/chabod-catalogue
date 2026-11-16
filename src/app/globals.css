@@ -7,8 +7,9 @@
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 /* "Hymnal editorial" — warm paper and ink-green with a single amber accent,
-   serif display type, tight 6px corners and hairline rules. Light is the
-   default; [data-theme="dark"] is a deep forest-green night mode.
+   serif display type, tight 6px corners and hairline rules. Dark (deep
+   forest-green) is the default; [data-theme="light"] is the paper palette
+   defined first in :root and overridden by the dark block below.
 
    shadcn's semantic tokens (background, foreground, primary, …) are the source
    of truth. The app's older class names (ground, ink, surface, rule, fill…)
@@ -61,7 +62,9 @@
   --sidebar-ring: #1f4a38;
 }
 
-:root[data-theme="dark"] {
+/* Dark is the default: it applies unless the theme is explicitly "light", so
+   the page is dark even before (or without) the script that sets data-theme. */
+:root:not([data-theme="light"]) {
   --background: #0f1a16;
   --foreground: #efe9dc;
   --card: #16241e;

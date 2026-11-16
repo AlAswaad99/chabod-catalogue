@@ -9,27 +9,28 @@ const THEME_COLOR: Record<Theme, string> = { dark: "#0f1a16", light: "#f6f1e6" }
 
 // Inlined into a <script> in the root layout so it runs before first paint —
 // keep in sync with getTheme()/setTheme() below. Duplicated deliberately:
-// this string runs pre-hydration, outside the module graph. Light is the
-// default; a stored choice wins. It also corrects the theme-color meta tag so
-// mobile browser chrome matches a stored dark choice from the first frame.
+// this string runs pre-hydration, outside the module graph. Dark is the
+// default; a stored choice (made with the Light/Dark toggle, kept per device in
+// localStorage) wins. It also corrects the theme-color meta tag so mobile
+// browser chrome matches a stored light choice from the first frame.
 export const THEME_INIT_SCRIPT = `
 (function () {
   try {
     var t = localStorage.getItem('${STORAGE_KEY}');
-    if (t !== 'light' && t !== 'dark') t = 'light';
+    if (t !== 'light' && t !== 'dark') t = 'dark';
     document.documentElement.setAttribute('data-theme', t);
-    if (t === 'dark') {
+    if (t === 'light') {
       var m = document.querySelector('meta[name="theme-color"]');
-      if (m) m.setAttribute('content', '${THEME_COLOR.dark}');
+      if (m) m.setAttribute('content', '${THEME_COLOR.light}');
     }
   } catch (e) {}
 })();
 `;
 
 export function getTheme(): Theme {
-  if (typeof window === "undefined") return "light";
+  if (typeof window === "undefined") return "dark";
   const stored = window.localStorage.getItem(STORAGE_KEY);
-  return stored === "dark" ? "dark" : "light";
+  return stored === "light" ? "light" : "dark";
 }
 
 const listeners = new Set<() => void>();
@@ -49,7 +50,7 @@ function subscribe(callback: () => void) {
 }
 
 function getServerSnapshot(): Theme {
-  return "light";
+  return "dark";
 }
 
 // localStorage-backed theme is unknown to the server, so reading it can't
