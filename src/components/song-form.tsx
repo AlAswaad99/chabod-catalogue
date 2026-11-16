@@ -239,17 +239,26 @@ export function SongForm({
     else router.push(closeHref);
   }
 
-  // Song number (edit mode only; new songs get the next number automatically
-  // and can be renumbered afterwards). Changing it to a number another song
-  // already holds swaps the two — shown here so it's never a surprise.
+  // Song number. Editing: moving to a number another song holds swaps the two.
+  // Creating: leave it blank for highest + 1, or type one — a number that's
+  // already used is rejected, and the song holding it is named here first.
   const parsedNumber = /^\d+$/.test(numberInput.trim()) ? parseInt(numberInput.trim(), 10) : null;
+  const isBlank = numberInput.trim() === "";
+  const outOfRange = parsedNumber === null || parsedNumber < 1 || parsedNumber > 9999;
   const numberChanged = !!initialSong && parsedNumber !== null && parsedNumber !== initialSong.number;
-  const numberInvalid = !!initialSong && (parsedNumber === null || parsedNumber < 1 || parsedNumber > 9999);
-  const swapTarget =
-    numberChanged && songNumbers ? songNumbers.find((s) => s.number === parsedNumber && s.id !== initialSong?.id) : undefined;
+  const numberInvalid = initialSong ? outOfRange : !isBlank && outOfRange;
+  const holder =
+    parsedNumber !== null && !numberInvalid && songNumbers
+      ? songNumbers.find((s) => s.number === parsedNumber && s.id !== initialSong?.id)
+      : undefined;
+  const swapTarget = initialSong && numberChanged ? holder : undefined;
+  // A new song can't swap, so a taken number blocks saving until it's changed.
+  const numberClash = !initialSong ? holder : undefined;
+  const nextNumber =
+    provisionalNumber ?? (songNumbers ? Math.max(0, ...songNumbers.map((s) => s.number)) + 1 : undefined);
 
   const hasLyrics = items.some((it) => it.text.trim().length > 0);
-  const canSave = title.trim().length > 0 && hasLyrics && !numberInvalid;
+  const canSave = title.trim().length > 0 && hasLyrics && !numberInvalid && !numberClash;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -259,7 +268,9 @@ export function SongForm({
           ? "Title is required."
           : numberInvalid
             ? "Song number must be a whole number between 1 and 9999."
-            : "Add at least one section with lyrics.",
+            : numberClash
+              ? `No. ${parsedNumber} is already used by “${numberClash.title}”. Pick another number, or leave it blank.`
+              : "Add at least one section with lyrics.",
       );
       return;
     }
@@ -285,12 +296,13 @@ export function SongForm({
         title: title.trim(),
         lyrics: itemsToSections(items),
         metadata,
+        number: !initialSong && parsedNumber !== null ? parsedNumber : undefined,
       });
       if (saveErr || !data) {
         setError(saveErr ?? "Couldn't save song.");
         return;
       }
-      showToast(numberToast ?? (initialSong ? "Song saved" : "Song added"));
+      showToast(numberToast ?? (initialSong ? "Song saved" : `Song added as No. ${data.number}`));
       router.push(`/songs/${data.id}`);
       router.refresh();
     } finally {
@@ -298,8 +310,9 @@ export function SongForm({
     }
   }
 
-  // In edit mode the label previews the number as it's typed (digits roll over).
-  const displayNumber = initialSong ? (parsedNumber !== null && !numberInvalid ? parsedNumber : initialSong.number) : provisionalNumber;
+  // The label previews the number as it's typed (digits roll over).
+  const displayNumber =
+    parsedNumber !== null && !numberInvalid ? parsedNumber : initialSong ? initialSong.number : nextNumber;
 
   return (
     <form onSubmit={handleSubmit} className="pb-24">
@@ -348,35 +361,43 @@ export function SongForm({
           autoFocus={!initialSong}
         />
 
-        {initialSong && (
-          <section className="space-y-2">
-            <TextInput
-              label="Song number"
-              inputMode="numeric"
-              value={numberInput}
-              onChange={(e) => {
-                markDirty();
-                setNumberInput(e.target.value.replace(/[^\d]/g, "").slice(0, 4));
-              }}
-              compact
-              className="w-[140px] font-mono"
-              aria-describedby="song-number-hint"
-            />
-            <p
-              id="song-number-hint"
-              className={`type-meta ${numberInvalid ? "text-danger" : swapTarget ? "text-brand" : ""}`}
-              aria-live="polite"
-            >
-              {numberInvalid
-                ? "Enter a whole number from 1 to 9999."
+        <section className="space-y-2">
+          <TextInput
+            label="Song number"
+            inputMode="numeric"
+            value={numberInput}
+            onChange={(e) => {
+              markDirty();
+              setNumberInput(e.target.value.replace(/[^\d]/g, "").slice(0, 4));
+            }}
+            placeholder={!initialSong && nextNumber ? String(nextNumber) : undefined}
+            compact
+            className="w-[140px] font-mono"
+            aria-describedby="song-number-hint"
+            aria-invalid={numberInvalid || !!numberClash}
+          />
+          <p
+            id="song-number-hint"
+            className={`type-meta ${numberInvalid || numberClash ? "text-danger" : swapTarget ? "text-brand" : ""}`}
+            aria-live="polite"
+          >
+            {numberInvalid
+              ? "Enter a whole number from 1 to 9999."
+              : numberClash
+                ? `No. ${parsedNumber} is already used by “${numberClash.title}”. Pick another number, or leave it blank${nextNumber ? ` for No. ${nextNumber}` : ""}.`
                 : swapTarget
-                  ? `No. ${parsedNumber} is “${swapTarget.title}”. Saving swaps them: it becomes No. ${initialSong.number}.`
-                  : numberChanged
-                    ? `No. ${parsedNumber} is free. This song will move there.`
-                    : "Shown in the catalogue and on slides. Choosing a number another song has swaps the two."}
-            </p>
-          </section>
-        )}
+                  ? `No. ${parsedNumber} is “${swapTarget.title}”. Saving swaps them: it becomes No. ${initialSong?.number}.`
+                  : initialSong
+                    ? numberChanged
+                      ? `No. ${parsedNumber} is free. This song will move there.`
+                      : "Shown in the catalogue and on slides. Choosing a number another song has swaps the two."
+                    : parsedNumber !== null
+                      ? `No. ${parsedNumber} is free.`
+                      : nextNumber
+                        ? `Leave blank to use No. ${nextNumber} (the highest number plus one).`
+                        : "Leave blank to number it automatically."}
+          </p>
+        </section>
 
         <section className="space-y-3">
           <div className="flex items-center justify-between">
@@ -556,12 +577,14 @@ export function SongForm({
                   ) : (
                     <p className="type-meta">No other fields yet.</p>
                   )}
-                  <Button type="button" variant="text" onClick={() => setAddFieldMode("create")}>
-                    Create a new field
-                  </Button>
-                  <Button type="button" variant="text" onClick={() => setShowAddField(false)}>
-                    Cancel
-                  </Button>
+                  <div className="flex items-center justify-between gap-4">
+                    <Button type="button" variant="text" onClick={() => setAddFieldMode("create")}>
+                      Create a new field
+                    </Button>
+                    <Button type="button" variant="text" className="text-muted-foreground" onClick={() => setShowAddField(false)}>
+                      Cancel
+                    </Button>
+                  </div>
                 </>
               ) : (
                 <>

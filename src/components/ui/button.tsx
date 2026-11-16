@@ -39,7 +39,8 @@ const buttonVariants = cva(
           "h-12 justify-between bg-primary px-4 type-action text-primary-foreground shadow-sm hover:bg-primary/90",
         secondary:
           "h-12 justify-between border border-input bg-card px-4 text-[15px] font-medium text-foreground hover:bg-secondary",
-        text: "h-11 bg-transparent px-0 text-sm font-semibold text-brand underline-offset-4 hover:underline",
+        // Block-level (flex + w-fit) so two text buttons never run together on one line.
+        text: "flex h-11 w-fit bg-transparent px-0 text-sm font-semibold text-brand underline-offset-4 hover:underline",
         danger:
           "h-12 justify-between border border-destructive/60 bg-transparent px-4 text-[15px] font-medium text-destructive hover:bg-destructive/10",
         "danger-confirm":
