@@ -121,10 +121,10 @@ export function MembersManager({
 
       <div className="px-5 py-4">
         {showAddForm && (
-          <div className="mb-4 space-y-3 border-2 border-fill p-4">
+          <div className="mb-4 space-y-3 border border-fill p-4">
             <PhoneInput value={phoneDigits} onChange={setPhoneDigits} label="Phone number" autoFocus />
             <div className="space-y-1">
-              <p className="type-field-label text-muted">Role</p>
+              <p className="type-field-label text-muted-foreground">Role</p>
               <SegmentedControl aria-label="Role" value={newRole} onChange={setNewRole} options={ROLE_OPTIONS} />
             </div>
             <p className="type-meta">They&apos;ll link Telegram the first time they sign in.</p>
@@ -140,7 +140,7 @@ export function MembersManager({
           </div>
         )}
 
-        <p className="type-meta border-b-2 border-rule pb-2">
+        <p className="type-meta border-b border-rule pb-2">
           {members.length} {members.length === 1 ? "number" : "numbers"} · {adminCount}{" "}
           {adminCount === 1 ? "admin" : "admins"} · {notLinkedCount} not linked
         </p>
@@ -164,9 +164,9 @@ export function MembersManager({
                   <div className="min-w-0 flex-1 space-y-0.5">
                     <p className="text-[16px] font-semibold text-ink">
                       {formatPhone(m.phone_number)}
-                      {isSelf && <span className="text-muted"> · You</span>}
+                      {isSelf && <span className="text-muted-foreground"> · You</span>}
                     </p>
-                    <p className={`type-meta ${m.telegramLinked ? "text-label" : "text-muted"}`}>
+                    <p className={`type-meta ${m.telegramLinked ? "text-label" : "text-muted-foreground"}`}>
                       {m.telegramLinked ? "✓ Telegram linked" : "○ Not linked yet"}
                     </p>
                   </div>
@@ -178,7 +178,7 @@ export function MembersManager({
                 {expanded && (
                   <div className="space-y-3 bg-surface p-4">
                     {locked ? (
-                      <p className="type-body text-muted">
+                      <p className="type-body text-muted-foreground">
                         {isSelf
                           ? "You can't change your own access. Ask another admin to do it."
                           : "This is the last admin — add another admin before removing this one."}
@@ -186,7 +186,7 @@ export function MembersManager({
                     ) : (
                       <>
                         <div className="space-y-1">
-                          <p className="type-field-label text-muted">Role</p>
+                          <p className="type-field-label text-muted-foreground">Role</p>
                           <SegmentedControl
                             aria-label="Role"
                             value={m.role}

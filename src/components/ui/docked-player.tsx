@@ -79,7 +79,7 @@ export function DockedPlayer({
 
   return (
     <div
-      className={`fixed left-0 right-0 z-20 grid h-[72px] grid-cols-[64px_1fr] border-t-2 border-fill bg-surface ${
+      className={`fixed left-0 right-0 z-20 grid h-[72px] grid-cols-[64px_1fr] border-t border-fill bg-surface ${
         spanTabletRightColumn ? "tablet:left-[382px] desktop:left-0" : ""
       } ${
         aboveBottomNav
@@ -109,7 +109,7 @@ export function DockedPlayer({
         <div className="flex items-center justify-between gap-2">
           <p className="type-meta min-w-0 truncate text-ink">{current.filename}</p>
           {recordings.length > 1 && (
-            <button type="button" onClick={nextTrack} className="type-mono shrink-0 text-muted">
+            <button type="button" onClick={nextTrack} className="type-mono shrink-0 text-muted-foreground">
               {index + 1} of {recordings.length} ›
             </button>
           )}
@@ -121,7 +121,7 @@ export function DockedPlayer({
               style={{ width: duration ? `${(currentTime / duration) * 100}%` : "0%" }}
             />
           </div>
-          <span className="type-mono shrink-0 text-[11px] text-muted">
+          <span className="type-mono shrink-0 text-[11px] text-muted-foreground">
             {formatTime(currentTime)} / {formatTime(duration)}
           </span>
         </div>

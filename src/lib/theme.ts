@@ -5,25 +5,31 @@ import { useSyncExternalStore } from "react";
 export type Theme = "dark" | "light";
 
 const STORAGE_KEY = "theme";
-const THEME_COLOR: Record<Theme, string> = { dark: "#0d2124", light: "#f4f1ea" };
+const THEME_COLOR: Record<Theme, string> = { dark: "#0f1a16", light: "#f6f1e6" };
 
 // Inlined into a <script> in the root layout so it runs before first paint —
 // keep in sync with getTheme()/setTheme() below. Duplicated deliberately:
-// this string runs pre-hydration, outside the module graph.
+// this string runs pre-hydration, outside the module graph. Light is the
+// default; a stored choice wins. It also corrects the theme-color meta tag so
+// mobile browser chrome matches a stored dark choice from the first frame.
 export const THEME_INIT_SCRIPT = `
 (function () {
   try {
     var t = localStorage.getItem('${STORAGE_KEY}');
-    if (t !== 'light' && t !== 'dark') t = 'dark';
+    if (t !== 'light' && t !== 'dark') t = 'light';
     document.documentElement.setAttribute('data-theme', t);
+    if (t === 'dark') {
+      var m = document.querySelector('meta[name="theme-color"]');
+      if (m) m.setAttribute('content', '${THEME_COLOR.dark}');
+    }
   } catch (e) {}
 })();
 `;
 
 export function getTheme(): Theme {
-  if (typeof window === "undefined") return "dark";
+  if (typeof window === "undefined") return "light";
   const stored = window.localStorage.getItem(STORAGE_KEY);
-  return stored === "light" ? "light" : "dark";
+  return stored === "dark" ? "dark" : "light";
 }
 
 const listeners = new Set<() => void>();
@@ -43,7 +49,7 @@ function subscribe(callback: () => void) {
 }
 
 function getServerSnapshot(): Theme {
-  return "dark";
+  return "light";
 }
 
 // localStorage-backed theme is unknown to the server, so reading it can't

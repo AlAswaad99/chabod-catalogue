@@ -4,7 +4,7 @@ import { useId } from "react";
 import type { InputHTMLAttributes, SelectHTMLAttributes, TextareaHTMLAttributes } from "react";
 
 const FIELD_BASE =
-  "w-full border border-rule-2 px-4 type-body text-ink placeholder:text-muted focus:border-fill focus:outline-none disabled:opacity-45 disabled:cursor-not-allowed";
+  "w-full rounded-md border border-input px-4 type-body text-ink shadow-xs transition-[border-color,box-shadow] placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/25 disabled:opacity-45 disabled:cursor-not-allowed";
 
 interface FieldWrapperProps {
   label?: string;
@@ -17,7 +17,7 @@ function FieldWrapper({ label, htmlFor, children }: FieldWrapperProps) {
   return (
     <div className="space-y-1">
       {label && (
-        <label htmlFor={htmlFor} className="type-field-label block text-muted">
+        <label htmlFor={htmlFor} className="type-field-label block text-muted-foreground">
           {label}
         </label>
       )}
@@ -41,7 +41,7 @@ export function TextInput({ label, inset, compact, className, id, ...props }: Te
     <FieldWrapper label={label} htmlFor={inputId}>
       <input
         id={inputId}
-        className={`${FIELD_BASE} ${compact ? "h-12" : "h-14"} ${inset ? "bg-ground" : "bg-surface"} ${className ?? ""}`}
+        className={`${FIELD_BASE} ${compact ? "h-11" : "h-12"} ${inset ? "bg-ground" : "bg-surface"} ${className ?? ""}`}
         {...props}
       />
     </FieldWrapper>
@@ -80,7 +80,7 @@ export function Select({ label, inset, compact, className, id, children, ...prop
     <FieldWrapper label={label} htmlFor={inputId}>
       <select
         id={inputId}
-        className={`${FIELD_BASE} appearance-none ${compact ? "h-12" : "h-14"} ${inset ? "bg-ground" : "bg-surface"} ${className ?? ""}`}
+        className={`${FIELD_BASE} appearance-none ${compact ? "h-11" : "h-12"} ${inset ? "bg-ground" : "bg-surface"} ${className ?? ""}`}
         {...props}
       >
         {children}

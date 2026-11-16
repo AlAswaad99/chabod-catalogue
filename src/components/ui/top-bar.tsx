@@ -18,7 +18,7 @@ export function TopBar({ title, backHref, onBack, onClose, right, noBorder }: To
 
   return (
     <header
-      className={`flex h-[60px] items-center gap-2 px-4 ${noBorder ? "" : "border-b-2 border-rule"}`}
+      className={`flex h-[60px] items-center gap-2 px-4 ${noBorder ? "" : "border-b border-rule"}`}
     >
       {backHref ? (
         <Link href={backHref} aria-label="Back" className={leadingIconClass}>

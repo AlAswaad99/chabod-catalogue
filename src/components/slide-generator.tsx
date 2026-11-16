@@ -264,13 +264,13 @@ export function SlideGenerator({ songs }: { songs: SongLite[] }) {
                 className="flex w-full items-center gap-3 px-5 py-3 text-left disabled:opacity-45"
               >
                 <span
-                  className={`flex h-6 w-6 shrink-0 items-center justify-center border-2 ${
+                  className={`flex h-6 w-6 shrink-0 items-center justify-center border ${
                     checked ? "border-fill bg-fill" : "border-rule-2"
                   }`}
                 >
                   {checked && <Check size={14} strokeWidth={3} className="text-on-fill" aria-hidden />}
                 </span>
-                <span className="type-mono shrink-0 text-muted">{String(song.number).padStart(3, "0")}</span>
+                <span className="type-mono shrink-0 text-muted-foreground">{String(song.number).padStart(3, "0")}</span>
                 <span className="type-body min-w-0 flex-1 truncate text-ink">{song.title}</span>
                 {alreadyIn && <span className="type-meta shrink-0 text-label">Already in deck</span>}
               </button>
@@ -288,7 +288,7 @@ export function SlideGenerator({ songs }: { songs: SongLite[] }) {
 
   return (
     <div className="pb-24">
-      <TopBar title="Slides" right={<span className="type-mono text-muted">{totalSlides} slides</span>} />
+      <TopBar title="Slides" right={<span className="type-mono text-muted-foreground">{totalSlides} slides</span>} />
 
       <div className="space-y-6 px-5 py-5">
         <section className="space-y-3">
@@ -355,7 +355,7 @@ export function SlideGenerator({ songs }: { songs: SongLite[] }) {
                         onClick={() => setExpandedId(expanded ? null : entry.song.id)}
                         className="flex min-w-0 flex-1 items-start gap-3 text-left"
                       >
-                        <span className="type-mono pt-0.5 text-muted">{String(songIndex + 1).padStart(2, "0")}</span>
+                        <span className="type-mono pt-0.5 text-muted-foreground">{String(songIndex + 1).padStart(2, "0")}</span>
                         <div className="min-w-0 flex-1 space-y-0.5">
                           <p className="type-body text-ink">{entry.song.title}</p>
                           <p className="type-meta truncate">
@@ -406,8 +406,8 @@ export function SlideGenerator({ songs }: { songs: SongLite[] }) {
                             return (
                               <div key={item.id} className="flex items-center gap-3 py-2">
                                 <span
-                                  className={item.type === "chorus" ? "text-[13px] font-bold shrink-0 text-label" : "type-mono shrink-0 text-accent"}
-                                  style={item.type === "chorus" ? { fontFamily: "var(--font-noto-ethiopic)" } : undefined}
+                                  className={item.type === "chorus" ? "text-[13px] font-bold shrink-0 text-label" : "type-mono shrink-0 text-brand"}
+                                  style={item.type === "chorus" ? { fontFamily: "var(--font-noto-serif-ethiopic)" } : undefined}
                                 >
                                   {sectionMark(item.type, verseIdx)}
                                 </span>
@@ -439,7 +439,7 @@ export function SlideGenerator({ songs }: { songs: SongLite[] }) {
                           })}
                         </div>
 
-                        <p className="type-field-label text-muted">Tap to add to the end</p>
+                        <p className="type-field-label text-muted-foreground">Tap to add to the end</p>
                         <div className="flex flex-wrap gap-2">
                           {distinctSections.map((s, i) => (
                             <Chip
@@ -472,7 +472,7 @@ export function SlideGenerator({ songs }: { songs: SongLite[] }) {
                     ))}
                   </p>
                 </div>
-                <p className="type-mono text-center text-[10px] text-muted">
+                <p className="type-mono text-center text-[10px] text-muted-foreground">
                   {String(i + 1).padStart(2, "0")}
                   {slide.songIndex != null ? ` · ${String(slide.songIndex).padStart(2, "0")}` : ""}
                 </p>

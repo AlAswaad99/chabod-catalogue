@@ -72,7 +72,7 @@ export function RecordingRow({ url, filename }: { url: string; filename: string 
               style={{ width: duration ? `${(currentTime / duration) * 100}%` : "0%" }}
             />
           </div>
-          <span className="type-mono shrink-0 text-[11px] text-muted">
+          <span className="type-mono shrink-0 text-[11px] text-muted-foreground">
             {formatTime(currentTime)} / {formatTime(duration)}
           </span>
         </div>

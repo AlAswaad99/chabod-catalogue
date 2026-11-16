@@ -1,6 +1,7 @@
 "use client";
 
-import { LogOut, Moon } from "lucide-react";
+import { LogOut, Moon, Sun } from "lucide-react";
+import NumberFlow from "@number-flow/react";
 import { Wordmark } from "@/components/ui/wordmark";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/lib/theme";
@@ -16,14 +17,14 @@ export function CatalogueHeader({ isAdmin, songCount }: { isAdmin: boolean; song
     <header className="flex h-14 items-center justify-between px-4">
       <Wordmark size={22} />
       <div className="flex items-center gap-1">
-        <span className="type-meta">
-          {songCount} {songCount === 1 ? "song" : "songs"}
+        <span className="type-meta tabular-nums">
+          <NumberFlow value={songCount} /> {songCount === 1 ? "song" : "songs"}
         </span>
         {!isAdmin && (
           <>
             <Button
               variant="icon"
-              icon={Moon}
+              icon={theme === "dark" ? Sun : Moon}
               aria-label="Toggle theme"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             />

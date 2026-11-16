@@ -27,10 +27,12 @@ export async function updateSession(request: NextRequest) {
   );
 
   // IMPORTANT: do not remove — this refreshes the auth token and must run
-  // before any route logic that depends on the session.
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // before any route logic that depends on the session. getClaims() verifies
+  // the JWT locally (cached JWKS) instead of calling the Auth server on
+  // every request like getUser() does — see src/lib/auth.ts.
+  const { data } = await supabase.auth.getClaims();
+  const user = data?.claims ?? null;
+  const role = (user?.app_metadata as { role?: string } | undefined)?.role;
 
   const { pathname } = request.nextUrl;
   const isPublic = PUBLIC_PATHS.some((path) => pathname.startsWith(path));
@@ -47,7 +49,7 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  if (user && pathname.startsWith("/admin") && user.app_metadata?.role !== "admin") {
+  if (user && pathname.startsWith("/admin") && role !== "admin") {
     const url = request.nextUrl.clone();
     url.pathname = "/catalogue";
     return NextResponse.redirect(url);

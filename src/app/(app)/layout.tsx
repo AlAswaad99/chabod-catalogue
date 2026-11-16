@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getSessionUser } from "@/lib/auth";
 import { ToastProvider } from "@/components/ui/toast";
 import { FullscreenProvider } from "@/lib/fullscreen";
 import { AdminShell } from "@/components/admin-shell";
@@ -10,22 +10,18 @@ import { AdminShell } from "@/components/admin-shell";
 // below the desktop breakpoint, DesktopRail at and above it — never both
 // (§4.9-§4.10).
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getSessionUser();
 
   if (!user) {
     redirect("/login");
   }
 
-  const isAdmin = user.app_metadata?.role === "admin";
   const phoneNumber = user.phone ? `+${user.phone}` : null;
 
   return (
     <FullscreenProvider>
       <ToastProvider>
-        {isAdmin ? <AdminShell phoneNumber={phoneNumber}>{children}</AdminShell> : children}
+        {user.isAdmin ? <AdminShell phoneNumber={phoneNumber}>{children}</AdminShell> : children}
       </ToastProvider>
     </FullscreenProvider>
   );

@@ -8,7 +8,7 @@ export function ReadingSizeControl() {
   const [size, setSize] = useReadingSize();
 
   return (
-    <div className="flex h-10 border-2 border-rule-2">
+    <div className="flex h-10 border border-rule-2">
       <button
         type="button"
         aria-label="Decrease lyrics text size"

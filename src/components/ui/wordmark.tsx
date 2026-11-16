@@ -12,7 +12,7 @@ export function Wordmark({
     <span
       className={className}
       style={{
-        fontFamily: "var(--font-noto-ethiopic)",
+        fontFamily: "var(--font-noto-serif-ethiopic)",
         fontWeight: 800,
         fontSize: size,
         lineHeight: 1.05,

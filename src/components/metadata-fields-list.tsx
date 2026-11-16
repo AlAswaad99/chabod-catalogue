@@ -132,7 +132,7 @@ export function MetadataFieldsList({
     <div>
       <TopBar title="Fields" />
       <div className="px-5 py-4">
-        <p className="type-meta border-b-2 border-rule pb-3">
+        <p className="type-meta border-b border-rule pb-3">
           New fields are usually created while editing a song; this page is for renaming, tidying
           options, merging duplicates and deleting unused fields.
         </p>
@@ -165,7 +165,7 @@ export function MetadataFieldsList({
                   {expanded && (
                     <div className="space-y-4 bg-surface p-4">
                       {canonical && (
-                        <div className="space-y-2 border-2 border-label p-3">
+                        <div className="space-y-2 border border-label p-3">
                           <p className="type-body text-ink">
                             Looks like a duplicate of <strong>{canonical.name}</strong>…
                           </p>
@@ -202,7 +202,7 @@ export function MetadataFieldsList({
 
                       {(field.type === "single_select" || field.type === "multi_select") && (
                         <div className="space-y-2">
-                          <p className="type-field-label text-muted">Options</p>
+                          <p className="type-field-label text-muted-foreground">Options</p>
                           <div className="flex flex-wrap gap-2">
                             {field.options.map((o) => (
                               <Chip key={o} label={o} onRemove={() => handleRemoveOption(field, o)} />

@@ -1,5 +1,16 @@
 import type { LyricsSection, MetadataFieldDefinition, Song, SongMetadata } from "@/types/song";
 
+// The catalogue list ships only what search and the row need — lyrics are
+// reduced to their text (no section type/label) to keep the payload small,
+// since the whole list is searched client-side.
+export interface SearchableSong {
+  id: string;
+  number: number;
+  title: string;
+  lyrics: Pick<LyricsSection, "text">[];
+  metadata: SongMetadata;
+}
+
 // Result tiers, in display order (redesign decisions.md Q4 / §4.2): title
 // or number matches first, then lyrics, then field values. Plain
 // case-insensitive substring matching — Ge'ez letter-variant normalization
@@ -13,7 +24,7 @@ export interface Snippet {
 }
 
 export interface SearchMatch {
-  song: Song;
+  song: SearchableSong;
   tier: SearchTier;
   titleMatch?: { start: number; end: number };
   matchBadge?: string;
@@ -32,7 +43,7 @@ function formatFieldValue(value: string | number | string[]): string {
   return Array.isArray(value) ? value.join(", ") : String(value);
 }
 
-function findLyricsSnippet(sections: LyricsSection[], query: string): Snippet | null {
+function findLyricsSnippet(sections: Pick<LyricsSection, "text">[], query: string): Snippet | null {
   for (const section of sections) {
     for (const line of section.text.split("\n")) {
       const idx = indexOfCi(line, query);
@@ -66,7 +77,7 @@ function findFieldMatch(
 }
 
 /** Up to 2 populated fields, for the meta line of a row with no active search. */
-export function defaultMetaLine(song: Song, fieldDefs: MetadataFieldDefinition[]): string | undefined {
+export function defaultMetaLine(song: Pick<Song, "metadata">, fieldDefs: MetadataFieldDefinition[]): string | undefined {
   const parts: string[] = [];
   for (const def of fieldDefs) {
     const raw = song.metadata[def.id];
@@ -78,7 +89,7 @@ export function defaultMetaLine(song: Song, fieldDefs: MetadataFieldDefinition[]
 }
 
 export function searchSongs(
-  songs: Song[],
+  songs: SearchableSong[],
   fieldDefs: MetadataFieldDefinition[],
   rawQuery: string,
 ): SearchMatch[] {

@@ -113,6 +113,6 @@ export async function mergeMetadataFields(
   if (deleteErr) return { data: null, error: deleteErr.message };
 
   revalidatePath("/admin/metadata-fields");
-  revalidatePath("/catalogue");
+  revalidatePath("/", "layout");
   return { data: mergedCanonical as unknown as MetadataFieldDefinition, error: null };
 }

@@ -124,7 +124,7 @@ export default function LoginPage() {
               <Wordmark size={56} />
               <p className="type-section-label">Chabod Choir · Song catalogue</p>
             </div>
-            <div className="border-t-2 border-rule" />
+            <div className="border-t border-rule" />
             <PhoneInput
               value={phoneDigits}
               onChange={setPhoneDigits}
@@ -161,14 +161,14 @@ export default function LoginPage() {
           <div className="mt-8 flex-1 space-y-4">
             <p className="type-section-label text-label">One-time setup</p>
             <h1 className="type-heading text-ink">Link your phone to our Telegram bot</h1>
-            <p className="type-body text-muted">
+            <p className="type-body text-muted-foreground">
               Login codes come through Telegram, not SMS. You only do this once.
             </p>
 
             <ol className="mt-2 divide-y divide-rule border-y border-rule">
               {LINK_STEPS.map((text, i) => (
                 <li key={text} className="flex items-start gap-4 py-4">
-                  <span className="type-mono text-accent">{i + 1}</span>
+                  <span className="type-mono text-brand">{i + 1}</span>
                   <span className="type-body text-ink">{text}</span>
                 </li>
               ))}
@@ -198,9 +198,9 @@ export default function LoginPage() {
       {step.name === "otp" && (
         <div className={`flex flex-1 flex-col px-4 pt-12 ${DESKTOP_COLUMN}`}>
           <div className="flex-1 space-y-4">
-            <p className="type-mono text-muted">Last step</p>
+            <p className="type-mono text-muted-foreground">Last step</p>
             <h1 className="type-heading text-ink">Enter the code</h1>
-            <p className="type-body text-muted">
+            <p className="type-body text-muted-foreground">
               We sent a code to +251 {phoneDigits}
             </p>
 
@@ -218,7 +218,7 @@ export default function LoginPage() {
 
             <div className="flex items-center justify-between pt-2">
               {secondsLeft > 0 ? (
-                <p className="type-body text-muted">
+                <p className="type-body text-muted-foreground">
                   Resend in 0:{String(secondsLeft).padStart(2, "0")}
                 </p>
               ) : (

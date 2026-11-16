@@ -28,13 +28,13 @@ export function LyricSection({ type, label, text, verseNumber }: LyricSectionPro
 
   const marker =
     type === "verse" ? (
-      <span className="type-mono text-accent">{String(verseNumber ?? 1).padStart(2, "0")}</span>
+      <span className="type-mono text-brand">{String(verseNumber ?? 1).padStart(2, "0")}</span>
     ) : isChorus ? (
-      <span style={{ fontFamily: "var(--font-noto-ethiopic)" }} className="text-[13px] font-bold text-label">
+      <span style={{ fontFamily: "var(--font-noto-serif-ethiopic)" }} className="text-[13px] font-bold text-label">
         አዝ
       </span>
     ) : (
-      <span className="type-mono text-accent">{TAG_MAP[type] ?? "•"}</span>
+      <span className="type-mono text-brand">{TAG_MAP[type] ?? "•"}</span>
     );
 
   const body = (

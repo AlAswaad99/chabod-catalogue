@@ -1,184 +1,296 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-/* Design tokens — design-reference/CLAUDE_CODE_PROMPT.md §2.1.
-   Dark is the unconditional default (:root); [data-theme="light"] overrides.
-   No raw hex anywhere outside this block — everything else references these
-   custom properties, either directly or through the @theme mapping below. */
+/* Dark mode is driven by the data-theme attribute (see src/lib/theme.ts), not
+   a .dark class, so shadcn's `dark:` utilities are pointed at it. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* "Hymnal editorial" — warm paper and ink-green with a single amber accent,
+   serif display type, tight 6px corners and hairline rules. Light is the
+   default; [data-theme="dark"] is a deep forest-green night mode.
+
+   shadcn's semantic tokens (background, foreground, primary, …) are the source
+   of truth. The app's older class names (ground, ink, surface, rule, fill…)
+   are aliases onto them in the @theme block below, so one palette drives both
+   the sourced components and the app's own. No raw hex outside this block. */
 :root {
-  --bg: #0d2124;
-  --surface: #152d31;
-  --text: #efe9dc;
-  --muted: #9fb3b1;
-  --rule: #2f4649;
-  --rule2: #4a6064;
-  --fill: #e2ad4f;
+  --background: #f6f1e6;
+  --foreground: #1a2a23;
+  --card: #fbf8f1;
+  --card-foreground: #1a2a23;
+  --popover: #fbf8f1;
+  --popover-foreground: #1a2a23;
+  --primary: #1f4a38;
+  --primary-foreground: #f6f1e6;
+  --secondary: #ece5d3;
+  --secondary-foreground: #1a2a23;
+  --muted: #ece5d3;
+  --muted-foreground: #5b675f;
+  --accent: #ece5d3;
+  --accent-foreground: #1a2a23;
+  --destructive: #a8401c;
+  --border: #ddd4be;
+  --input: #cdc3aa;
+  --ring: #1f4a38;
+  --radius: 0.375rem;
+
+  /* App-specific tokens with no shadcn equivalent. */
+  --brand: #8a560a; /* amber as text/icon colour */
+  --fill: #e0a030; /* amber as a surface: selection bar, highlights */
   --onfill: #1a1206;
-  --accent: #e2ad4f;
-  --label: #7ccfd6;
+  --label: #2b6b66;
+  --hl: #f3e2a8;
+  --hltext: #5e3c05;
+  --band: #ece5d3;
+  --scrim: rgba(26, 42, 35, 0.45);
+  --mark: linear-gradient(180deg, #b9791f 0%, #8f5a0c 55%, #1f4a38 100%);
+
+  --chart-1: #1f4a38;
+  --chart-2: #8a560a;
+  --chart-3: #2b6b66;
+  --chart-4: #a8401c;
+  --chart-5: #5b675f;
+  --sidebar: #fbf8f1;
+  --sidebar-foreground: #1a2a23;
+  --sidebar-primary: #1f4a38;
+  --sidebar-primary-foreground: #f6f1e6;
+  --sidebar-accent: #ece5d3;
+  --sidebar-accent-foreground: #1a2a23;
+  --sidebar-border: #ddd4be;
+  --sidebar-ring: #1f4a38;
+}
+
+:root[data-theme="dark"] {
+  --background: #0f1a16;
+  --foreground: #efe9dc;
+  --card: #16241e;
+  --card-foreground: #efe9dc;
+  --popover: #16241e;
+  --popover-foreground: #efe9dc;
+  --primary: #e6b258;
+  --primary-foreground: #1a1206;
+  --secondary: #1f3229;
+  --secondary-foreground: #efe9dc;
+  --muted: #1f3229;
+  --muted-foreground: #9fb0a6;
+  --accent: #1f3229;
+  --accent-foreground: #efe9dc;
+  --destructive: #ef8a6c;
+  --border: #2a3d34;
+  --input: #3a4f44;
+  --ring: #e6b258;
+
+  --brand: #e6b258;
+  --fill: #e6b258;
+  --onfill: #1a1206;
+  --label: #86c9bf;
   --hl: #3a3219;
   --hltext: #f3c75a;
-  --band: #152d31;
-  --scrim: rgba(3, 11, 12, 0.72);
-  --danger: #ef8a6c;
+  --band: #16241e;
+  --scrim: rgba(3, 10, 7, 0.72);
   --mark: linear-gradient(180deg, #f3c75a 0%, #ea8a34 60%, #d9542a 100%);
+
+  --chart-1: #e6b258;
+  --chart-2: #86c9bf;
+  --chart-3: #ef8a6c;
+  --chart-4: #9fb0a6;
+  --chart-5: #efe9dc;
+  --sidebar: #16241e;
+  --sidebar-foreground: #efe9dc;
+  --sidebar-primary: #e6b258;
+  --sidebar-primary-foreground: #1a1206;
+  --sidebar-accent: #1f3229;
+  --sidebar-accent-foreground: #efe9dc;
+  --sidebar-border: #2a3d34;
+  --sidebar-ring: #e6b258;
 }
 
-:root[data-theme="light"] {
-  --bg: #f4f1ea;
-  --surface: #e9e3d6;
-  --text: #10282b;
-  --muted: #52676a;
-  --rule: #d3cbbb;
-  --rule2: #b4ab98;
-  --fill: #d9a03f;
-  --onfill: #1a1206;
-  --accent: #8a5a0e;
-  --label: #1f6f79;
-  --hl: #f1d99a;
-  --hltext: #5e3c05;
-  --band: #e9e3d6;
-  --scrim: rgba(16, 40, 43, 0.45);
-  --danger: #a8401c;
-  --mark: linear-gradient(180deg, #d99a2b 0%, #c8662a 60%, #a8401c 100%);
-}
-
-/* Font stacks — CLAUDE_CODE_PROMPT.md §2.2. Archivo has no Ethiopic
-   glyphs, so Ge'ez falls through to Noto Sans Ethiopic and mixed-script
-   lines render each script in its correct face. The lyrics body
-   deliberately reverses the order (Ge'ez sizes/shapes the line). */
+/* Font stacks. Fraunces carries Latin display type; Hanken Grotesk is the UI
+   face. Neither has Ethiopic glyphs, so Ge'ez falls through to Noto Serif
+   Ethiopic (display, lyrics) or Noto Sans Ethiopic (UI) and mixed-script lines
+   render each script in its correct face. Lyrics deliberately lead with the
+   Ge'ez serif — it sizes and shapes the line. */
 :root {
-  --font-ui: var(--font-archivo), var(--font-noto-ethiopic), system-ui, sans-serif;
-  --font-lyrics: var(--font-noto-ethiopic), var(--font-archivo), sans-serif;
+  --font-ui: var(--font-hanken), var(--font-noto-sans-ethiopic), system-ui, sans-serif;
+  --font-display-stack: var(--font-fraunces), var(--font-noto-serif-ethiopic), Georgia, serif;
+  --font-lyrics-stack: var(--font-noto-serif-ethiopic), var(--font-fraunces), Georgia, serif;
   --font-mono-stack: var(--font-jetbrains-mono), monospace;
 }
 
 @theme inline {
-  --color-ground: var(--bg);
-  --color-surface: var(--surface);
-  --color-ink: var(--text);
+  /* shadcn semantic tokens */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
-  --color-rule: var(--rule);
-  --color-rule-2: var(--rule2);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* The app's own names, aliased onto the palette above. */
+  --color-ground: var(--background);
+  --color-surface: var(--card);
+  --color-ink: var(--foreground);
+  --color-rule: var(--border);
+  --color-rule-2: var(--input);
+  --color-danger: var(--destructive);
+  --color-brand: var(--brand);
   --color-fill: var(--fill);
   --color-on-fill: var(--onfill);
-  --color-accent: var(--accent);
   --color-label: var(--label);
   --color-hl: var(--hl);
   --color-hl-text: var(--hltext);
   --color-band: var(--band);
-  --color-danger: var(--danger);
 
   --font-sans: var(--font-ui);
-  --font-lyrics: var(--font-lyrics);
+  --font-heading: var(--font-display-stack);
+  --font-display: var(--font-display-stack);
+  --font-lyrics: var(--font-lyrics-stack);
   --font-mono: var(--font-mono-stack);
 
-  /* Matches the brief's own breakpoints (§4.10), not Tailwind's defaults.
-     `tablet:` (768px+) carries the 768-1199px split-view styles; since
-     Tailwind breakpoints are min-width and cascade, anything tablet: sets
-     also applies at desktop width unless a later desktop: rule overrides
-     it — exactly the layering used elsewhere (e.g. MetaGrid's grid-cols). */
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* The brief's own breakpoints (§4.10), not Tailwind's defaults. `tablet:`
+     (768px+) carries the 768-1199px split-view styles; Tailwind breakpoints are
+     min-width and cascade, so anything tablet: sets also applies at desktop
+     width unless a later desktop: rule overrides it. */
   --breakpoint-tablet: 768px;
   --breakpoint-desktop: 1200px;
 }
 
 body {
-  background: var(--bg);
-  color: var(--text);
+  background: var(--background);
+  color: var(--foreground);
   font-family: var(--font-ui);
 }
 
-/* Type scale — CLAUDE_CODE_PROMPT.md §2.2 table. Desktop breakpoint only
-   (1200px) for now; tablet (768–1199px) intermediate sizes are deferred
-   along with tablet split-view generally (see docs/redesign/decisions.md,
-   Q10) and phone sizes apply in that range meanwhile.
-   "Latin only" styles (section-label, badge: uppercase + letter-spacing)
-   must never be applied to Ge'ez text — enforced by usage, not CSS.
+/* Type scale. "Latin only" styles (section-label, badge: uppercase +
+   letter-spacing) must never be applied to Ge'ez text — enforced by usage.
 
    Wrapped in @layer components: unlayered CSS always wins over ANY @layer
-   rule regardless of specificity or source order, so leaving these
-   unlayered would make color: var(--muted) on .type-meta/-section-label/
-   -field-label permanently beat a `text-danger`/`text-accent`/etc utility
-   applied alongside them. Components sits before Tailwind's utilities
-   layer, so a utility class can still override these as expected. */
+   rule regardless of specificity or source order, so leaving these unlayered
+   would make color: var(--muted-foreground) on .type-meta etc. permanently beat
+   a `text-danger`/`text-brand`/etc utility applied alongside them. Components
+   sits before Tailwind's utilities layer, so a utility can still override. */
 @layer components {
-.type-heading {
-  font-size: 26px;
-  font-weight: 800;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
-}
-.type-topbar-title {
-  font-size: 18px;
-  font-weight: 800;
-}
-.type-song-title {
-  font-size: 34px;
-  font-weight: 700;
-  line-height: 1.25;
-}
-@media (min-width: 1200px) {
-  .type-song-title {
-    font-size: 44px;
+  .type-heading {
+    font-family: var(--font-display-stack);
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
   }
-}
-.type-list-title {
-  font-size: 19px;
-  font-weight: 700;
-  line-height: 1.35;
-}
-.type-list-title-latin {
-  font-size: 18px;
-  font-weight: 600;
-}
-.type-lyrics {
-  font-family: var(--font-lyrics);
-  /* --lyrics-size is set inline by the reading-size control (A−/A+, step
-     11); this default only applies before that control has run. */
-  font-size: var(--lyrics-size, 20px);
-  font-weight: 400;
-  line-height: 1.75;
-}
-.type-action {
-  font-size: 16px;
-  font-weight: 800;
-}
-.type-body {
-  font-size: 15px;
-  font-weight: 400;
-  line-height: 1.5;
-}
-.type-meta {
-  font-size: 13px;
-  font-weight: 400;
-  color: var(--muted);
-}
-.type-section-label {
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--muted);
-}
-.type-badge {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-.type-field-label {
-  font-size: 11px;
-  font-weight: 400;
-  color: var(--muted);
-}
-.type-mono {
-  font-family: var(--font-mono-stack);
-  font-size: 12px;
-  font-weight: 400;
-}
+  .type-topbar-title {
+    font-family: var(--font-display-stack);
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+  }
+  .type-song-title {
+    font-family: var(--font-display-stack);
+    font-size: 34px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  @media (min-width: 1200px) {
+    .type-song-title {
+      font-size: 46px;
+    }
+  }
+  .type-list-title {
+    font-family: var(--font-display-stack);
+    font-size: 19px;
+    font-weight: 500;
+    line-height: 1.35;
+  }
+  .type-list-title-latin {
+    font-family: var(--font-display-stack);
+    font-size: 18px;
+    font-weight: 500;
+  }
+  .type-lyrics {
+    font-family: var(--font-lyrics-stack);
+    /* --lyrics-size is set inline by the reading-size control (A−/A+); this
+       default only applies before that control has run. */
+    font-size: var(--lyrics-size, 20px);
+    font-weight: 400;
+    line-height: 1.8;
+  }
+  .type-action {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.005em;
+  }
+  .type-body {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+  .type-meta {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--muted-foreground);
+  }
+  .type-section-label {
+    font-size: 11.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--muted-foreground);
+  }
+  .type-badge {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .type-field-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted-foreground);
+  }
+  .type-mono {
+    font-family: var(--font-mono-stack);
+    font-size: 12px;
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+  }
 }
 
 :focus-visible {
-  outline: 2px solid var(--fill);
+  outline: 2px solid var(--ring);
   outline-offset: 2px;
 }
 

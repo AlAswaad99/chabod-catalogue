@@ -12,8 +12,7 @@ interface SegmentedControlProps<T extends string> {
   "aria-label": string;
 }
 
-// The gap:1px + background:rule / cell-background trick from §2.3 draws
-// 1px dividers between cells without doubled borders.
+// A recessed track with the selected option raised on a paper "thumb".
 export function SegmentedControl<T extends string>({
   options,
   value,
@@ -25,7 +24,7 @@ export function SegmentedControl<T extends string>({
     <div
       role="radiogroup"
       aria-label={ariaLabel}
-      className={`gap-px border border-rule-2 bg-rule ${grid ? "grid grid-cols-2" : "flex h-11"}`}
+      className={`gap-0.5 rounded-md bg-secondary p-0.5 ${grid ? "grid grid-cols-2" : "flex h-11"}`}
     >
       {options.map((opt) => {
         const selected = opt.value === value;
@@ -36,8 +35,12 @@ export function SegmentedControl<T extends string>({
             role="radio"
             aria-checked={selected}
             onClick={() => onChange(opt.value)}
-            className={`flex items-center justify-center px-3 text-[15px] font-semibold ${grid ? "h-11" : "h-full flex-1"} ${
-              selected ? "bg-fill text-on-fill" : "bg-surface text-ink"
+            className={`flex items-center justify-center rounded-[5px] px-3 text-[14px] transition-[background-color,box-shadow,color] ${
+              grid ? "h-10" : "h-full flex-1"
+            } ${
+              selected
+                ? "bg-card font-semibold text-foreground shadow-sm ring-1 ring-border"
+                : "font-medium text-muted-foreground hover:text-foreground"
             }`}
           >
             {opt.label}

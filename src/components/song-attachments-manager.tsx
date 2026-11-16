@@ -112,7 +112,7 @@ export function SongAttachmentsManager({
   if (!isAdmin) return null;
 
   return (
-    <div className="space-y-3 border-t-2 border-rule px-5 py-5">
+    <div className="space-y-3 border-t border-rule px-5 py-5">
       <div className="flex items-center justify-between">
         <p className="type-section-label">Recordings</p>
         <input

@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowDown, ArrowUp, Check, Copy, Plus, Trash, X } from "lucide-react";
+import NumberFlow from "@number-flow/react";
 import { createOrGetMetadataField } from "@/lib/actions/metadata-fields";
-import { saveSong } from "@/lib/actions/songs";
+import { saveSong, setSongNumber } from "@/lib/actions/songs";
 import { useToast } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
 import { TextInput, TextArea, Select } from "@/components/ui/text-input";
@@ -76,17 +77,21 @@ export function SongForm({
   initialFieldDefs,
   closeHref,
   provisionalNumber,
+  songNumbers,
 }: {
   initialSong?: Song;
   initialFieldDefs: MetadataFieldDefinition[];
   closeHref: string;
   /** Next sequence value, shown as "No. 0XX" for a brand-new song (Step 7). Ignored when editing. */
   provisionalNumber?: number;
+  /** Every song's id/number/title, so editing the number can warn about the swap. Edit mode only. */
+  songNumbers?: { id: string; number: number; title: string }[];
 }) {
   const router = useRouter();
   const { showToast } = useToast();
 
   const [title, setTitle] = useState(initialSong?.title ?? "");
+  const [numberInput, setNumberInput] = useState(initialSong ? String(initialSong.number) : "");
   const [items, setItems] = useState<FormItem[]>(() => itemsFromSections(initialSong?.lyrics ?? []));
   const [metadata, setMetadata] = useState<SongMetadata>(initialSong?.metadata ?? {});
   const [assignedFieldIds, setAssignedFieldIds] = useState<string[]>(() =>
@@ -234,18 +239,47 @@ export function SongForm({
     else router.push(closeHref);
   }
 
+  // Song number (edit mode only; new songs get the next number automatically
+  // and can be renumbered afterwards). Changing it to a number another song
+  // already holds swaps the two — shown here so it's never a surprise.
+  const parsedNumber = /^\d+$/.test(numberInput.trim()) ? parseInt(numberInput.trim(), 10) : null;
+  const numberChanged = !!initialSong && parsedNumber !== null && parsedNumber !== initialSong.number;
+  const numberInvalid = !!initialSong && (parsedNumber === null || parsedNumber < 1 || parsedNumber > 9999);
+  const swapTarget =
+    numberChanged && songNumbers ? songNumbers.find((s) => s.number === parsedNumber && s.id !== initialSong?.id) : undefined;
+
   const hasLyrics = items.some((it) => it.text.trim().length > 0);
-  const canSave = title.trim().length > 0 && hasLyrics;
+  const canSave = title.trim().length > 0 && hasLyrics && !numberInvalid;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!canSave) {
-      setError(!title.trim() ? "Title is required." : "Add at least one section with lyrics.");
+      setError(
+        !title.trim()
+          ? "Title is required."
+          : numberInvalid
+            ? "Song number must be a whole number between 1 and 9999."
+            : "Add at least one section with lyrics.",
+      );
       return;
     }
     setSaving(true);
     setError(null);
     try {
+      // Number first: if it fails (or someone else grabbed it), nothing else
+      // has been saved yet and the form is untouched.
+      let numberToast: string | null = null;
+      if (initialSong && numberChanged && parsedNumber !== null) {
+        const { data: numberData, error: numberErr } = await setSongNumber(initialSong.id, parsedNumber);
+        if (numberErr || !numberData) {
+          setError(numberErr ?? "Couldn't change the song number.");
+          return;
+        }
+        numberToast = numberData.swapped
+          ? `No. ${numberData.number} · “${numberData.swapped.title}” moved to No. ${numberData.swapped.number}`
+          : `Renumbered to No. ${numberData.number}`;
+      }
+
       const { data, error: saveErr } = await saveSong({
         id: initialSong?.id,
         title: title.trim(),
@@ -256,7 +290,7 @@ export function SongForm({
         setError(saveErr ?? "Couldn't save song.");
         return;
       }
-      showToast(initialSong ? "Song saved" : "Song added");
+      showToast(numberToast ?? (initialSong ? "Song saved" : "Song added"));
       router.push(`/songs/${data.id}`);
       router.refresh();
     } finally {
@@ -264,18 +298,25 @@ export function SongForm({
     }
   }
 
-  const displayNumber = initialSong ? initialSong.number : provisionalNumber;
+  // In edit mode the label previews the number as it's typed (digits roll over).
+  const displayNumber = initialSong ? (parsedNumber !== null && !numberInvalid ? parsedNumber : initialSong.number) : provisionalNumber;
 
   return (
     <form onSubmit={handleSubmit} className="pb-24">
       <TopBar
         title={initialSong ? "Edit song" : "New song"}
         onClose={handleCloseClick}
-        right={displayNumber != null && <span className="type-mono text-muted">No. {String(displayNumber).padStart(3, "0")}</span>}
+        right={
+          displayNumber != null && (
+            <span className="type-mono text-muted-foreground">
+              No. <NumberFlow value={displayNumber} format={{ minimumIntegerDigits: 3, useGrouping: false }} />
+            </span>
+          )
+        }
       />
 
       {showDiscardConfirm && (
-        <div className="flex items-center justify-between gap-3 border-b-2 border-danger bg-surface px-5 py-3">
+        <div className="flex items-center justify-between gap-3 border-b border-danger bg-surface px-5 py-3">
           <p className="type-body text-ink">Discard unsaved changes?</p>
           <div className="flex items-center gap-2">
             <Button variant="text" onClick={() => setShowDiscardConfirm(false)}>
@@ -307,6 +348,36 @@ export function SongForm({
           autoFocus={!initialSong}
         />
 
+        {initialSong && (
+          <section className="space-y-2">
+            <TextInput
+              label="Song number"
+              inputMode="numeric"
+              value={numberInput}
+              onChange={(e) => {
+                markDirty();
+                setNumberInput(e.target.value.replace(/[^\d]/g, "").slice(0, 4));
+              }}
+              compact
+              className="w-[140px] font-mono"
+              aria-describedby="song-number-hint"
+            />
+            <p
+              id="song-number-hint"
+              className={`type-meta ${numberInvalid ? "text-danger" : swapTarget ? "text-brand" : ""}`}
+              aria-live="polite"
+            >
+              {numberInvalid
+                ? "Enter a whole number from 1 to 9999."
+                : swapTarget
+                  ? `No. ${parsedNumber} is “${swapTarget.title}”. Saving swaps them: it becomes No. ${initialSong.number}.`
+                  : numberChanged
+                    ? `No. ${parsedNumber} is free. This song will move there.`
+                    : "Shown in the catalogue and on slides. Choosing a number another song has swaps the two."}
+            </p>
+          </section>
+        )}
+
         <section className="space-y-3">
           <div className="flex items-center justify-between">
             <p className="type-section-label">
@@ -319,9 +390,9 @@ export function SongForm({
               const position = idx + 1;
 
               return (
-                <div key={item.id} className="space-y-3 border-t-2 border-rule-2 bg-surface p-4">
+                <div key={item.id} className="space-y-3 border-t border-rule-2 bg-surface p-4">
                   <div className="flex items-center gap-2">
-                    <span className="type-mono text-accent">{String(position).padStart(2, "0")}</span>
+                    <span className="type-mono text-brand">{String(position).padStart(2, "0")}</span>
                     <Select
                       value={item.type}
                       onChange={(e) => updateItem(item.id, { type: e.target.value as LyricsSectionType })}
@@ -402,8 +473,8 @@ export function SongForm({
                 return (
                   <div key={fieldId} className="space-y-1.5">
                     <div className="flex items-center justify-between">
-                      <p className="type-field-label text-muted">
-                        {def.name} <span className="text-muted">· {FIELD_TYPES.find((t) => t.value === def.type)?.label}</span>
+                      <p className="type-field-label text-muted-foreground">
+                        {def.name} <span className="text-muted-foreground">· {FIELD_TYPES.find((t) => t.value === def.type)?.label}</span>
                       </p>
                       <Button
                         type="button"
@@ -465,7 +536,7 @@ export function SongForm({
               Add field
             </Button>
           ) : (
-            <div className="space-y-3 border-2 border-fill p-4">
+            <div className="space-y-3 border border-fill p-4">
               {addFieldMode === "pick" ? (
                 <>
                   {unassignedFields.length > 0 ? (
@@ -503,7 +574,7 @@ export function SongForm({
                     autoFocus
                   />
                   <div className="space-y-1">
-                    <p className="type-field-label text-muted">Type</p>
+                    <p className="type-field-label text-muted-foreground">Type</p>
                     <SegmentedControl
                       aria-label="Field type"
                       grid
@@ -514,7 +585,7 @@ export function SongForm({
                   </div>
                   {(createType === "single_select" || createType === "multi_select") && (
                     <div className="space-y-2">
-                      <p className="type-field-label text-muted">Options</p>
+                      <p className="type-field-label text-muted-foreground">Options</p>
                       <div className="flex flex-wrap gap-2">
                         {createOptions.map((o) => (
                           <Chip

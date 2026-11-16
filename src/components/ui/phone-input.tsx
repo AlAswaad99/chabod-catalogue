@@ -20,12 +20,12 @@ export function PhoneInput({ value, onChange, label, id, autoFocus, placeholder 
   return (
     <div className="space-y-1">
       {label && (
-        <label htmlFor={inputId} className="type-field-label block text-muted">
+        <label htmlFor={inputId} className="type-field-label block text-muted-foreground">
           {label}
         </label>
       )}
-      <div className="grid h-14 grid-cols-[72px_1fr] border-2 border-rule-2 bg-surface focus-within:border-fill">
-        <div className="flex items-center justify-center border-r border-rule type-body text-muted">
+      <div className="grid h-12 grid-cols-[72px_1fr] overflow-hidden rounded-md border border-input bg-card shadow-xs transition-[border-color,box-shadow] focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/25">
+        <div className="flex items-center justify-center border-r border-rule type-body text-muted-foreground">
           +251
         </div>
         <input
@@ -36,7 +36,7 @@ export function PhoneInput({ value, onChange, label, id, autoFocus, placeholder 
           value={value}
           onChange={(e) => onChange(e.target.value.replace(/\D/g, ""))}
           placeholder={placeholder ?? "9XX XXX XXX"}
-          className="bg-transparent px-4 text-[19px] font-medium tracking-[0.04em] text-ink placeholder:text-muted focus:outline-none"
+          className="bg-transparent px-4 text-[18px] font-medium tracking-[0.04em] text-ink placeholder:text-muted-foreground focus:outline-none"
         />
       </div>
     </div>

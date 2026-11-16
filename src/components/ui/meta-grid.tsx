@@ -9,8 +9,8 @@ export interface MetaGridField {
 function Cell({ f }: { f: MetaGridField }) {
   return (
     <div className="space-y-0.5 bg-ground p-3">
-      <p className="type-field-label text-muted">{f.name}</p>
-      <p className={f.isKey ? "text-[20px] font-extrabold text-accent" : "text-[17px] font-bold text-ink"}>
+      <p className="type-field-label text-muted-foreground">{f.name}</p>
+      <p className={f.isKey ? "text-[20px] font-extrabold text-brand" : "text-[17px] font-bold text-ink"}>
         {f.value}
       </p>
     </div>
@@ -20,7 +20,7 @@ function Cell({ f }: { f: MetaGridField }) {
 function Row({ f }: { f: MetaGridField }) {
   return (
     <div className="grid grid-cols-[96px_1fr] border-b border-rule py-2.5">
-      <span className="type-field-label text-muted">{f.name}</span>
+      <span className="type-field-label text-muted-foreground">{f.name}</span>
       <span className="type-body text-ink">{f.value}</span>
     </div>
   );

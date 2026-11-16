@@ -1,42 +1,33 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { CatalogueListPane } from "@/components/catalogue-list-pane";
+import { getSessionUser } from "@/lib/auth";
+import { getFieldDefs } from "@/lib/data";
 import { SongDetailView } from "@/components/song-detail-view";
-import type { MetadataFieldDefinition, Song, SongAttachment } from "@/types/song";
+import type { Song, SongAttachment } from "@/types/song";
 
 function formatMetadataValue(value: unknown): string {
   return Array.isArray(value) ? value.join(", ") : String(value);
 }
 
-export default async function SongDetailPage({
-  params,
-  searchParams,
-}: {
-  params: Promise<{ id: string }>;
-  searchParams: Promise<{ q?: string }>;
-}) {
+export default async function SongDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const { q } = await searchParams;
-  const query = q?.trim() ?? "";
   const supabase = await createClient();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const isAdmin = user?.app_metadata?.role === "admin";
-
-  const [{ data: songRow, error }, { data: fieldDefs }, { data: attachments }] = await Promise.all([
+  // Everything the page needs is requested at once — the session claims are
+  // local (no network), so the three queries below are the only round trips.
+  const [user, fieldDefList, { data: songRow, error }, { data: attachments }] = await Promise.all([
+    getSessionUser(),
+    getFieldDefs(),
     supabase.from("songs").select("*").eq("id", id).maybeSingle(),
-    supabase.from("metadata_field_definitions").select("*").order("name"),
     supabase.from("song_attachments").select("*").eq("song_id", id).order("created_at"),
   ]);
+  const isAdmin = user?.isAdmin ?? false;
 
   if (error || !songRow) {
     notFound();
   }
 
   const song = songRow as unknown as Song;
-  const fieldDefList = (fieldDefs ?? []) as unknown as MetadataFieldDefinition[];
 
   const metaFields = fieldDefList
     .map((def) => {
@@ -51,15 +42,21 @@ export default async function SongDetailPage({
     })
     .filter((f): f is NonNullable<typeof f> => f !== null);
 
+  // One storage call for all recordings instead of one per file.
   const attachmentRows = (attachments ?? []) as unknown as SongAttachment[];
-  const signedAttachments = await Promise.all(
-    attachmentRows.map(async (a) => {
-      const { data } = await supabase.storage
-        .from("song-audio")
-        .createSignedUrl(a.storage_path, 60 * 60);
-      return { ...a, url: data?.signedUrl ?? null };
-    }),
-  );
+  const urlByPath = new Map<string, string>();
+  if (attachmentRows.length > 0) {
+    const { data: signed } = await supabase.storage
+      .from("song-audio")
+      .createSignedUrls(
+        attachmentRows.map((a) => a.storage_path),
+        60 * 60,
+      );
+    for (const entry of signed ?? []) {
+      if (entry.path && entry.signedUrl) urlByPath.set(entry.path, entry.signedUrl);
+    }
+  }
+  const signedAttachments = attachmentRows.map((a) => ({ ...a, url: urlByPath.get(a.storage_path) ?? null }));
   const playableRecordings = signedAttachments
     .filter((a): a is typeof a & { url: string } => a.url !== null)
     .map((a) => ({ id: a.id, url: a.url, filename: a.filename }));
@@ -71,7 +68,6 @@ export default async function SongDetailPage({
       isAdmin={isAdmin}
       playableRecordings={playableRecordings}
       signedAttachments={signedAttachments}
-      listPane={<CatalogueListPane query={query} selectedSongId={song.id} isAdmin={isAdmin} />}
     />
   );
 }

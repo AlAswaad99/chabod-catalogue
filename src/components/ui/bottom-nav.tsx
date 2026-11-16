@@ -1,8 +1,9 @@
 "use client";
 
-import Link from "next/link";
+import Link, { useLinkStatus } from "next/link";
 import { usePathname } from "next/navigation";
-import { Ellipsis, Music, Plus } from "lucide-react";
+import { Ellipsis, Loader2, Music, Plus } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 interface BottomNavProps {
   moreOpen: boolean;
@@ -14,6 +15,17 @@ interface BottomNavProps {
   constrainWidthAtTablet?: boolean;
 }
 
+// Swaps the icon for a spinner while its link's navigation is in flight, so a
+// tap always shows an immediate response (no wondering whether it registered).
+function NavIcon({ icon: Icon, strokeWidth = 1.9 }: { icon: LucideIcon; strokeWidth?: number }) {
+  const { pending } = useLinkStatus();
+  return pending ? (
+    <Loader2 size={22} className="animate-spin" aria-hidden />
+  ) : (
+    <Icon size={22} strokeWidth={strokeWidth} aria-hidden />
+  );
+}
+
 // Admin, mobile/tablet only (§3.14) — hidden at the desktop breakpoint,
 // where DesktopRail takes over both this and MoreSheet.
 export function BottomNav({ moreOpen, onToggleMore, moreButtonRef, constrainWidthAtTablet }: BottomNavProps) {
@@ -22,22 +34,27 @@ export function BottomNav({ moreOpen, onToggleMore, moreButtonRef, constrainWidt
 
   return (
     <nav
-      className={`fixed bottom-0 left-0 z-30 grid h-[72px] grid-cols-3 border-t-2 border-rule bg-ground pb-[env(safe-area-inset-bottom)] desktop:hidden ${
-        constrainWidthAtTablet ? "right-auto w-full tablet:w-[380px] tablet:border-r-2" : "right-0"
+      aria-label="Primary"
+      className={`fixed bottom-0 left-0 z-30 grid h-[72px] grid-cols-3 border-t border-rule bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur desktop:hidden ${
+        constrainWidthAtTablet ? "right-auto w-full tablet:w-[380px] tablet:border-r" : "right-0"
       }`}
     >
       <Link
         href="/catalogue"
         onClick={() => moreOpen && onToggleMore()}
-        className={`relative flex items-center gap-2 pl-[18px] ${catalogueActive ? "text-accent" : "text-muted"}`}
+        aria-current={catalogueActive ? "page" : undefined}
+        className={`relative flex flex-col items-center justify-center gap-1 ${catalogueActive ? "text-brand" : "text-muted-foreground"}`}
       >
-        {catalogueActive && <span className="absolute inset-x-0 top-0 h-[3px] bg-fill" aria-hidden />}
-        <Music size={22} strokeWidth={2} aria-hidden />
-        <span className="type-action text-[13px]">Catalogue</span>
+        {catalogueActive && <span className="absolute inset-x-6 top-0 h-[2px] bg-fill" aria-hidden />}
+        <NavIcon icon={Music} />
+        <span className="text-[12px] font-semibold">Catalogue</span>
       </Link>
-      <Link href="/admin/songs/new" className="flex items-center gap-2 bg-fill pl-[18px] text-on-fill">
-        <Plus size={22} strokeWidth={2.4} aria-hidden />
-        <span className="type-action text-[13px]">Add song</span>
+      <Link
+        href="/admin/songs/new"
+        className="m-2 flex flex-col items-center justify-center gap-1 rounded-md bg-primary text-primary-foreground"
+      >
+        <NavIcon icon={Plus} strokeWidth={2.3} />
+        <span className="text-[12px] font-semibold">Add song</span>
       </Link>
       <button
         ref={moreButtonRef}
@@ -45,10 +62,10 @@ export function BottomNav({ moreOpen, onToggleMore, moreButtonRef, constrainWidt
         onClick={onToggleMore}
         aria-haspopup="dialog"
         aria-expanded={moreOpen}
-        className={`flex items-center gap-2 pl-[18px] ${moreOpen ? "text-accent" : "text-muted"}`}
+        className={`flex flex-col items-center justify-center gap-1 ${moreOpen ? "text-brand" : "text-muted-foreground"}`}
       >
-        <Ellipsis size={22} strokeWidth={2} aria-hidden />
-        <span className="type-action text-[13px]">More</span>
+        <Ellipsis size={22} strokeWidth={1.9} aria-hidden />
+        <span className="text-[12px] font-semibold">More</span>
       </button>
     </nav>
   );

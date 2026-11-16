@@ -95,9 +95,9 @@ function DraftCard({
   const { draft, saving, error } = entry;
 
   return (
-    <div className="space-y-3 border-t-2 border-rule-2 bg-surface p-4">
+    <div className="space-y-3 border-t border-rule-2 bg-surface p-4">
       <div className="flex items-center gap-2">
-        <span className="type-mono text-muted shrink-0">Draft {entry.displayNumber}</span>
+        <span className="type-mono text-muted-foreground shrink-0">Draft {entry.displayNumber}</span>
         <TextInput
           value={draft.title}
           onChange={(e) => onChangeTitle(e.target.value)}
@@ -126,7 +126,7 @@ function DraftCard({
             const firstLine = section.text.split("\n")[0] ?? "";
             return (
               <div key={i} className="flex items-center gap-3 py-2">
-                <p className="type-body min-w-0 flex-1 truncate text-muted">
+                <p className="type-body min-w-0 flex-1 truncate text-muted-foreground">
                   Repeat · <span className="text-ink">Chorus</span> · {firstLine}
                 </p>
               </div>
@@ -140,9 +140,9 @@ function DraftCard({
                 className={
                   section.type === "chorus"
                     ? "text-[13px] font-bold shrink-0 text-label"
-                    : "type-mono shrink-0 text-accent"
+                    : "type-mono shrink-0 text-brand"
                 }
-                style={section.type === "chorus" ? { fontFamily: "var(--font-noto-ethiopic)" } : undefined}
+                style={section.type === "chorus" ? { fontFamily: "var(--font-noto-serif-ethiopic)" } : undefined}
               >
                 {sectionSummaryMark(section.type, section.verseNumber)}
               </span>
@@ -313,7 +313,7 @@ export function BulkImport() {
           </Button>
         }
       />
-      <p className="type-meta border-b-2 border-rule px-5 pb-3 pt-1">
+      <p className="type-meta border-b border-rule px-5 pb-3 pt-1">
         {entries.length} {entries.length === 1 ? "draft" : "drafts"} found
         {needsALook > 0 ? ` · ${needsALook} needs a look` : ""}
       </p>
@@ -329,7 +329,7 @@ export function BulkImport() {
               >
                 <Check size={18} strokeWidth={2.4} className="shrink-0 text-label" aria-hidden />
                 <p className="type-body min-w-0 flex-1 truncate text-ink">{entry.draft.title}</p>
-                <span className="type-meta shrink-0 text-accent">
+                <span className="type-meta shrink-0 text-brand">
                   Saved as No. {String(entry.status.number).padStart(3, "0")} · Edit
                 </span>
               </Link>
@@ -338,8 +338,8 @@ export function BulkImport() {
           if (entry.status.kind === "discarded") {
             return (
               <div key={i} className="flex items-center gap-3 border-b border-rule py-3">
-                <X size={18} strokeWidth={2} className="shrink-0 text-muted" aria-hidden />
-                <p className="type-body min-w-0 flex-1 truncate text-muted line-through">{entry.draft.title}</p>
+                <X size={18} strokeWidth={2} className="shrink-0 text-muted-foreground" aria-hidden />
+                <p className="type-body min-w-0 flex-1 truncate text-muted-foreground line-through">{entry.draft.title}</p>
                 <Button
                   variant="text"
                   icon={Undo2}

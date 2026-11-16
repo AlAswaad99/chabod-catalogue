@@ -1,6 +1,5 @@
 "use client";
 
-import type { ReactNode } from "react";
 import { Maximize2, Minimize2, Pencil } from "lucide-react";
 import { useFullscreen } from "@/lib/fullscreen";
 import { SongAttachmentsManager } from "@/components/song-attachments-manager";
@@ -22,14 +21,12 @@ export function SongDetailView({
   isAdmin,
   playableRecordings,
   signedAttachments,
-  listPane,
 }: {
   song: Song;
   metaFields: MetaGridField[];
   isAdmin: boolean;
   playableRecordings: DockedPlayerRecording[];
   signedAttachments: AttachmentWithUrl[];
-  listPane: ReactNode;
 }) {
   const { fullscreen, setFullscreen } = useFullscreen();
 
@@ -41,7 +38,7 @@ export function SongDetailView({
   if (fullscreen) {
     return (
       <div>
-        <div className="fixed inset-x-0 top-0 z-40 flex items-center justify-between gap-2 border-b-2 border-rule bg-ground px-4 py-2">
+        <div className="fixed inset-x-0 top-0 z-40 flex items-center justify-between gap-2 border-b border-rule bg-ground px-4 py-2">
           <p className="type-topbar-title min-w-0 flex-1 truncate text-ink">{song.title}</p>
           <div className="flex shrink-0 items-center gap-2">
             <ReadingSizeControl />
@@ -63,15 +60,10 @@ export function SongDetailView({
     );
   }
 
+  // The tablet split-view's list column is rendered by the (browse) layout
+  // (BrowseShell), so this view is just the reading pane.
   return (
     <div className="tablet:flex desktop:block">
-      {/* Tablet split-view's left column (§4.10) — hidden on phone (full-screen
-          reading) and at desktop (which has its own list column via the rail
-          + reading column + sidebar layout instead). */}
-      <div className="hidden tablet:block tablet:w-[380px] tablet:shrink-0 tablet:border-r-2 tablet:border-rule desktop:hidden">
-        {listPane}
-      </div>
-
       <div
         className={`tablet:min-w-0 tablet:flex-1 ${playableRecordings.length > 0 ? "pb-[72px] desktop:pb-0" : ""}`}
       >
@@ -116,8 +108,8 @@ export function SongDetailView({
 
         <div className="desktop:flex">
           <div className="min-w-0 flex-1 desktop:max-w-[600px] desktop:px-14">
-            <div className="space-y-1 border-b-2 border-rule px-5 pb-4 desktop:px-0">
-              <p className="type-mono text-muted">No. {String(song.number).padStart(3, "0")}</p>
+            <div className="space-y-1 border-b border-rule px-5 pb-4 desktop:px-0">
+              <p className="type-mono text-muted-foreground">No. {String(song.number).padStart(3, "0")}</p>
               <h1 className="type-song-title text-ink">{song.title}</h1>
             </div>
 

@@ -12,8 +12,11 @@ export function Chip({ label, selected, onClick, onRemove }: ChipProps) {
     <button
       type="button"
       onClick={onClick}
-      className={`inline-flex h-10 min-w-11 items-center gap-1.5 border px-3 text-sm ${
-        selected ? "border-fill bg-fill font-bold text-on-fill" : "border-rule-2 bg-transparent font-medium text-ink"
+      aria-pressed={onClick ? !!selected : undefined}
+      className={`inline-flex h-10 min-w-11 items-center gap-1.5 rounded-full border px-4 text-sm transition-colors ${
+        selected
+          ? "border-primary bg-primary font-semibold text-primary-foreground"
+          : "border-input bg-card font-medium text-ink hover:bg-secondary"
       }`}
     >
       {label}

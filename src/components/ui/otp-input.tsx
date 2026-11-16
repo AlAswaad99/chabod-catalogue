@@ -35,7 +35,7 @@ export function OtpInput({
 
   return (
     <div
-      className="relative grid h-[60px] cursor-text border-2 border-rule-2 bg-surface"
+      className="relative grid h-[60px] cursor-text overflow-hidden rounded-md border border-input bg-card shadow-xs"
       style={{ gridTemplateColumns: `repeat(${length}, 1fr)` }}
       onClick={() => inputRef.current?.focus()}
     >
@@ -44,10 +44,10 @@ export function OtpInput({
         return (
           <div
             key={i}
-            className={`relative flex items-center justify-center text-[26px] font-extrabold text-ink ${i > 0 ? "border-l border-rule" : ""}`}
+            className={`relative flex items-center justify-center font-display text-[26px] font-semibold text-ink ${i > 0 ? "border-l border-rule" : ""}`}
           >
-            {digit || (isActive && <span className="h-7 w-[2px] bg-fill" aria-hidden />)}
-            {isActive && <span className="absolute inset-x-0 bottom-0 h-[3px] bg-fill" aria-hidden />}
+            {digit || (isActive && <span className="h-7 w-[2px] animate-pulse bg-primary" aria-hidden />)}
+            {isActive && <span className="absolute inset-x-0 bottom-0 h-[3px] bg-primary" aria-hidden />}
           </div>
         );
       })}

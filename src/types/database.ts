@@ -203,6 +203,10 @@ export type Database = {
       jwt_phone: { Args: Record<PropertyKey, never>; Returns: string };
       jwt_role: { Args: Record<PropertyKey, never>; Returns: string };
       normalize_phone: { Args: { p: string }; Returns: string };
+      set_song_number: {
+        Args: { p_song_id: string; p_new_number: number };
+        Returns: Json;
+      };
     };
     Enums: {
       [_ in never]: never;
