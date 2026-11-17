@@ -277,7 +277,7 @@ export function SlideGenerator({ songs }: { songs: SongLite[] }) {
             );
           })}
         </div>
-        <StickyFooterAction>
+        <StickyFooterAction aboveAdminNav>
           <Button icon={Plus} disabled={addCount === 0} onClick={confirmPicker}>
             {addCount === 0 ? "Select songs to add" : `Add ${addCount} ${addCount === 1 ? "song" : "songs"}`}
           </Button>
@@ -484,7 +484,7 @@ export function SlideGenerator({ songs }: { songs: SongLite[] }) {
         {error && <p className="type-body text-danger">{error}</p>}
       </div>
 
-      <StickyFooterAction>
+      <StickyFooterAction aboveAdminNav>
         <Button icon={Download} disabled={generating || selected.length === 0} onClick={handleGenerate}>
           {generating ? "Generating…" : `Generate PowerPoint · ${totalSlides} slides`}
         </Button>

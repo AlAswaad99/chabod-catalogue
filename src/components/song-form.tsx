@@ -2,34 +2,25 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowDown, ArrowUp, Check, Copy, Plus, Trash, X } from "lucide-react";
+import { Check, Plus, X } from "lucide-react";
 import NumberFlow from "@number-flow/react";
 import { createOrGetMetadataField } from "@/lib/actions/metadata-fields";
 import { saveSong, setSongNumber } from "@/lib/actions/songs";
 import { useToast } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
-import { TextInput, TextArea, Select } from "@/components/ui/text-input";
+import { TextInput } from "@/components/ui/text-input";
 import { Chip } from "@/components/ui/chip";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { TopBar } from "@/components/ui/top-bar";
 import { StickyFooterAction } from "@/components/ui/sticky-footer-action";
+import { LyricsEditor, itemsFromSections, itemsToSections } from "@/components/lyrics-editor";
+import type { LyricsItem } from "@/components/lyrics-editor";
 import type {
-  LyricsSection,
-  LyricsSectionType,
   MetadataFieldDefinition,
   MetadataFieldType,
   Song,
   SongMetadata,
 } from "@/types/song";
-
-const SECTION_TYPES: { value: LyricsSectionType; label: string }[] = [
-  { value: "verse", label: "Verse" },
-  { value: "chorus", label: "Chorus" },
-  { value: "bridge", label: "Bridge" },
-  { value: "intro", label: "Intro" },
-  { value: "outro", label: "Outro" },
-  { value: "other", label: "Other" },
-];
 
 const FIELD_TYPES: { value: MetadataFieldType; label: string }[] = [
   { value: "text", label: "Text" },
@@ -37,40 +28,6 @@ const FIELD_TYPES: { value: MetadataFieldType; label: string }[] = [
   { value: "single_select", label: "Single-select" },
   { value: "multi_select", label: "Multi-select" },
 ];
-
-function makeId(): string {
-  return typeof crypto !== "undefined" && "randomUUID" in crypto
-    ? crypto.randomUUID()
-    : Math.random().toString(36).slice(2);
-}
-
-interface FormItem {
-  id: string;
-  type: LyricsSectionType;
-  label: string;
-  text: string;
-}
-
-// Reconstructs the form's client-only item list (with stable ids) from
-// stored sections. A section that happens to duplicate another's
-// {type, text} is still detected and collapsed as a repeat on read
-// (src/lib/lyrics.ts), but here every item is fully independent and editable.
-function itemsFromSections(sections: LyricsSection[]): FormItem[] {
-  const items = sections.map((s) => ({ id: makeId(), type: s.type, label: s.label ?? "", text: s.text }));
-  return items.length > 0 ? items : [{ id: makeId(), type: "verse" as LyricsSectionType, label: "", text: "" }];
-}
-
-function itemsToSections(items: FormItem[]): LyricsSection[] {
-  return items
-    .filter((it) => it.text.trim().length > 0)
-    .map((it) => ({ type: it.type, label: it.label.trim() || undefined, text: it.text }));
-}
-
-function autoGrow(e: React.FormEvent<HTMLTextAreaElement>) {
-  const el = e.currentTarget;
-  el.style.height = "auto";
-  el.style.height = `${el.scrollHeight}px`;
-}
 
 export function SongForm({
   initialSong,
@@ -92,7 +49,7 @@ export function SongForm({
 
   const [title, setTitle] = useState(initialSong?.title ?? "");
   const [numberInput, setNumberInput] = useState(initialSong ? String(initialSong.number) : "");
-  const [items, setItems] = useState<FormItem[]>(() => itemsFromSections(initialSong?.lyrics ?? []));
+  const [items, setItems] = useState<LyricsItem[]>(() => itemsFromSections(initialSong?.lyrics ?? []));
   const [metadata, setMetadata] = useState<SongMetadata>(initialSong?.metadata ?? {});
   const [assignedFieldIds, setAssignedFieldIds] = useState<string[]>(() =>
     Object.keys(initialSong?.metadata ?? {}),
@@ -117,46 +74,6 @@ export function SongForm({
 
   function markDirty() {
     if (!dirty) setDirty(true);
-  }
-
-  function updateItem(id: string, patch: Partial<FormItem>) {
-    markDirty();
-    setItems((prev) => prev.map((it) => (it.id === id ? { ...it, ...patch } : it)));
-  }
-
-  function moveItem(id: string, direction: -1 | 1) {
-    markDirty();
-    setItems((prev) => {
-      const idx = prev.findIndex((it) => it.id === id);
-      const swapIdx = idx + direction;
-      if (idx === -1 || swapIdx < 0 || swapIdx >= prev.length) return prev;
-      const next = [...prev];
-      [next[idx], next[swapIdx]] = [next[swapIdx], next[idx]];
-      return next;
-    });
-  }
-
-  function removeItem(id: string) {
-    markDirty();
-    setItems((prev) => prev.filter((it) => it.id !== id));
-  }
-
-  function addSection() {
-    markDirty();
-    setItems((prev) => [...prev, { id: makeId(), type: "verse", label: "", text: "" }]);
-  }
-
-  function duplicateSection(id: string) {
-    markDirty();
-    setItems((prev) => {
-      const idx = prev.findIndex((it) => it.id === id);
-      if (idx === -1) return prev;
-      const source = prev[idx];
-      const copy: FormItem = { id: makeId(), type: source.type, label: source.label, text: source.text };
-      const next = [...prev];
-      next.splice(idx + 1, 0, copy);
-      return next;
-    });
   }
 
   function setMetadataValue(fieldId: string, value: string | number | string[]) {
@@ -399,89 +316,13 @@ export function SongForm({
           </p>
         </section>
 
-        <section className="space-y-3">
-          <div className="flex items-center justify-between">
-            <p className="type-section-label">
-              Lyrics · {items.length} {items.length === 1 ? "part" : "parts"}
-            </p>
-          </div>
-
-          <div className="space-y-3">
-            {items.map((item, idx) => {
-              const position = idx + 1;
-
-              return (
-                <div key={item.id} className="space-y-3 border-t border-rule-2 bg-surface p-4">
-                  <div className="flex items-center gap-2">
-                    <span className="type-mono text-brand">{String(position).padStart(2, "0")}</span>
-                    <Select
-                      value={item.type}
-                      onChange={(e) => updateItem(item.id, { type: e.target.value as LyricsSectionType })}
-                      compact
-                      className="flex-1"
-                      aria-label="Section type"
-                    >
-                      {SECTION_TYPES.map((t) => (
-                        <option key={t.value} value={t.value}>
-                          {t.label}
-                        </option>
-                      ))}
-                    </Select>
-                    <div className="flex shrink-0 items-center gap-1">
-                      <Button
-                        type="button"
-                        variant="icon"
-                        icon={ArrowUp}
-                        aria-label="Move up"
-                        disabled={idx === 0}
-                        onClick={() => moveItem(item.id, -1)}
-                      />
-                      <Button
-                        type="button"
-                        variant="icon"
-                        icon={ArrowDown}
-                        aria-label="Move down"
-                        disabled={idx === items.length - 1}
-                        onClick={() => moveItem(item.id, 1)}
-                      />
-                      <Button
-                        type="button"
-                        variant="icon"
-                        icon={Trash}
-                        aria-label="Delete section"
-                        className="text-danger"
-                        onClick={() => removeItem(item.id)}
-                      />
-                    </div>
-                  </div>
-
-                  <TextInput
-                    value={item.label}
-                    onChange={(e) => updateItem(item.id, { label: e.target.value })}
-                    placeholder="Label (optional), e.g. Verse 1"
-                    compact
-                  />
-
-                  <TextArea
-                    value={item.text}
-                    onChange={(e) => updateItem(item.id, { text: e.target.value })}
-                    onInput={autoGrow}
-                    placeholder="One lyric line per row. A blank line starts an indented response."
-                    className="min-h-[100px] overflow-hidden"
-                  />
-
-                  <Button type="button" variant="text" icon={Copy} onClick={() => duplicateSection(item.id)}>
-                    Duplicate section
-                  </Button>
-                </div>
-              );
-            })}
-          </div>
-
-          <Button type="button" variant="secondary" icon={Plus} onClick={addSection}>
-            Add section
-          </Button>
-        </section>
+        <LyricsEditor
+          items={items}
+          onChange={(next) => {
+            markDirty();
+            setItems(next);
+          }}
+        />
 
         <section className="space-y-3">
           <p className="type-section-label">Details</p>
@@ -654,7 +495,7 @@ export function SongForm({
         {error && <p className="type-body text-danger">{error}</p>}
       </div>
 
-      <StickyFooterAction>
+      <StickyFooterAction aboveAdminNav>
         <div className="desktop:mx-auto desktop:max-w-[720px]">
           <Button type="submit" icon={Check} disabled={saving}>
             {saving ? "Saving…" : "Save song"}
